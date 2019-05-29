@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">			
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />	
+		<style type="text/css">
+			.my_disabled{
+				color:#BBBBBB;				
+			}			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav my_backgroundcolor_blue2">			
+			<h1 class="mui-title my_color_white">新增测点</h1>
+		</header>		
+		<div class="mui-content">
+			<form id="fsxz" class="mui-input-group">
+				<div class="mui-input-row">
+					<label>新增方式：</label>	
+					<select id="xzfs">
+						<option value ="单个增加" selected="selected">单个增加</option>
+						<option value ="批量增加">批量增加</option>
+					</select>
+				</div>				
+			</form>	
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<label>测点个数：</label>	
+					<input id="cdgs" type="number" class="my_disabled" placeholder="测点个数" value="1" readonly="readonly" >
+				</div>
+				<div class="mui-input-row">
+					<label>测点类型：</label>	
+					<select id="cdlx">
+						<option value ="无" selected="selected">无</option>
+						<option value ="地面平整度">地面平整度</option>
+						<option value ="墙面平整度">墙面平整度</option>
+						<option value ="垂直度">垂直度</option>
+						<option value ="墙面阴阳角方正">墙面阴阳角方正</option>
+						<option value ="栏杆、护栏高度">栏杆、护栏高度</option>
+						<option value ="竖杆间距">竖杆间距</option>
+						<option value ="安全玻璃厚度">安全玻璃厚度</option>
+						<option value ="导线截面配线">导线截面(㎜²)配线</option>
+						<option value ="绝缘强度">绝缘强度(MΩ)</option>						
+					</select>
+				</div>				
+				<div class="mui-input-row">
+					<label>起始编号：</label>	
+					<input id="qsbh" type="text" class="" placeholder="后台自动生成" readonly="readonly" >
+				</div>
+				<div class="mui-input-row">
+					<label>终止编号：</label>	
+					<input id="zzbh" type="text" class="" placeholder="后台自动生成" readonly="readonly" >
+				</div>
+				<div class="mui-input-row">
+					<label>实测值：</label>
+					<input id="scz" type="text" class="" placeholder="实测值">
+				</div>
+			</form>
+			<form class="mui-input-group">
+				<div class="my_style3">
+					<label>说明：</label>
+					<textarea id="sm" class="mui-input-clear" rows="2" placeholder=""></textarea>
+				</div>					
+			</form>	
+			<div class="mui-button-row">
+				<button id="no" type="button" class="mui-btn mui-btn-primary">关闭</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button id="ok" type="button" class="mui-btn mui-btn-primary">确定</button>
+			</div>			
+		</div>			
+		
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js" ></script>
+		<script>
+		mui.init({
+				swipeBack:true //启用右滑关闭功能
+		});
+		mui.plusReady(function(){	
+			//接收上一个页面传递的值
+			var self = plus.webview.currentWebview();
+			var fhid = self.fhid;
+			var xmid = self.xmid;
+				
+			var no=document.getElementById('no');
+			var ok=document.getElementById('ok');
+			var xzfs=document.getElementById('xzfs');
+			var cdgs=document.getElementById('cdgs');
+			var scz=document.getElementById('scz');
+			var cdlx=document.getElementById('cdlx');
+			var qsbh=document.getElementById('qsbh');
+			var zzbh=document.getElementById('zzbh');
+			var sm=document.getElementById('sm');
+			
+			//新增方式监听
+			xzfs.addEventListener('change', function() {
+				//alert(this.value);
+				if (this.value=="单个增加") {					
+					cdgs.classList.add('my_disabled');
+					cdgs.value='1';
+					cdgs.readOnly=true;
+					scz.readOnly=false;
+					scz.placeholder='实测值';
+					cdlx.value="无";
+					qsbh.value="";
+					zzbh.value="";
+				} else{
+					cdgs.classList.remove('my_disabled');					
+					cdgs.readOnly=false;
+					cdgs.value='10';
+					scz.value="";
+					scz.placeholder='批量增加不可填写该项';
+					scz.readOnly=true;
+					cdlx.value="无";
+					qsbh.value="";
+					zzbh.value="";
+					
+					var btnArray = ['确定', '取消'];
+					mui.prompt('请输入测点个数：', '直接取消，默认值是“10”', '同欣易送检', btnArray, function(e) {
+						if (e.index == 0) {
+							cdgs.value=e.value;
+							cdgs.readOnly=true;
+						} else {							
+							cdgs.readOnly=true;
+						}
+					})
+				}
+			
+			});			
+			
+			//测点类型监听，自动生成编号
+			cdlx.addEventListener('change', function() {				
+				var lx=this.value;				
+				//alert(lx);
+				mui.ajax(url+'my_xzcd_qsbh.php',{
+					data:{
+						fhid:fhid,
+						cdlx:lx
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						qsbh.value=data.qsbh;
+						if (data.qsbh) {
+							zzxh=parseInt(data.xxh)+parseInt(cdgs.value)-1;
+							zzbh.value=data.bm+zzxh;
+						}else{
+							zzbh.value="";
+						}			
+					
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			});
+			ok.addEventListener('tap', function() {
+				var mydata = {
+					fhid:fhid,					
+					cdgs: cdgs.value,
+					cdlx: cdlx.value,
+					qsbh: qsbh.value,
+					zzbh: zzbh.value,
+					scz: scz.value,
+					sm: sm.value					
+				};		
+				
+				//验证数据，存到数据库
+				ajaxform(mydata, function(err) {
+					if (err) {
+						plus.nativeUI.toast(err);
+						return;
+					}
+					plus.nativeUI.alert('保存成功');
+					//target是my_project_fhys.html，这情况特殊，会触发my_project_fhys_bj.html页面的json_bj事件，原因是my_project_fhys_bj.html是my_project_fhys.html点击href链接出现的页面，所以my_project_fhys_bj.html页面的WebviewById还是my_project_fhys.html					
+					var target = plus.webview.getWebviewById('my_project_fhys.html');					
+					mui.fire(target,'json_bj',{
+						flag:'ok',
+						cdlx:mydata.cdlx,
+						qsbh:mydata.qsbh,
+						zzbh:mydata.zzbh,
+						scz:mydata.scz
+					});
+					mui.back();
+				});	
+				
+			});
+			
+			//验证数据，存到数据库
+			var ajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.fhid = mydata.fhid || '';
+				mydata.cdgs = mydata.cdgs || '';
+				mydata.cdlx = mydata.cdlx || '';
+				mydata.qsbh = mydata.qsbh || '';
+				mydata.zzbh = mydata.zzbh || '';
+				mydata.scz = mydata.scz || '';
+				mydata.sm = mydata.sm || '';					
+				
+				if (mydata.cdlx.length < 3) {
+					return callback('测点类型未填写！');
+				}				
+				
+				mui.ajax(url+'my_project_xzcd.php',{
+					data:{
+						xmid:xmid,
+						fhid: mydata.fhid,
+						cdgs: mydata.cdgs,
+						cdlx: mydata.cdlx,
+						qsbh: mydata.qsbh,
+						zzbh: mydata.zzbh,
+						scz: mydata.scz,
+						sm: mydata.sm									
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback('服务器返回error');	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};
+			
+			no.addEventListener('tap', function() {				
+				var target = plus.webview.getWebviewById('my_project_fhys.html');				
+				mui.fire(target,'json_bj',{
+					flag:'no'
+				});
+				mui.back();
+			});
+			
+			//处理手机自身返回键或者home键
+			plus.key.addEventListener("backbutton",function(){
+				var target = plus.webview.getWebviewById('my_project_fhys.html');
+				mui.fire(target,'json_bj',{
+					flag:'backbutton'
+				});
+				mui.back();
+			});
+			
+		});		
+		</script>
+		
+		
+	</body>
+</html>

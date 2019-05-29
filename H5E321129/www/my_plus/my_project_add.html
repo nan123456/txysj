@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="../css/mui.min.css" rel="stylesheet" />
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link href="../css/my_project_fhys_xz.css" rel="stylesheet" />
+		<style>
+			#data_save {
+				margin-left: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">新增卡片</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">
+				<div class="mui-input-row">
+					<div class="mui-input-row">
+						<label>资料库名称:</label>
+						<select id="constructionUnits" style="font-size: 14px;"></select>
+					</div>
+				</div>
+				<div class="mui-input-row">
+					<label>表格编号:</label>
+					<select id="supervision" style="font-size: 14px;"></select>
+				</div>
+				<div class="mui-input-row">
+					<label>表格名称:</label>
+					<select id="bgmc" style="font-size: 14px;"></select>
+				</div>
+				<div class="mui-input-row">
+					<label>验收部位:</label>
+					<input id="prospectingUnits" type="text" placeholder="请输入勘察单位">
+				</div>
+
+				<div class="mui-input-row">
+					<label>验收日期:</label>
+					<input id="applicationTime" type="text" class="mui-input-clear" placeholder="请输入发起时间" readonly="readonly">
+				</div>
+			</form>
+			<div id="formbtn" class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-action-back" id="data_close">关闭</button>
+				<button type="button" class="mui-btn mui-btn-primary" id="data_save" onclick="javascript:{this.disabled=true;document.form1.submit();}">保存</button>
+			</div>
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script type="text/javascript">
+			//防止重复点击保存按钮
+			//          function fncSubmit(){  
+			//          setTimeout(function(){  
+			//              alert('保存新增卡片');  
+			//          },1000);  
+			//          this.disabled = true; 
+			//          }   
+			document.getElementById('data_save');
+
+			mui.init()
+			mui.plusReady(function() {
+				//获取传值 
+				var self = plus.webview.currentWebview();
+				zlkmc = self.cs //资料库
+				csbh = self.csbh; //表格编号
+				csmc = self.csmc; //表格名称
+				mobile = self.mobile; //手机号码
+				uid = self.uid; //用户id
+				var doc = document;
+				//              名称表格
+				var bgmc = doc.getElementById("bgmc");
+				//				验收日期
+				var applicationTime = doc.getElementById("applicationTime");
+				//				保存按钮
+				var data_save = doc.getElementById("data_save");
+				//				资料库名称
+				var constructionUnits = doc.getElementById("constructionUnits");
+				//				表格编号
+				var supervision = doc.getElementById("supervision");
+				//				验收部位
+				var prospectingUnits = doc.getElementById("prospectingUnits");
+
+				//当前日期
+				var myDate = new Date();
+				var mytime = myDate.getTime();
+				var timestamp = mytime; //当前时间戳
+				applicationTime.value = myDate.getFullYear() + "-" + (myDate.getMonth() + 1) + "-" + myDate.getDate();
+
+				//动态添加资料库名称
+				var constrs = zlkmc.split(",");
+				for(var i = 0; i < constrs.length; i++) {
+					var option = doc.createElement("option");
+					option.innerHTML = constrs[i];
+					constructionUnits.appendChild(option);
+				}
+				//动态添加表格编号
+				var supervisions = csbh.split(",");
+				for(var i = 0; i < constrs.length; i++) {
+					var option = doc.createElement("option");
+					option.innerHTML = supervisions[i];
+					supervision.appendChild(option);
+				}
+
+				//动态添加表格名称
+				var bgmcs = csmc.split(",");
+				for(var i = 0; i < constrs.length; i++) {
+					var option = doc.createElement("option");
+					option.innerHTML = bgmcs[i];
+					bgmc.appendChild(option);
+				}
+
+				//日期监听
+				applicationTime.addEventListener('tap', function() {
+					plus.nativeUI.pickDate(function(e) {
+						d = e.date;
+						applicationTime.value = d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+					});
+				});
+				//信息保存(待开发)
+				data_save.addEventListener('tap', function() {
+					//					alert(constructionUnits.value+" "+supervision.value+" "+bgmc.value+" "+prospectingUnits.value+" "+applicationTime.value+" "+timestamp)
+					mui.ajax(url + 'my_plus/division_add.php', {
+						data: {
+							//							资料库名称
+							constructionUnits: constructionUnits.value,
+							//							表格编号
+							supervision: supervision.value,
+							//							表格名称
+							bgmc: bgmc.value,
+							//							验收部位
+							prospectingUnits: prospectingUnits.value,
+							//							验收日期
+							applicationTime: applicationTime.value,
+							//							当前时间戳
+							timestamp: timestamp,
+							//                          用户id
+							uid: uid
+						},
+						type: 'post',
+						dataType: 'json',
+						timeout: 10000,
+						success: function(data) {
+							//							alert(data);
+							if(data.result == 'success') {
+								var target = plus.webview.getWebviewById('my_project_ysjl.html');
+								target.reload(true);
+								mui.back();
+								mui.toast('保存成功！', {
+									duration: 'long',
+									type: 'div'
+								});
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							alert('ajax错误' + type + '---' + errorThrown + "失败！");
+						}
+					});
+				});
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />
+		<style type="text/css">
+			#hfms {
+				min-height: 80px;
+				height: auto;
+			}
+			
+			#hfjl {
+				padding: 10px;
+				min-height: 80px;
+				height: auto;
+			}
+			/*块级按钮按钮样式*/
+			
+			.mui-content-padded {
+				margin: 10px;
+			}
+			/*按钮小样式*/
+			
+			.mui-btn-block_my {
+				font-size: 16px;
+				display: block;
+				width: 100%;
+				margin-bottom: 10px;
+				padding: 8px 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id='wchen' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue">完成</a>
+			<h1 class="mui-title">测点类型</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-card">
+				<form id="cdlb" class="mui-input-group">
+				</form>
+			</div>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true, //启用右滑关闭功能
+				gestureConfig: {
+					doubletap: true, //默认为false
+					longtap: true, //默认为false
+				}
+			});
+
+			mui.plusReady(function() {
+				//获取上级页面传值
+				var self = plus.webview.currentWebview();
+				var sjc = self.sjc;
+				var xmid = self.xmid;
+				var gclb = self.gclb;
+				var checkId = self.checkId;
+				var cdlb = document.getElementById("cdlb");
+				var wchen = document.getElementById("wchen");
+				var jcnr;
+				var k = new Array(); //测点编号和测点个数数组
+				var lx;
+				var j = 0;
+				var pdbh;//判断是否同类型不同编号
+				//创建测点类别
+				var cdlx = function() {
+					var cdlb = document.getElementById("cdlb");
+					var oDiv = document.createElement("div");
+					oDiv.className = "mui-input-row mui-radio";
+					oDiv.innerHTML = '<label>' + jcnr + '</label><input name="radio" type="radio">';
+					cdlb.appendChild(oDiv);
+				}
+
+				//动态获取测点类别
+				mui.ajax(url + 'my_plus/my_jzgc.php', {
+					data: {
+//						gclb: gclb
+                        sjc:sjc
+					},
+					dataType: 'json',
+					type: 'post',
+					timeout: 10000,
+					success: function(data) {
+						var length = data.length; //数据返回的形式是数组，在这里先判断数组的长度
+						if(length > 0) {
+							for(var i = 0; i < length - 1; i++) {
+								if(jcnr == data[i].测点类型&&pdbh == data[i].测点编号){
+									continue;
+								}
+								else{
+								    pdbh = data[i].测点编号;
+								    jcnr = data[i].测点类型;
+								    k[j] = data[i].测点编号+data[i].测点个数;
+//								    alert(k[j]);  
+								    j++;
+								    cdlx(); 
+								} 
+							};
+						} else {
+
+						}
+					},
+					error: function(xhr, type, errorThrown) {
+						alert('ajax错误' + type + '---' + errorThrown);
+					}
+				});
+				
+				//获取选中的测点类别
+				function chk() {
+					var obj = cdlb.getElementsByTagName("input");
+					var obj2 = cdlb.getElementsByTagName("label");
+					s = '';
+//										alert(obj2.innerHTML);
+					for(var i = 0; i < obj.length; i++) {
+						if(obj[i].checked) {
+//							s = obj2[i].innerHTML;//如果选中，将value添加到变量s中
+						    lx = k[i];//测点编号和测点个数添加到lx中
+//						    alert(lx)
+						} else {
+
+						}
+					}				
+				}
+
+				//完成按钮监听
+				wchen.addEventListener('tap', function() {
+					chk();
+					if(lx){
+					var target = plus.webview.currentWebview().opener();//返回当前页面所属的Webview窗口对象的引用
+					mui.fire(target, 'cdlb', {
+						flag: lx,
+					});//触发上一页面的cdlb事件
+					mui.back();
+					}
+					else{
+						alert("请选择测点类型");
+					}
+				});
+			});
+		</script>
+	</body>
+
+</html>

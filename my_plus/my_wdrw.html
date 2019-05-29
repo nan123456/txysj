@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style type="text/css">
+			.mui-control-content {				
+				bottom: 0px;	
+			}
+			/*媒体查询，横屏效果*/
+			@media only screen and (orientation:landscape ) {
+				.mui-control-content {
+					bottom: 0px;
+					}			
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">我的任务</h1>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						全部（0）
+					</a>
+					<a class="mui-control-item" href="#item2">
+						运行中（0）
+					</a>
+					<a class="mui-control-item" href="#item3">
+						延期（0）
+					</a>
+				</div>
+			</div>
+			<div>
+				<!--全部 -->
+				<div id="item1" class="mui-control-content mui-active">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+						
+						</div>						
+					</div>
+				</div>
+				<!--全部 -->
+				<!--运行中 -->
+				<div id="item2" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							
+						</div>
+					</div>				
+				</div>
+				<!--运行中 -->
+				<!--延期-->
+				<div id="item3" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							
+						</div>
+					</div>
+				</div>
+				<!--延期-->
+			</div>		
+		</div>		
+		<script src="../js/mui.min.js"></script>		
+		<script src="../js/service.js"></script>		
+		<script>
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});			
+			//区域滚动,需手动初始化scroll控件
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			(function($) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});					
+			})(mui);
+			
+			mui.plusReady(function(){
+				//获取我的mobile
+				var self = plus.webview.currentWebview();
+				var mobile = self.mobile;
+				//alert(mobile);
+				
+				var item=document.getElementsByClassName('mui-control-item');
+				
+				//创建全部任务列表函数
+				var createrwlist=function(rwid,xmid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx) {
+					var ziduan1=rwmc+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+xjrq;
+					var ziduan2="类别："+rwlb;
+					var ziduan3="部位："+rwbw;
+					var ziduan4="创建人+接收人："+rwcjr+"+"+rwjsr;
+					var ziduan5="截止日期："+jzrq;
+					var ziduan6="附件："+rwfj;
+					var muiscroll=document.getElementsByClassName('mui-scroll');
+					var ul = document.createElement("ul");
+					ul.className = "mui-table-view mui-card my_list my_marginbottom10px";
+					var color="";
+					if (rwzyx=='重要') {
+						color="my_backgroundcolor_red";
+					}else if (rwzyx=='次重要') {
+						color="my_backgroundcolor_orange";					
+					}else if (rwzyx=='一般') {
+						color="my_backgroundcolor_#00BFFF";
+					}else if (rwzyx=='无时限') {
+						color="my_backgroundcolor_green";
+					}else{
+						color="my_backgroundcolor_black";
+					}
+					
+					ul.innerHTML = '<li class="mui-table-view-cell  '+color+' "><a  href="my_wdrw_rwck.html?rwid='+rwid+'&xmid='+xmid+'&mobile='+mobile+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan6+'</p></li>';
+					muiscroll[0].appendChild(ul);
+				};	
+				
+				//创建运行中任务列表函数
+				var createyxlist=function(rwid,xmid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx) {
+					var ziduan1=rwmc+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+xjrq;
+					var ziduan2="类别："+rwlb;
+					var ziduan3="部位："+rwbw;
+					var ziduan4="创建人+接收人："+rwcjr+"+"+rwjsr;
+					var ziduan5="截止日期："+jzrq;
+					var ziduan6="附件："+rwfj;
+					var muiscroll=document.getElementsByClassName('mui-scroll');
+					var ul = document.createElement("ul");
+					ul.className = "mui-table-view mui-card my_list my_marginbottom10px";
+					
+					var color="";
+					if (rwzyx=='重要') {
+						color="my_backgroundcolor_red";
+					}else if (rwzyx=='次重要') {
+						color="my_backgroundcolor_orange";					
+					}else if (rwzyx=='一般') {
+						color="my_backgroundcolor_#00BFFF";
+					}else if (rwzyx=='无时限') {
+						color="my_backgroundcolor_green";
+					}else{
+						color="my_backgroundcolor_black";
+					}
+					
+					ul.innerHTML = '<li class="mui-table-view-cell  '+color+' "><a  href="my_wdrw_rwck.html?rwid='+rwid+'&xmid='+xmid+'&mobile='+mobile+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan6+'</p></li>';
+					muiscroll[1].appendChild(ul);
+				};
+				
+				//创建延期任务列表函数
+				var createyqlist=function(rwid,xmid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx) {
+					var ziduan1=rwmc+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+xjrq;
+					var ziduan2="类别："+rwlb;
+					var ziduan3="部位："+rwbw;
+					var ziduan4="创建人+接收人："+rwcjr+"+"+rwjsr;
+					var ziduan5="截止日期："+jzrq;
+					var ziduan6="附件："+rwfj;
+					var muiscroll=document.getElementsByClassName('mui-scroll');
+					var ul = document.createElement("ul");
+					ul.className = "mui-table-view mui-card my_list my_marginbottom10px";
+					
+					var color="";
+					if (rwzyx=='重要') {
+						color="my_backgroundcolor_red";
+					}else if (rwzyx=='次重要') {
+						color="my_backgroundcolor_orange";					
+					}else if (rwzyx=='一般') {
+						color="my_backgroundcolor_#00BFFF";
+					}else if (rwzyx=='无时限') {
+						color="my_backgroundcolor_green";
+					}else{
+						color="my_backgroundcolor_black";
+					}
+					
+					ul.innerHTML = '<li class="mui-table-view-cell  '+color+' "><a  href="my_wdrw_rwck.html?rwid='+rwid+'&xmid='+xmid+'&mobile='+mobile+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan6+'</p></li>';
+					muiscroll[2].appendChild(ul);
+				};
+				
+				//创建任务列表
+				mui.ajax(url+'my_plus/wdrw_du.php',{
+					data:{
+						mobile:mobile
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var yx=0;
+						var yq=0;
+						if (length>1) {		
+							item[0].firstChild.nodeValue="全部（"+data[length-1].count+"）";
+							for (var i=0;i<length-1;i++) {
+								var rwid=data[i].id;
+								var xmid=data[i].xmid;
+								var xmmc=data[i].项目名称;
+								var rwmc=data[i].任务名称;
+								var rwzyx=data[i].任务重要性;
+								var rwlb=data[i].任务类别;
+								var rwcjr=data[i].任务创建人;
+								var rwjsr=data[i].任务接收人;
+								var rwbw=data[i].部位;
+								var jzrq=data[i].截止日期;
+								var rwfj=data[i].任务附件;
+								var xjrq=data[i].新建日期;
+								var hfzt=data[i].回复状态;
+								if (hfzt=="已回复") {
+									rwzyx="已回复";
+								}
+								createrwlist(rwid,xmid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx);
+							}
+							
+							for (var i=0;i<length-1;i++) {
+								var rwid=data[i].id;
+								var xmid=data[i].xmid;
+								var xmmc=data[i].项目名称;
+								var rwmc=data[i].任务名称;
+								var rwzyx=data[i].任务重要性;
+								var rwlb=data[i].任务类别;
+								var rwcjr=data[i].任务创建人;
+								var rwjsr=data[i].任务接收人;
+								var rwbw=data[i].部位;
+								var jzrq=data[i].截止日期;
+								var rwfj=data[i].任务附件;
+								var xjrq=data[i].新建日期;
+								var hfzt=data[i].回复状态;
+								if (hfzt=="已回复") {
+									rwzyx="已回复";
+								}
+								
+								//获取当天日期，与截止日期比较，划分运行中和延期
+								var xjzrq = new Date(Date.parse(jzrq.replace(/-/g, "/")));
+								var xjzrq = xjzrq.getTime();
+								var today = new Date();
+								if (xjzrq>today) {
+									createyxlist(rwid,xmid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx);
+									yx++;
+								} else{
+									createyqlist(rwid,xmid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx);
+									yq++;
+								}
+							}
+							item[1].firstChild.nodeValue="运行中（"+yx+"）";
+							item[2].firstChild.nodeValue="延期（"+yq+"）";
+							
+						} else{
+							createrwlist('','','---','---','---','---','---','---','---','---','---');
+							createyxlist('','','---','---','---','---','---','---','---','---','---');
+							createyqlist('','','---','---','---','---','---','---','---','---','---');
+						}
+						
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			
+			
+			});	
+		</script>
+		
+	</body>
+</html>

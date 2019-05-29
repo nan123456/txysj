@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.mui-control-content {
+				top: 0px;				
+				bottom: 0px;	
+				height:508px;
+			}
+			.my_table{
+				float: left;
+				text-align: center;				
+			}
+			.my_th{
+				background-color: #E3E3E3;
+			}			
+			.my_td_width30{
+				width: 30%;
+			}
+			.my_td_width70{
+				width: 70%;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						材料检验
+					</a>
+					<a class="mui-control-item" href="#item2">
+						现场检测
+					</a>
+					
+				</div>
+			</div>
+			<div>				
+				<div id="item1" class="mui-control-content mui-active">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell my_th mui-disabled">
+									<div class="my_table my_td_width30">定额编号</div>
+									<div class="my_table my_td_width70">定额内容</div>									
+								</li>
+								
+							</ul>				
+						</div>						
+					</div>
+				</div>				
+				<div id="item2" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell my_th mui-disabled">
+									<div class="my_table my_td_width30">定额编号</div>
+									<div class="my_table my_td_width70">定额内容</div>									
+								</li>
+							</ul>		
+						</div>
+					</div>				
+				</div>
+			</div>			
+			
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>	
+	<script src="../js/service.js" ></script>	
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		//区域滚动,需手动初始化scroll控件
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});		
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			sjzslx = self.sjzslx;
+			sjzslx=decodeURI(sjzslx);
+			var h1=document.getElementsByTagName("h1");
+			h1[0].innerText=sjzslx;			
+			
+			//创建材料检验列表函数
+			var CreCljyList=function(sjc,dzbh,dznr){				
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell";
+				li.id=sjc;
+				li.setAttribute("dzbh",dzbh);
+				li.innerHTML='<div class="my_table my_td_width30">'+dzbh+'</div><div class="my_table my_td_width70">'+dznr+'</div>';
+				ul[0].appendChild(li);
+			};
+			//创建现场检测列表函数
+			var CreXcjcList=function(sjc,dzbh,dznr){				
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell";
+				li.id=sjc;
+				li.setAttribute("dzbh",dzbh);
+				li.innerHTML='<div class="my_table my_td_width30">'+dzbh+'</div><div class="my_table my_td_width70">'+dznr+'</div>';
+				ul[1].appendChild(li);
+			};
+			
+			//加载数据
+			mui.ajax(url+'adminphp/pc_zslb.php',{
+					data:{
+						sqlflag:'app_select_all',
+						sjzslx:sjzslx
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;						
+						for (var i=0;i<row;i++) {							
+							var sjc=data[i].时间戳;
+							var dzbh=data[i].定制编号;
+							var dznr=data[i].定制内容;
+							var clxc=data[i].材料_现场;
+							if (clxc=="材料检验") {
+								CreCljyList(sjc,dzbh,dznr);
+							} else{
+								CreXcjcList(sjc,dzbh,dznr);
+							}					
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+			});
+			
+			//列表监听
+			mui('.mui-table-view').on('tap', 'li', function() {
+				var thissjc=this.id;
+				var dzbh=this.getAttribute("dzbh");
+				//alert(dzbh)
+				
+				var webview_style = {
+					popGesture: "close"
+				};
+				mui.openWindow({					
+					url: 'knowledge_list_nr.html',
+					id: 'knowledge_list_nr.html',
+					styles: webview_style,
+					extras:{						
+						sjc:thissjc,
+						dzbh:dzbh
+					},
+					show: {
+						
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			});
+			
+			
+			
+		});
+	</script>
+	
+</html>

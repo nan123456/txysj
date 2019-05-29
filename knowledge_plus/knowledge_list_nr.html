@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			p{
+				text-indent:2em;
+			}
+			h4{
+				margin-top:10px;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">			
+			<div class="mui-content-padded">
+				<h4>送检数量要求:</h4>
+				<p id="sjslyq" >加载中...</p>
+				<h4>取样（检验）方法:</h4>
+				<p id="qyff">加载中...</p>
+				<h4>检验性质:</h4>
+				<p id="jyxz">加载中...</p>
+				<h4>备注说明:</h4>
+				<p id="bzsm">加载中...</p>		
+					
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>	
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			sjc = self.sjc;
+			dzbh = self.dzbh;
+			var h1=document.getElementsByTagName("h1");
+			h1[0].innerText="定额编号："+dzbh;
+			
+			var sjslyq=document.getElementById("sjslyq");
+			var qyff=document.getElementById("qyff");
+			var jyxz=document.getElementById("jyxz");
+			var bzsm=document.getElementById("bzsm");
+			
+			//加载数据
+			mui.ajax(url+'adminphp/pc_zslb.php',{
+					data:{
+						sqlflag:'select',
+						sjc:sjc
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;						
+						for (var i=0;i<row;i++) {							
+							sjslyq.innerText=data[i].送检数量要求;
+							qyff.innerText=data[i].取样方法;
+							jyxz.innerText=data[i].检验性质;
+							bzsm.innerText=data[i].备注说明;							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+			
+		});
+	</script>
+	<script src="../js/setPullToRefresh.js" ></script>
+</html>

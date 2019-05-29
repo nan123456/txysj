@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.mui-media-body{
+				color: black;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view mui-table-view-chevron my_list">
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<img class="mui-media-object mui-pull-left" src="images/xzmc.png">
+						<div class="mui-media-body">
+							无
+							<p class='mui-ellipsis'>无</p>
+						</div>
+					</a>
+				</li>
+			</ul>			
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>	
+	<script src="js/service.js" ></script>
+	<script>
+		mui.init({
+			swipeBack:true //启用右滑关闭功能
+		});
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();		
+			
+			//全局变量mobile
+			mobile = self.mobile;
+			//alert(mobile);
+			//alert(plus.webview.defaultHardwareAccelerated());
+			
+			//创建组列表
+			var createteamlist=function(ProjectId,Name,ConstructionName,CityName,TypeName){
+				var xmmc=Name;
+				//汉字编码，为了get传值
+				var xmmc=encodeURI(encodeURI(xmmc));
+				
+				var CityName=encodeURI(encodeURI(CityName));
+				var TypeName=encodeURI(encodeURI(TypeName));
+				
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell mui-media";
+				li.innerHTML='<a class="mui-navigate-right" href="team_plus/team_in.html?ProjectId='+ProjectId+'&xmmc='+xmmc+'&mobile='+mobile+'&CityName='+CityName+'&TypeName='+TypeName+'"><img class="mui-media-object mui-pull-left" src="images/xzmc.png"><div class="mui-media-body">'+Name+'<p class="mui-ellipsis">'+ConstructionName+'</p></div></a>';
+				ul[0].appendChild(li);
+			};			
+			//createteamlist();
+			
+			//获取工程组列表
+			mui.ajax(TxtqUrl,{
+				data:{
+					mode:'myproject',
+					mobile:mobile					
+				},
+				dataType:'json',
+				type:'get',
+				timeout:10000,
+				success:function(data){
+					var length=data.length;
+					var ul=document.getElementsByTagName('ul');
+					if (length>0) {
+						ul[0].innerHTML='';
+						for (var i=0;i<length;i++) {
+							var ProjectId=data[i].ProjectId;
+							var Name=data[i].Name;
+							var ConstructionName=data[i].ConstructionName;							
+											
+							var CityName=data[i].CityName;
+							var TypeName=data[i].TypeName;
+							
+							createteamlist(ProjectId,Name,ConstructionName,CityName,TypeName);
+						}
+					}else{
+						ul[0].innerHTML='';
+						createteamlist('0644bce1-88af-4a2d-98c9-bfe73c7df269','例子项目','xxx公司');
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					alert('ajax错误'+type+'---'+errorThrown);
+					createteamlist('0644bce1-88af-4a2d-98c9-bfe73c7df269','例子项目','xxx公司');
+				}
+			});
+			
+			
+			
+			var aniShow = "pop-in";
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version)<4.4){
+					aniShow = "slide-in-right";
+				}
+			}
+			
+			//主列表点击事件
+			mui('.my_list').on('tap', 'a', function() {
+				var id = 'team_in.html';
+				var href = this.href;
+				//var type = this.getAttribute("open-type");
+				//alert(type);
+				var webview_style = {
+					popGesture: "close"
+				};
+				//侧滑菜单需动态控制一下zindex值；
+				if (~id.indexOf('offcanvas-')) {
+					webview_style.zindex = 9998;
+					webview_style.popGesture = ~id.indexOf('offcanvas-with-right') ? "close" : "none";
+				}
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					styles: webview_style,
+					extras:{
+						zhi:"www"
+					},
+					show: {
+						aniShow: aniShow
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			});			
+			
+			
+			
+		});
+		
+	</script>
+	<script src="js/setPullToRefresh.js" ></script>
+</html>

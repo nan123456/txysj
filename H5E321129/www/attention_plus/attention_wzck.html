@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 5px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}	
+			.mui-content,input,select,textarea,option,p,label{
+				font-size: 0.9em;
+			}
+			form{
+				margin-top: 5px;
+			}
+			.my_color_blue{
+				color:#0000FF;
+			}	
+			#done.mui-disabled{
+				color: gray;
+			}	
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">
+			加载中,请稍等...
+			
+			
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>	
+	
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			wz = self.wz;
+			mc = self.mc;
+			mc=decodeURI(mc);
+			//alert(hblx);
+			var h1=document.getElementsByTagName("h1");
+			h1[0].innerText=mc;			
+			var subpage_style = {
+				top: '45px',
+				bottom: '0px'
+			};
+			var sub = plus.webview.create(wz,"www",subpage_style);			
+			self.append(sub);
+			
+			setTimeout(function() {
+				//关闭等待框
+				plus.nativeUI.closeWaiting();
+				//显示当前页面
+				mui.currentWebview.show();
+			}, 600);
+			
+		
+		});
+		
+	</script>
+</html>

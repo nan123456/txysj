@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.mui-row.mui-fullscreen>[class*="mui-col-"] {
+				height: 100%;
+			}
+			.mui-col-xs-3,
+			.mui-control-content {
+				overflow-y: auto;
+				height: 100%;
+			}
+			.mui-segmented-control .mui-control-item {
+				line-height: 50px;
+				width: 100%;
+			}
+			.mui-segmented-control.mui-segmented-control-inverted .mui-control-item.mui-active {
+				background-color: #fff;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id="bar" class="mui-icon mui-icon-bars mui-pull-right" style=""></a>
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content mui-row mui-fullscreen">
+			<div class="mui-col-xs-3">
+				<div id="segmentedControls" class="mui-segmented-control mui-segmented-control-inverted mui-segmented-control-vertical">
+				</div>
+			</div>
+			
+			<div id="segmentedControlContents" class="mui-col-xs-9" style="border-left: 1px solid #c8c7cc;">
+				<div id="item1" class="mui-control-content mui-active"></div>
+				<div id="item2" class="mui-control-content"></div>
+				<div id="item3" class="mui-control-content"></div>
+			</div>
+			
+			
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>	
+	<script src="../js/service.js" ></script>	
+	<script>
+		mui.init();
+		
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			var zlzslx= self.sjzslx;
+			var mobile = self.mobile;
+			var uid = self.uid;
+			zlzslx=decodeURI(zlzslx);
+			
+			var doc=document;
+			var h1=doc.getElementsByTagName("h1");
+			h1[0].innerText=zlzslx;
+			
+			var bar=doc.getElementById("bar");	
+			
+			//创建左边选项卡函数
+			var cerTrol=function (len,arrStr) {
+				var doc=document;
+				var controls=doc.getElementById("segmentedControls"),
+					i=0,
+					html=[];					
+				for (i; i<len; i++) {					
+					html.push('<a class="mui-control-item" href="#content' + i + '">' + arrStr[i] + '</a>');
+				}
+				controls.innerHTML = html.join('');
+				controls.querySelector('.mui-control-item').classList.add('mui-active');
+			};
+			
+			//创建右边表格列表函数
+			var cerTent=function (data) {
+				var doc=document,
+					contents = doc.getElementById("segmentedControlContents"),
+					item=doc.getElementsByClassName("mui-control-item"),	//左边选项卡集合
+					itemLen=item.length,
+					itemTex="",		//左边选项卡里面文本
+					len=data.length-1,
+					$id="",
+					$zlzszlx="",
+					$bgmc="",
+					$bgbh="",
+					html=[];
+				for (var i=0;i<itemLen;i++) {
+					itemTex=item[i].innerText;					
+					html.push('<div id="content' + i + '" class="mui-control-content"><ul class="mui-table-view">');
+					for (var j=0;j<len;j++) {						
+						$zlzszlx=data[j].资料知识子类型;						
+						if (itemTex==$zlzszlx) {
+							$id=data[j].id;
+							$bgmc=data[j].表格名称;
+							$bgbh=data[j].表格编号;
+							html.push('<li id="'+$id+'" bhbh="'+$bgbh+'" bhbh1="'+$bgmc+'" class="mui-table-view-cell">' + $bgbh+$bgmc + '</li>');							
+						}
+//						alert($bgmc);
+					}
+//					bhbh1=$bgbh+$bgmc;
+//					alert(bhbh1);
+					html.push('</ul></div>');
+				}
+				contents.innerHTML = html.join('');				
+				contents.querySelector('.mui-control-content').classList.add('mui-active');
+				
+				//给列表添加监听事件
+				mui("ul").on('tap','li',function() {
+					var thisid=this.id,
+						thisBh=this.getAttribute("bhbh");
+						thisBhmc=this.getAttribute("bhbh1");
+						csbh=thisBh
+						csmc=thisBhmc
+//						alert(csbh);
+					openTab(thisid,thisBh,thisBhmc)
+				});
+			};
+			
+			//加载左边的选项卡
+			mui.ajax(url+'adminphp/pc_zlzszlx.php',{
+				data:{
+					sqlflag:'selectChild',
+					zslx:zlzslx
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){	
+					var length=data.length;
+					var row=length-1,
+						arrStr=[],
+						$zlzszlx="",
+						i=0;
+					for (i;i<row;i++) {
+						$zlzszlx=data[i].资料知识子类型;						
+						arrStr.push($zlzszlx);
+					}				
+					cerTrol(row,arrStr);
+					ajaxTent();
+				},
+				error:function(xhr,type,errorThrown){
+					alert('ajax错误'+type+'---'+errorThrown);
+				}
+			});
+			
+			//加载右边列表
+			var ajaxTent=function(){
+				mui.ajax(url+'adminphp/pc_zlzslb.php',{
+					data:{
+						sqlflag:'appSelect',
+						zlzslx:zlzslx
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+//						alert(zlzslx);
+						cerTent(data);
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+			};
+			
+			//表格打开页面
+			var openTab=function(id,Bh){				
+				var webview_style = {
+					popGesture: "close"
+				};
+				mui.openWindow({
+					id: "my_project_add.html",
+					url: "my_project_add.html",
+					styles: webview_style,
+					extras:{
+						id:id,
+						Bh:Bh,
+						cs:zlzslx,
+						csbh:csbh,
+						csmc:csmc,
+						mobile:mobile,
+						uid:uid
+					},
+					show: {
+						//autoShow:false,
+						aniShow: "pop-in"
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			};
+			//右上角菜单事件监听
+//			bar.addEventListener("tap",function(){
+//				var btnArray = [
+//					{title:"快速查找"}
+//					];
+//				
+//				plus.nativeUI.actionSheet( {
+//						title:"操作",
+//						cancel:"取消",
+//						buttons:btnArray
+//					}, function(e){
+//						var index = e.index;	
+//						var nextpage='';
+//						switch (index){
+//							case 0:	//取消	
+//								break;
+//							case 1:	//任务新建								
+//								plus.nativeUI.prompt("输入表格编号：", function(e){
+//									var i=e.index;									
+//									if (i==0) {
+//										var value=e.value;
+//										openTab("",value);
+//										//alert(value);
+//									} 
+//								},"同欣易送检", "在此输入...", ["搜索","取消"]);
+//								break;							
+//						}
+//					} );
+//			});
+		});
+	</script>
+	
+</html>

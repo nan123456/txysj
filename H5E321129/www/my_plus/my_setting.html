@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link href="../css/mui.min.css" rel="stylesheet"/>    
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<style>			
+			.mui-input-group {
+				margin-top: 10px;
+			}
+			
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			
+			.mui-input-group label {
+				width: 22%;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 78%;
+			}
+			
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			
+			.link-area {
+				display: block;
+				margin-top: 25px;
+				text-align: center;
+			}
+			
+			.spliter {
+				color: #bbb;
+				padding: 0px 8px;
+			}
+			
+			.oauth-area {
+				position: absolute;
+				bottom: 20px;
+				left: 0px;
+				text-align: center;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.oauth-area .oauth-btn {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				background-size: 30px 30px;
+				background-position: center center;
+				background-repeat: no-repeat;
+				margin: 0px 20px;
+				/*-webkit-filter: grayscale(100%); */
+				border: solid 1px #ddd;
+				border-radius: 25px;
+			}
+			
+			.oauth-area .oauth-btn:active {
+				border: solid 1px #aaa;
+			}
+			
+			.oauth-area .oauth-btn.disabled {
+				background-color: #ddd;
+			}
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">设置</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">				
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-divider">账户信息</li>
+					<li class="mui-table-view-cell">						
+						<a id="wdzh" class="mui-navigate-right">
+						我的账户
+						</a>
+					</li>
+					<li class="mui-table-view-divider">二维码</li>
+					<li class="mui-table-view-cell">
+						<a id="qr" class="mui-icon iconfont icon-erweima">
+						扫一扫
+						</a>
+					</li>
+					<li class="mui-table-view-divider">登录设置</li>
+					<li class="mui-table-view-cell">
+						自动登录
+						<div id="autoLogin" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+					<li class="mui-table-view-divider">升级设置</li>
+					<li id="dqbb" class="mui-table-view-cell">
+						当前版本：						
+					</li>
+					<li class="mui-table-view-cell">
+						自动侦测升级
+						<div id="zdzcsj" class="mui-switch">
+							<div class="mui-switch-handle"></div>
+						</div>
+					</li>
+					<li id="jcxbb" class="mui-table-view-cell">
+						检查新版本						
+					</li>
+					<li class="mui-table-view-divider">&nbsp;</li>
+					<li class="mui-table-view-cell" style="text-align: center;">
+						<a id='exit'>退出</a>
+					</li>
+				</ul>
+			</form>
+		
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js" ></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui.plusReady(function() {
+				//获取传值
+				var self = plus.webview.currentWebview();			
+				mobile = self.mobile;
+				curWebId=self.id;
+				//alert(curWebId);
+				
+				var autoLogin = document.getElementById("autoLogin");
+				var zdzcsj = document.getElementById("zdzcsj");
+				var jcxbb = document.getElementById("jcxbb");
+				var wdzh = document.getElementById("wdzh");
+				var exit =document.getElementById('exit');
+				var qr =document.getElementById('qr');
+				var dqbb =document.getElementById('dqbb');
+				
+				//自动登录
+				var foo = plus.storage.getItem("autoLoginState");
+				if (foo=="true") {
+					autoLogin.classList.add("mui-active");
+				} else{
+					autoLogin.classList.remove("mui-active");
+				}
+				var isActive = autoLogin.classList.contains("mui-active");
+				autoLogin.addEventListener("toggle",function(event){
+					if(event.detail.isActive){
+						plus.storage.setItem("autoLoginState","true");
+					}else{
+						plus.storage.setItem("autoLoginState","false");
+					}
+				});
+				
+				//自动侦测升级
+				var zdzcsjState = plus.storage.getItem("zdzcsjState");
+				if (zdzcsjState=="true") {
+					zdzcsj.classList.add("mui-active");
+				} else{
+					zdzcsj.classList.remove("mui-active");
+				}
+				
+				//var zdzcsjActive = zdzcsj.classList.contains("mui-active");
+				zdzcsj.addEventListener("toggle",function(event){
+					var zdzcsjActive = zdzcsj.classList.contains("mui-active");					
+					if(zdzcsjActive){						
+						plus.storage.setItem("zdzcsjState","true");
+					}else{						
+						plus.storage.setItem("zdzcsjState","false");
+					}
+					
+				});
+				
+				//检查新版本
+				//检测服务器是否有新版本
+				var thisversion=plus.runtime.version;
+				dqbb.innerText="当前版本："+thisversion;
+				cvz="";	//用于存放compareVersion函数的判断结果
+				//比较版本大小，如果新版本nv大于旧版本ov则cvz=true，否则cvz=false
+				function compareVersion( ov, nv ){
+					if ( !ov || !nv || ov=="" || nv=="" ){
+						cvz="false";
+						return false;
+					}
+					var b=false,
+					ova = ov.split(".",4);
+					nva = nv.split(".",4);
+					for ( var i=0; i<ova.length&&i<nva.length; i++ ) {
+						var so=ova[i],no=parseInt(so),sn=nva[i],nn=parseInt(sn);
+						if ( nn>no || sn.length>so.length  ) {
+							cvz="true";
+							return true;
+						} else if ( nn<no ) {
+							cvz="false";
+							return false;
+						}
+					}
+					if ( nva.length>ova.length && 0==nv.indexOf(ov) ) {
+						cvz="true";
+						return true;
+					}
+				}
+				//改函数用于下载安装
+				var createDownload=function(DownUrl){
+					plus.nativeUI.showWaiting("下载中，请稍等...");
+					var dtask = plus.downloader.createDownload( DownUrl, {
+						timeout:180
+					}, function ( d, status ) {
+						plus.nativeUI.closeWaiting();
+						if ( status == 200 ) {
+							// 下载成功
+							var path = d.filename;
+							//console.log(d.filename);
+							//alert( "下载成功: " + path);
+							var btnArray = ['是', '否'];
+							mui.confirm('下载成功：'+path+'是否安装？', '同欣易送检', btnArray, function(e) {
+								if (e.index == 0) {
+									plus.runtime.install(path);  // 安装下载的apk文件
+								} else {
+									
+								}
+							});
+						} else {
+							//下载失败
+							alert( "下载失败: " + status );
+						}
+					});	
+					dtask.start();
+				};
+				
+				jcxbb.addEventListener("tap",function(event){
+					mui.ajax(url+'update.php',{
+						data:{
+							
+						},
+						dataType:'json',
+						type:'post',
+						timeout:10000,
+						success:function(data){	
+							var version=data.version;
+							var appurl=data.appurl;
+							compareVersion(thisversion,version);
+							if (cvz=="true") {
+								// 提示用户是否升级
+								plus.nativeUI.confirm( "有新版本"+version+"，是否更新？", function(i){
+									if ( 0==i.index ) {
+										//alert(appurl);
+										createDownload(appurl);
+										//plus.runtime.openURL(appurl);
+									} else {
+										
+									}
+								}, "同欣易送检", ["下载新版","取消"] );
+							}else{
+								alert("目前已经是最新版本！");
+							}
+						},
+						error:function(xhr,type,errorThrown){
+							//异常处理；
+							alert('ajax错误'+type);
+						}
+					});
+				});
+				
+				//我的账户点击事件
+				wdzh.addEventListener("tap",function(event){
+					mui.openWindow({
+						url: "my_setting_wdzh.html",
+						id: this.href,
+						styles: {
+							hardwareAccelerated:false
+						},
+						waiting:{
+							autoShow:false
+						},
+						extras:{							
+							mobile:mobile
+						}
+					});
+					return;
+				});
+				
+				//二维码扫一扫
+				qr.addEventListener("tap",function(event){		
+					mui.openWindow({
+						url: "../barcode_scan.html",
+						id: this.href,
+						waiting:{
+							autoShow:false
+						},
+						extras:{
+							
+						}
+					});
+					return;
+				});			
+				
+				//退出操作******************
+				exit.addEventListener('tap', function() {	
+					var btnArray = [
+						{
+							title: "确认关闭系统吗？"
+						}
+						];
+					plus.nativeUI.actionSheet({
+						cancel: "取消",
+						buttons: btnArray
+					}, function(event) {
+						var index = event.index;
+						switch (index) {							
+							case 1:
+								plus.runtime.quit();
+								break;
+						}
+					});
+				}, false);
+			});
+			
+			//二维码扫描成功的跳转页面
+			function open_qd(result){
+				var bool=result.indexOf("Qrqd.php");
+				if (bool>0) {
+					var str=result.split("?");
+					mui.openWindow({
+						url: "../attention_plus/attention_ewm.html",
+						id: this.href,
+						waiting:{
+							//等待框
+							autoShow:true,
+							title:'辛苦加载中...'
+						},
+						extras:{
+							//传值
+							str:str,
+							mobile:mobile
+						}
+					});
+					return;	
+				} else{
+					//alert("对不起，您扫的二维码不是本系统提供的二维码！");
+					mui.openWindow({
+						url: "../http.html",
+						id: this.href,
+						waiting:{
+							//等待框
+							autoShow:true,
+							title:'辛苦加载中...'
+						},
+						extras:{							
+							www:result
+						}
+					});
+					return;
+				}
+			}
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<style type="text/css">
+			.my_margin{
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			/****表格自适应css******/
+			/****大屏幕******/
+			body {
+				font-family: arial;
+			}
+			table {
+				border: 1px solid #ccc;
+				width: 93%;
+				
+				margin:0;
+				padding:0;
+				border-collapse: collapse;
+				border-spacing: 0;
+				margin: 0 auto;
+			}
+			table tr {
+				border: 1px solid #ddd;
+				padding: 5px;
+			}
+			table th, table td {
+				padding: 5px;
+				text-align: center;
+			}
+			table th {
+				text-transform: uppercase;
+				font-size: 14px;
+				letter-spacing: 1px;
+			}
+			/****大屏幕******/
+			/****小屏幕******/
+			@media screen and (max-width: 430px) {
+				table {
+					border: 0;
+				}
+				table thead {
+					display: none;
+				}
+				table tr {
+					margin-bottom: 0px;
+					display: block;
+					border-bottom: 2px solid #ddd;
+				}
+				table td {
+					display: block;
+					text-align: right;
+					font-size: 13px;
+					border-bottom: 1px dotted #ccc;
+				}
+				table td:last-child {
+					border-bottom: 0;
+				}
+				table td:before {
+					content: attr(data-label);
+					float: left;
+					text-transform: uppercase;
+					font-weight: bold;
+				}
+			}
+			/****小屏幕******/
+			.note{
+				max-width: 80%;
+				margin: 0 auto;
+			}
+			/****表格自适应css******/	
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">时间查询</h1>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a id="xmmc" class="mui-control-item mui-active" href="">
+						项目名称
+					</a>					
+				</div>
+			</div>
+			<div class="my_margin">
+				<form class="mui-input-group">					
+					<div class="mui-input-row">
+						<label>日期：</label>
+						<input id='rq' type="text" placeholder="起始日期" readonly="readonly">						
+					</div>	
+					
+				</form>				
+	        </div>
+	        <div class="mui-button-row">
+				<button id="qkong" type="button" class="mui-btn mui-btn-primary" disabled="disabled">清空</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button id="hzong" type="button" class="mui-btn mui-btn-primary" disabled="disabled">汇总</button>
+			</div>
+			
+			<table class="mui-input-group my_margintop10px">
+				<thead>
+					<tr>
+						<th>28天试件制作日期</th>
+						<th>同条件养护达600度试件制作日期</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td data-label="28天试件制作日期">无</td>
+						<td data-label="同条件养护达600度试件制作日期">无</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>		
+		<script src="../js/mui.min.js"></script>		
+		<script src="../js/service.js" ></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});		
+			mui.plusReady(function(){
+				//获取项目id、Name值
+				var self = plus.webview.currentWebview();
+				var CityName = self.CityName;
+				document.getElementById('xmmc').innerText=self.Name;								
+				
+				var rq=document.getElementById('rq');
+				var hzong=document.getElementById('hzong');
+				var qkong=document.getElementById('qkong');
+				
+				var today = new Date();
+				var hours=today.getHours();
+				var minutes=today.getMinutes();
+				var seconds=today.getSeconds();					
+				
+				rq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						rq.value=d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+						hzong.disabled=false;						
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});
+				});
+				
+				//汇总事件				
+				hzong.addEventListener('tap', function() {
+					qkong.disabled=false;
+					var rqvalue=rq.value;
+					var todaydate3=rqvalue+' '+hours+':'+minutes+':'+seconds;
+					var td=document.getElementsByTagName('td');
+					mui.ajax(TxtqUrl,{
+						data:{
+							mode:'getsum',
+							citycode:CityName,
+							date:todaydate3
+						},
+						dataType:'json',
+						type:'get',
+						timeout:10000,
+						success:function(data){
+							var success=data.success;
+							if (success='true') {
+								var Normal=data.Normal;	//标准养护日期
+								var Same=data.Same;	//同条件养护日期
+								var fgNormal=Normal.split(" ");
+								var fgSame=Same.split(" ");	
+								td[0].innerText=fgNormal[0];
+								td[1].innerText=fgSame[0];
+							} else{
+								var msg=data.msg;	//错误信息集
+								alert('获取失败：'+msg)
+							}
+						},
+						error:function(xhr,type,errorThrown){
+							//alert('ajax错误'+type);
+						}
+					});
+				});
+				
+				//清空事件
+				qkong.addEventListener('tap', function() {
+					rq.value='';					
+					var td=document.getElementsByTagName('td');
+					td[0].innerText='无';
+					td[1].innerText='无';				
+					hzong.disabled=true;
+					qkong.disabled=true;
+				});
+				
+			});
+		</script>
+		
+	</body>
+</html>

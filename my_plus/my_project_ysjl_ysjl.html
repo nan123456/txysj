@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />
+		<style type="text/css">
+			.mui-control-content {
+				bottom: 0px;
+			}
+			
+			.my_table {
+				float: left;
+				text-align: center;
+			}
+			
+			.my_th_weight {
+				font-weight: bold;
+			}
+			
+			.my_td_width30 {
+				width: 30%;
+			}
+			
+			.my_td_width40 {
+				width: 40%;
+			}
+			/*媒体查询，横屏效果*/
+			
+			@media only screen and (orientation:landscape) {
+				.mui-control-content {
+					bottom: 0px;
+				}
+			}
+			
+			.mui-popover {
+				height: 260px;
+			}
+			
+			#middlePopover {
+				min-width: 282px;
+				top: 15% !important;
+				margin-top: -150px;
+				left: 50% !important;
+				margin-left: -141px;
+			}
+			
+			#cdbzPopover {
+				min-width: 282px;
+				top: 15% !important;
+				margin-top: -150px;
+				left: 50% !important;
+				margin-left: -141px;
+			}
+			
+			.mui-popover .mui-popover-arrow {
+				display: none !important;
+			}
+			
+			#mydiv {
+				width: 320px;
+				height: 498px;
+				margin: auto;
+				border: 1px #C6C6C6 solid;
+				/*background-size: 100% 100%;*/
+				/*背景图片充满div*/
+			}
+			
+			#jp {
+				width: 320px;
+				height: 498px;
+				margin: auto;
+				/*border: 1px #C6C6C6 solid;
+				background-size: 100% 100%;*/
+				/*背景图片充满div*/
+			}
+			
+			.bzcd {
+				margin: 10px;
+				padding-bottom: 10px;
+				height: auto;
+				min-height: 80px;
+				border: 1px #C6C6C6 solid;
+			}
+			
+			.jobDescription {
+				margin: 10px;
+				padding-bottom: 10px;
+				height: auto;
+				min-height: 100px;
+				border: 1px #C6C6C6 solid;
+			}
+			
+			p {
+				font-size: 1em;
+				color: #000000;
+			}
+			
+			span {
+				margin-left: 15px;
+			}
+			
+			.myposition {
+				position: absolute;
+			}
+			
+			.out {
+				margin: 10px;
+				padding-bottom: 10px;
+				height: auto;
+				min-height: 60px;
+				border: 1px #C6C6C6 solid;
+			}
+			.span{
+				left: 90px;
+				top: 119px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id="my_popover" class="mui-icon mui-icon-bars mui-pull-right"></a>
+			<h1 id="refresh" class="mui-title">原始记录</h1>
+		</header>
+		<div class="mui-content">
+
+			<head class="mui-bar mui-bar-tab">
+				<div style="padding: 10px 10px;">
+					<div id="segmentedControl" class="mui-segmented-control">
+						<a id="a1" class="mui-control-item  mui-active" href="#item1">
+							基本信息
+						</a>
+						<a id="a2" class="mui-control-item" href="#item2">
+							测点布置
+						</a>
+						<a id="a3" class="mui-control-item" href="#item3">
+							实测实量
+						</a>
+						<a id="a" class="mui-control-item" href="#item4"  disabled="disabled">
+							统计分析
+						</a>
+					</div>
+					
+				</div>
+			</head>
+			<div class="mui-content" id="refreshContainer">
+				<!--基本信息  -->
+				<div id="item1" class="mui-control-content  mui-active">
+					<div id="myform" class="mui-content">
+						<form class=" mui-input-group">
+							<div class="mui-input-row">
+								<label>名称：</label>
+								<input type="text" id="mc" placeholder="名称">
+							</div>
+							<div class="mui-input-row">
+								<label>检查部位：</label>
+								<input type="text" id="jcbw" placeholder="检查部位">
+							</div>
+							<div class="mui-input-row">
+								<label>检查日期：</label>
+								<input type="text" id="jcrq" placeholder="检查日期">
+							</div>
+							<div class="mui-input-row">
+								<label>检查人员：</label>
+								<input type="text" id="jcry" placeholder="检查人员">
+							</div>
+						</form>
+						<form class=" mui-input-group" style="margin-top: 10px;">
+							<div class="mui-input-row">
+								<label>施工班组：</label>
+								<input type="text" id="sgbz" placeholder="施工班组">
+							</div>
+							<div class="mui-input-row">
+								<label>组长姓名：</label>
+								<input type="text" id="zzxm" placeholder="组长姓名">
+							</div>
+							<div class="mui-input-row">
+								<label>联系电话：</label>
+								<input type="text" id="lxdh" placeholder="联系电话">
+							</div>
+							<div class="mui-input-row">
+								<label>施工日期：</label>
+								<input type="date" id="sgrq" placeholder="施工日期">
+							</div>
+						</form>
+						<form class="mui-input-group">
+							<div class="jobDescription">
+								<p>工作描述：</p>
+								<input type="text" id="gzms" value="" placeholder="工作描述">
+							</div>
+							<div class="mui-button-row my_margintop10px">
+								<!--<button id="fjck" type="button" class="mui-btn mui-btn-primary">附件查看</button>-->
+								<button id="fjscxg" type="button" class="mui-btn mui-btn-primary">附件上传/修改</button>
+								<button id="save" type="button" class="mui-btn mui-btn-primary">保存</button>
+							</div>
+						</form>
+					</div>
+					<div id="uploader" class="my_none">
+						<div id="upload_camera">
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>附件上传：</label>
+									<input class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">
+								</div>
+								<div style="margin-top: -10px;padding-bottom: 1px;">
+									<ul id="history_yszp" class="dlist" style="text-align:left;">
+										<li id="empty_yszp" class="ditem-empty">无历史记录</li>
+									</ul>
+									<div class="mui-button-row">
+										<button id="clean_yszp" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('yszp');">清空记录</button>&nbsp;&nbsp;&nbsp;&nbsp;
+										<button id="yszp" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_yszp');">上传附件</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!--基本信息  -->
+
+				<!--测点布置  -->
+				<div id="item2" class="mui-control-content">
+					<div class="mui-content">
+						<div id="scroll" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								  <div id="jp">
+								        <img id="mydiv"></img>
+								    </div>
+								    <div class="bzcd" id="cd">
+									<p>可供布置的测点：</p>
+								    </div> 
+								<p></p>
+								<div class="mui-button-row">
+									<button id="xztp" type="button" class="mui-btn mui-btn-primary">测点分层</button>
+									<button id="qkbz" type="button" class="mui-btn mui-btn-primary">清空布置</button>
+									<button id="bcbz" type="button" class="mui-btn mui-btn-primary">保存布置</button>
+									<button id="yjbz" type="button" class="mui-btn mui-btn-primary">一键布置</button>
+								</div>
+								<div class="out">
+									操作：
+									<p id="out"></p>
+								</div>
+							</div>
+						</div>
+
+						<div id="cdbzPopover" class="mui-popover">
+							<div class="mui-popover-arrow"></div>
+							<h4 id="title" style="text-align: center;margin-top: 20px;">测点基本信息</h4>
+							<form class="mui-input-group" style="margin-top: 30px;">
+								<div class="mui-input-row">
+									<label> 编号：</label>
+									<input id="kbbhao" type="text" class="" placeholder="" readonly="readonly">
+								</div>
+								<div class="mui-input-row">
+									<label>类型：</label>
+									<input id="kbcdlx" type="text" class="" placeholder="" readonly="readonly">
+								</div>
+								<div class="mui-input-row">
+									<label>实测值：</label>
+									<input id="kbscz" type="text" class="mui-input-clear" placeholder="请输入">
+								</div>
+							</form>
+							<div class="mui-button-row my_margintop10px">
+								<button id="kbgbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+								<button id="kbqding" type="button" class="mui-btn mui-btn-primary">确定</button>
+							</div>
+						</div>
+						<!--区域滚动  -->
+					</div>
+					<!--区域滚动  -->
+
+				</div>
+				<!--测点布置  -->
+
+				<!--实量实测  -->
+				<div id="item3" class="mui-control-content">
+					<!--区域滚动  -->
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell my_th_weight mui-disabled">
+									<div class="my_table my_td_width30">编号</div>
+									<div class="my_table my_td_width40">测点类型</div>
+									<div class="my_table my_td_width30">实测值</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!--区域滚动  -->
+					<div id="middlePopover" class="mui-popover">
+						<div class="mui-popover-arrow"></div>
+						<h4 id="title" style="text-align: center;margin-top: 20px;">实测值输入</h4>
+						<form class="mui-input-group" style="margin-top: 30px;">
+							<div class="mui-input-row">
+								<label> 编号：</label>
+								<input id="bhao" type="text" class="" placeholder="" readonly="readonly">
+							</div>
+							<div class="mui-input-row">
+								<label>类型：</label>
+								<input id="cdlx" type="text" class="" placeholder="" readonly="readonly">
+							</div>
+							<div class="mui-input-row">
+								<label>实测值：</label>
+								<input id="scz" type="text" class="mui-input-clear" placeholder="请输入">
+							</div>
+						</form>
+						<div class="mui-button-row my_margintop10px">
+							<button id="scgbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+							<button id="scqding" type="button" class="mui-btn mui-btn-primary">确定</button>
+							<!--<button id="plsr" type="button" class="mui-btn mui-btn-primary">批量</button>-->
+						</div>
+
+					</div>
+				</div>
+				<!--统计分析(待开发)-->
+				<!--<div id="item4" class="mui-control-content">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul id="tjfx" class="mui-table-view">
+								<li class="mui-table-view-cell my_th_weight mui-disabled">
+									<div class="my_table my_td_width30">编号</div>
+									<div class="my_table my_td_width40">测点类型</div>
+									<div class="my_table my_td_width30">合格率</div>
+								</li>
+								<li class="mui-table-view-cell my_th_weight mui-disabled">
+									<div class="my_table my_td_width30">综合统计</div>
+									<div class="my_table my_td_width40">----</div>
+									<div id="zhtj" class="my_table my_td_width30"></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>-->
+			</div>
+			<!--实量实测  -->
+		</div>
+		<div id="output">
+			<!--Camera管理摄像头设备，可用于拍摄照片、录制视频文件。      -->
+		</div>
+	</body>
+	<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/common.js"></script>
+	<script src="../js/immersed.js"></script>
+	<script src="../js/service.js"></script>
+	<script src="../js/my_ysjl.js"></script>  
+	<script src="../js/html2canvas.js"></script>  
+    <script src="../js/canvas2image.js"></script> 
+    <script src="../js/share.js"></script> 
+	<!--<script src="../js/setPullToRefresh.js"></script>-->
+    <script type="text/javascript">			
+        //长按保存截图并分享到微信
+        mydiv.addEventListener('longtap',function(){
+        	//获取像素PixelRatio
+		    var getPixelRatio = function(context){
+			var backingStore = context.backingStorePixelRatio||context.webkitBackingStorePixelRatio||context.mozBackingStorePixelRatio||context.msBackingStorePixelRatio||context.oBackingStorePixelRatio||context.backingStorePixelRatio||1;
+			return (window.devicePixelRatio||1)/backingStore;
+		}
+            var width = 360,  // 获取(原生）dom 宽度
+                height = 498, // 获取(原生）dom 高
+                offsetTop = 100,  //元素距离顶部的偏移量
+                canvas = document.createElement('canvas'), //创建canvas 对象
+                context = canvas.getContext('2d'),  //创建画布        
+                scaleBy = getPixelRatio(context); //获取像素密度的方法 (也可以采用自定义缩放比例)
+//              console.log(offsetTop)
+            canvas.width = width * scaleBy;   //这里 由于绘制的dom 为固定宽度，居中，所以没有偏移
+            canvas.height = (height + offsetTop) * scaleBy;  // 注意高度问题，由于顶部有个距离所以要加上顶部的距离，解决图像高度偏移问题
+            canvas.style.width = (width * scaleBy)+'px';
+            canvas.style.height = ((height + offsetTop) * scaleBy)+'px';      
+            context.scale(scaleBy, scaleBy); //放大画布 
+            var opts = { 
+                    allowTaint:true,//允许加载跨域的图片
+                    tainttest:true, //检测每张图片都已经加载完成
+                    scale:scaleBy, // 添加的scale 参数
+                    canvas:canvas, //自定义 canvas
+                    logging: true, //日志开关，发布的时候记得改成false
+                    width:width, //dom 原始宽度
+                    height:height //dom 原始高度
+                };
+            var img;
+            var a = [
+                {title:"分享"},
+                {title:"保存"}
+            ];
+        	plus.nativeUI.actionSheet({
+        		cancel :"取消",
+        		buttons	: a
+        	},function(e){
+        		var index = e.index;
+        		switch(index){ 
+        			case 0: 
+        			break;
+        			//分享到微信
+        			case 1:       
+                    html2canvas(jp,opts).then(function (canvas) {                           
+                            canvas.style.width = width+'px';
+                            canvas.style.height = (height + offsetTop)+'px'; 
+                            console.log(canvas.style.width+" "+canvas.style.height); 
+                            var imgjpeg = Canvas2Image.convertToJPEG(canvas,canvas.width,canvas.height);
+                            img = imgjpeg.src;                            
+                            console.log(img);                                      
+                    	mui.ajax(url+'my_plus/my_project_base64.php',{
+                     	    data:{  
+                     		    img:img,
+                     		    flag:1
+                     	    },
+                     	    dataType:'json',
+                     	    type:'post',
+                     	    timeout:1000,
+                     	    success:function(data){
+//                   	    	alert(data);
+                               //下载到本地
+                               function createDownload(){
+	                                var dtask = plus.downloader.createDownload(url+data.result,{},function(d,status){
+		                                if ( status == 200 ){
+//			                                alert( "Download success: " + d.filename ); 
+                                            shareimg(window,d.filename);//分享到微信
+		                                    }else {
+			                                    alert( "分享失败: " + status ); 
+		                                    }   
+	                                    });
+	                                //dtask.addEventListener( "statechanged", onStateChanged, false );
+	                                dtask.start(); 
+                                }createDownload();                    		    
+                     	    },
+                     	    error: function(xhr, type, errorThrown) {
+				            //异常处理；
+				                    alert('ajax错误'+type); 
+//				                    return callback('ajax错误' + type + errorThrown);
+			                }
+                        })
+                    }); 
+                    break; 
+        		    //保存到相册 
+        		    case 2: 
+        		    html2canvas(jp,opts).then(function (canvas){                    
+                            canvas.style.width = width+'px';
+                            canvas.style.height = (height + offsetTop)+'px'; 
+                            console.log(canvas.style.width+" "+canvas.style.height); 
+                            var imgjpeg = Canvas2Image.convertToJPEG(canvas,canvas.width,canvas.height);                                                
+	                        img = imgjpeg.src;  
+	                        console.log(img);   
+                    	    mui.ajax(url+'my_plus/my_project_base64.php',{
+                     	        data:{
+                     		        img:img,
+                     		        flag:0
+                     	        },
+                     	        dataType:'json',
+                     	        type:'post',
+                     	        timeout:1000,
+                     	        success:function(data){
+                     	        	console.log(data.result);
+                     		    function createDownload(){
+	                                var dtask = plus.downloader.createDownload(url+data.result,{},function(d,status){
+		                            // 下载完成
+		                                if ( status == 200 ){
+//			                                alert( "Download success: " + d.filename );
+			                                plus.gallery.save(d.filename, function(){
+			                                alert('保存成功');       
+		                                    }, function(e){
+			                                        outSet('保存失败: '+JSON.stringify(e));
+		                                        });
+		                                    }else {
+			                                    alert( "保存失败: " + status ); 
+		                                    }   
+	                                    });
+	                                //dtask.addEventListener( "statechanged", onStateChanged, false );
+	                                dtask.start(); 
+                                }createDownload();           
+                     	        },
+                     	        error: function(xhr, type, errorThrown) {
+				                            //异常处理；
+				                            alert('ajax错误'+type); 
+//				                             return callback('ajax错误' + type + errorThrown);
+			                            }
+                                })
+                        });
+                    break;
+                }
+        	})
+        });
+		mui.init({
+//				preloadPages:[
+//				    {
+//				      url:'division_details.html',
+//				      id:'list'
+//				    } 
+//				],
+				gestureConfig:{					
+					longtap: true, //长按默认为false
+					doubletap: true
+				}
+			});
+			mui.plusReady(function(){
+				var	refresh = document.getElementById("refresh");
+			//监听标题栏的双击事件(刷新页面)
+			refresh.addEventListener('doubletap',function () {
+				window.location.reload();
+			});
+			});
+		</script>
+</html>

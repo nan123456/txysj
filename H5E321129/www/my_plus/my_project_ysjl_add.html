@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/iconfont.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.mui-control-content {
+				top: 0px;				
+				bottom: 51px;	
+				height:460px;	
+			}
+			#mydiv{
+				height: auto;
+				white-space:normal;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">资料知识</h1>
+		</header>
+		<div class="mui-content">
+			<!--<div style="padding: 10px 10px;">-->
+				<!--<div id="segmentedControl" class="mui-segmented-control">-->
+					<!--<a class="mui-control-item mui-active" href="#item1">
+						资料 知识
+					</a>-->
+					<!--<a id="divZlzs" class="mui-control-item" href="#item2">
+						资料知识
+					</a>--> 
+					
+				<!--</div>-->
+			<!--</div>-->
+			<div>				
+				<div id="item1" class="mui-control-content mui-active">
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view mui-grid-view mui-grid-9  my_list">								
+							</ul>
+						</div>						
+					</div>
+				</div>				
+				<div id="item2" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view mui-grid-view mui-grid-9 my_list">
+								
+							</ul>							
+						</div>
+					</div>				
+				</div>
+			</div>	
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>	
+	<script>
+		mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+		//区域滚动,需手动初始化scroll控件
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});		
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			var mobile = self.mobile;
+			var uid = self.uid;
+//			alert(uid);
+			
+			//判断积分是否大于等于100，是否有查看资料知识的权限
+			var judgementJfen=function(jfen){
+				var divZlzs=document.getElementById("divZlzs");
+				if (jfen<100) {
+					divZlzs.addEventListener("tap",function (e) {
+						alert("对不起，您的积分小于100，无查看资料知识的权限,若有疑问,请联系同欣客服。")
+						//取消事件的进一步捕获或者冒泡，e的bubbles属性为true时可用stopPropagation（）
+						e.stopPropagation();
+					});
+				}
+			};
+			
+			//获取用户积分
+			mui.ajax(url+'adminphp/pc_jflb.php',{
+				data:{
+					sqlflag:'app_select',
+					mobile:mobile
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+					var jfen=data[0].积分;					
+					judgementJfen(jfen);
+				},
+				error:function(xhr,type,errorThrown){
+					alert('ajax错误'+type+'---'+errorThrown);
+				}
+			});
+			
+			//列表链接事件监听
+			var aniShow = "pop-in";
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version)<4.4){
+					aniShow = "slide-in-right";
+				}
+			}
+			mui('.my_list').on('tap', 'a', function() {
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var sjzslx = this.getAttribute("id");
+				//alert(hdsjc);
+				var webview_style = {
+					popGesture: "close"
+				};
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					styles: webview_style,
+					extras:{						
+						sjzslx:sjzslx,
+						mobile:mobile,
+						uid:uid
+					},
+					show: {
+						//autoShow:false,
+						aniShow: aniShow
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			});
+			
+			//资料知识类型创建函数
+			var cerZllx=function (len,arrStr) {	
+				var ul=document.getElementsByTagName("ul"),
+					html="",
+					encodArrSte="",
+					i=0;				
+				for ( i;i<len;i++) {
+					encodArrSte=encodeURI(arrStr[i]);
+					html=html+'<li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3"><a id="'+encodArrSte+'" open-type="common" href="my_project_ysjl_list.html"><img src="../images/jdjg.png" height="50px"><div id="mydiv" class="mui-media-body">'+arrStr[i]+'</div></a></li>'
+				}
+				ul[0].innerHTML=html;				
+			};
+			
+			//加载资料知识
+			mui.ajax(url+'adminphp/pc_zlzslx.php',{
+				data:{
+					sqlflag:'selectall'
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+//					alert(data);
+					var length=data.length;
+					var row=length-1,
+						arrStr=[],
+						$zlzslx="",
+						i=0;
+					for (i;i<row;i++) {
+						$zlzslx=data[i].资料知识类型;
+						arrStr.push($zlzslx);
+//						alert(arrStr);
+					}
+					cerZllx(row,arrStr);
+				},
+				error:function(xhr,type,errorThrown){
+					alert('ajax错误'+type+'---'+errorThrown);
+				}
+			});
+			
+			
+		});
+	</script>
+	<script src="js/setPullToRefresh.js" ></script>
+</html>

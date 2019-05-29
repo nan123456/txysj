@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/iconfont.css">
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			#mydiv{
+				height: auto;
+				white-space:normal;			
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">			
+			<ul class="mui-table-view mui-grid-view mui-grid-9  my_list">
+				
+		    </ul>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			mobile = self.mobile;
+			hblx = self.hdsjc;
+			hblx=decodeURI(hblx);
+			//alert(hblx);
+			var h1=document.getElementsByTagName("h1");
+			h1[0].innerText=hblx;
+			
+			//创建伙伴函数
+			var CreHBList=function(sjc,mc,wz){
+				//alert(mc.length);
+				if (mc.length>4) {
+					
+				}
+				var encodemc=encodeURI(mc);
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell mui-media mui-col-xs-4 ";
+				li.innerHTML='<a id="'+sjc+'" for="'+wz+'" mc="'+mc+'"><span class="mui-icon iconfont">&#xe61d;</span><div id="mydiv" class="mui-media-body">'+mc+'</div></a>';
+				ul[0].appendChild(li);
+			};	
+			//CreHBList('sjc','电子科技大学中山学院','wz');
+			
+			//加载伙伴
+			mui.ajax(url+'adminphp/pc_hblb.php',{
+					data:{
+						sqlflag:'app_selectall',
+						hblx:hblx,
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;						
+						for (var i=0;i<row;i++) {
+							var sjc=data[i].时间戳;
+							var mc=data[i].名称;
+							var wz=data[i].网址;							
+							CreHBList(sjc,mc,wz);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+				
+			//列表链接事件监听
+			var aniShow = "pop-in";
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version)<4.4){
+					aniShow = "slide-in-right";
+				}
+			}
+			mui('.my_list').on('tap', 'a', function() {				
+				var sjc = this.getAttribute("id");
+				var wz = this.getAttribute("for");
+				var mc = this.getAttribute("mc");
+				//alert(hdsjc);
+				var webview_style = {
+					popGesture: "close"
+				};
+				mui.openWindow({
+					id: wz,
+					url: "attention_wzck.html",
+					styles: webview_style,
+					extras:{						
+						wz:wz,
+						mc:mc
+					},
+					show: {
+						autoShow:false,
+						aniShow: aniShow
+					},
+					waiting: {
+						autoShow: true,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			});
+		
+		});
+	</script>
+	<script src="../js/setPullToRefresh.js" ></script>
+</html>

@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style type="text/css">
+			.mui-control-content {				
+				bottom: 0px;	
+			}			
+			/*媒体查询，横屏效果*/
+			@media only screen and (orientation:landscape ) {
+				.mui-control-content {
+					bottom: 0px;
+					}			
+			}
+			html,body {
+				background-color: #efeff4;
+			}			
+			 .oa-contact-cell.mui-table .mui-table-cell {
+				padding: 11px 0;
+				vertical-align: middle;
+			}
+			
+			.oa-contact-cell {
+				position: relative;
+				margin: -11px 0;
+			}
+	
+			.oa-contact-avatar {
+				width: 75px;
+			}
+			.oa-contact-avatar img {
+				border-radius: 50%;
+			}
+			.oa-contact-content {
+				width: 100%;
+			}
+			.oa-contact-name {
+				margin-right: 20px;
+			}
+			.oa-contact-name, oa-contact-position {
+				float: left;
+			}
+			
+			.mui-popover {
+				height: 290px;
+			}
+			#zuyPopover{
+				min-width: 282px;				
+				top:15% !important;
+				margin-top: -150px;
+				left: 50% !important;
+				margin-left: -141px;
+			}
+			#zybjPopover{
+				min-width: 282px;				
+				top:15% !important;
+				margin-top: -150px;
+				left: 50% !important;
+				margin-left: -141px;
+			}			
+			.mui-popover .mui-popover-arrow{
+				display: none !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id="my_popover" class="mui-icon mui-icon-bars mui-pull-right"></a>
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						任务（0）
+					</a>
+					<a class="mui-control-item" href="#item2">
+						回复（0）
+					</a>
+					<a class="mui-control-item" href="#item3">
+						组员（0）
+					</a>
+				</div>
+			</div>
+			<div>
+				<!--任务 -->
+				<div id="item1" class="mui-control-content mui-active">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll rwdiv">
+									
+						</div>						
+					</div>
+				</div>
+				<!--任务 -->
+				<!--回复 -->
+				<div id="item2" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							
+						</div>
+					</div>				
+				</div>
+				<!--回复 -->
+				<!--组员-->
+				<div id="item3" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view zy">
+								
+							</ul>
+						</div>
+					</div>
+					
+					<div id="zuyPopover" class="mui-popover">
+	        		<div class="mui-popover-arrow"></div>	        		
+	        		<h4 id="title" style="text-align: center;margin-top: 20px;">组员添加</h4>
+	        		<form class="mui-input-group" style="margin-top: 30px;">
+	        			<div class="mui-input-row">
+	        				<label>姓名：</label>
+	        				<input id="xming" type="text" class="" placeholder="姓名">
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>职务：</label>
+	        				<select id="zwu">
+	        					<option disabled="disabled" value ="" selected="selected"></option>	
+	        				</select>	        				
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>手机：</label>
+	        				<input id="sji" type="text" class="mui-input-clear" placeholder="手机">
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>邮箱：</label>
+	        				<input id="yxiang" type="text" class="mui-input-clear" placeholder="邮箱">
+	        			</div>	        			
+	        		</form>
+					<div class="mui-button-row my_margintop10px">
+						<button id="zygbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button id="zyqding" type="button" class="mui-btn mui-btn-primary">确定</button>
+					</div>
+				</div>
+				
+				<div id="zybjPopover" class="mui-popover">
+	        		<div class="mui-popover-arrow"></div>	        		
+	        		<h4 id="title" style="text-align: center;margin-top: 20px;">组员编辑</h4>
+	        		<form class="mui-input-group" style="margin-top: 30px;">
+	        			<div class="mui-input-row">
+	        				<label>时间戳：</label>
+	        				<input id="bjsjc" type="text" class="" placeholder="bcsjc">
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>姓名：</label>
+	        				<input id="bjxm" type="text" class="" placeholder="姓名">
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>职务：</label>
+	        				<input id="bjzw" type="text" class="" placeholder="职务">
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>手机：</label>
+	        				<input id="bjsj" type="text" class="mui-input-clear" placeholder="手机">
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>邮箱：</label>
+	        				<input id="bjyx" type="text" class="mui-input-clear" placeholder="邮箱">
+	        			</div>	        			
+	        		</form>
+					<div class="mui-button-row my_margintop10px">
+						<button id="bjgb" type="button" class="mui-btn mui-btn-primary">关闭</button>
+						<button id="bjsc" type="button" class="mui-btn mui-btn-primary">删除组员</button>						
+						<button id="bjqd" type="button" class="mui-btn mui-btn-primary">保存</button>
+					</div>
+				</div>
+				
+				
+				</div>
+				<!--组员-->
+			</div>			
+		</div>		
+		<script src="../js/mui.min.js"></script>	
+		<script src="../js/service.js" ></script>
+		<script type="text/javascript" src="../js/common.js"></script>
+		<script type="text/javascript" src="../js/immersed.js" ></script>
+		
+		<script>		
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+				gestureConfig:{					
+					doubletap: true, //默认为false
+					longtap: true, //默认为false
+					
+					}
+			});	
+			
+			//区域滚动,需手动初始化scroll控件
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			(function($) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});					
+			})(mui);			
+			
+			//获取url参数值
+			function geturl(name){
+				var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r!=null)return  unescape(r[2]);
+				return null;
+			}
+			ProjectId=geturl("ProjectId");
+			mobile=geturl("mobile");
+			//项目名称是汉字，进行解码			
+			var xmmc=geturl("xmmc");
+			xmmc=decodeURI(xmmc);
+			
+			var CityName=geturl("CityName");
+			var TypeName=geturl("TypeName");			
+			CityName=decodeURI(CityName);
+			TypeName=decodeURI(TypeName);
+			//标题
+			var h1=document.getElementsByTagName('h1');
+			h1[0].firstChild.nodeValue=xmmc;			
+			
+			mui.plusReady(function(){
+				var item=document.getElementsByClassName('mui-control-item');
+				var content=document.getElementsByClassName('mui-control-content');
+				//组员添加表单
+				var xming=document.getElementById('xming');
+				var zwu=document.getElementById('zwu');
+				var sji=document.getElementById('sji');
+				var yxiang=document.getElementById('yxiang');			
+				var zygbi=document.getElementById('zygbi');
+				var zyqding=document.getElementById('zyqding');
+				
+				var my_popover=document.getElementById('my_popover');
+				
+				var bjsjc=document.getElementById('bjsjc');
+				var bjxm=document.getElementById('bjxm');
+				var bjzw=document.getElementById('bjzw');
+				var bjsj=document.getElementById('bjsj');
+				var bjyx=document.getElementById('bjyx');
+				var select=document.getElementsByTagName('select');
+								
+				//创建组员列表函数
+				var createpeoplelist=function(zysjc,zyxm,zyzu,zysj,zyyx){					
+					var zy=document.getElementsByClassName('zy');					
+					var li = document.createElement("li");
+					li.className="mui-table-view-cell";
+					li.id=zysjc;
+					li.innerHTML='<div class="mui-slider-cell"><div class="oa-contact-cell mui-table"><div class="oa-contact-avatar mui-table-cell"><img class="mui-media-object mui-pull-left" src="../images/user-photo.png" /></div><div class="oa-contact-content mui-table-cell"><div class="mui-clearfix"><h4 class="oa-contact-name">'+zyxm+'</h4><span class="oa-contact-position mui-h6">'+zyzu+'</span></div><p class="oa-contact-email mui-h6">'+zysj+'-----'+zyyx+'</p></div></div></div>';
+					zy[0].appendChild(li);					
+				};
+				//createpeoplelist('zyxm','zyzu','zysj','zyyx');
+				createpeoplelist('','同欣客服1','','18988583168','无');
+				createpeoplelist('','同欣客服2','','18988583166','无');
+				createpeoplelist('','同欣客服3','','18988583163','无');
+				
+				//动态组员列表
+				mui.ajax(url+'my_team/zuyuan_du.php',{
+					data:{
+						xmid:ProjectId
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;						
+						if (length>1) {		
+							item[2].firstChild.nodeValue="组员（"+data[length-1].count+"）";
+							for (var i=0;i<length-1;i++) {
+								var zysjc=data[i].时间戳;
+								var zyxm=data[i].姓名;
+								var zyzu=data[i].职务;
+								var zysj=data[i].手机;
+								var zyyx=data[i].邮箱;
+								createpeoplelist(zysjc,zyxm,zyzu,zysj,zyyx);
+							}
+						} else{
+							createpeoplelist('---','---','---','---','---');
+							alert('该项目未添加组员，请添加！');
+							//模拟点击“组员”选项卡
+							item[0].classList.remove('mui-active');
+							content[0].classList.remove('mui-active');
+							item[1].classList.remove('mui-active');
+							content[1].classList.remove('mui-active');
+							item[2].classList.add('mui-active');
+							content[2].classList.add('mui-active');
+						}
+						
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+				//组员列表监听
+				mui('.mui-table-view').on('longtap', 'li', function() {
+					var thisid=this.id;
+					if (thisid) {
+						dcthisid=document.getElementById(thisid);
+						var btnArray = ['是', '否'];
+						mui.confirm('确定删除该组员吗？', '同欣易送检', btnArray, function(e) {
+							if (e.index == 0) {
+								dcthisid.remove();
+								var zycount=item[2].innerText.replace(/[^0-9]/ig,"");
+								zycount=zycount-1;
+								item[2].firstChild.nodeValue="组员（"+zycount+"）";
+								
+								mui.ajax(url+'my_team/zysc.php',{
+									data:{
+										sjc:thisid
+									},
+									dataType:'json',
+									type:'post',
+									timeout:10000,
+									success:function(data){
+										if (data.result=="success") {
+											plus.nativeUI.toast('删除成功！');
+										}else{
+											plus.nativeUI.toast('删除失败！');
+										}
+									},
+									error:function(xhr,type,errorThrown){
+										//异常处理；
+										alert('ajax错误'+type);
+									}
+								});
+							} else {
+								
+							}
+						});
+					}
+					
+					//bjsjc.value=this.id;
+					//bjxm.value=this.childNodes[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].innerText;	//姓名
+					//bjzw.value=this.childNodes[0].childNodes[0].childNodes[1].childNodes[0].childNodes[1].innerText;	//职务
+					//var sjyx=this.childNodes[0].childNodes[0].childNodes[1].childNodes[1].innerText;
+					//var fgsjyx=sjyx.split("-----");
+					//bjsj.value=fgsjyx[0];	//手机
+					//bjyx.value=fgsjyx[1];	//邮箱
+				
+					//mui("#zybjPopover").popover("toggle");
+				});
+				
+				//创建任务列表函数
+				var createrwlist=function(rwid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx) {
+					var ziduan1=rwmc+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+xjrq;
+					var ziduan2="类别："+rwlb;
+					var ziduan3="部位："+rwbw;
+					var ziduan4="创建人+接收人："+rwcjr+"+"+rwjsr;
+					var ziduan5="截止日期："+jzrq;
+					var ziduan6="附件："+rwfj;
+					var muiscroll=document.getElementsByClassName('mui-scroll');
+					var ul = document.createElement("ul");
+					ul.id=rwid;
+					ul.className = "mui-table-view mui-card my_list my_marginbottom10px";
+					var color="";
+					if (rwzyx=='重要') {
+						color="my_backgroundcolor_red";
+					}else if (rwzyx=='次重要') {
+						color="my_backgroundcolor_orange";					
+					}else if (rwzyx=='一般') {
+						color="my_backgroundcolor_#00BFFF";
+					}else if (rwzyx=='无时限') {
+						color="my_backgroundcolor_green";
+					}else{
+						color="my_backgroundcolor_black";
+					}
+					
+					ul.innerHTML = '<li class="mui-table-view-cell '+color+' "><a  href="team_in_rwbj.html?rwid='+rwid+'&xmid='+ProjectId+'&mobile='+mobile+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan6+'</p></li><li class="mui-table-view-cell my_none"><p class="mui-ellipsis my_style1">'+rwzyx+'</p></li>';
+					muiscroll[0].appendChild(ul);	
+					
+				};				
+				//createrwlist();				
+				//创建任务列表
+				mui.ajax(url+'my_team/rwu_du.php',{
+					data:{
+						xmid:ProjectId
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;						
+						if (length>1) {		
+							item[0].firstChild.nodeValue="任务（"+data[length-1].count+"）";
+							for (var i=0;i<length-1;i++) {
+								var rwid=data[i].id;
+								var rwmc=data[i].任务名称;
+								var rwzyx=data[i].任务重要性;
+								var rwlb=data[i].任务类别;
+								var rwcjr=data[i].任务创建人;
+								var rwjsr=data[i].任务接收人;
+								var rwbw=data[i].部位;
+								var jzrq=data[i].截止日期;
+								var rwfj=data[i].任务附件;
+								var xjrq=data[i].新建日期;
+								var hfzt=data[i].回复状态;
+								if (hfzt=="已回复") {
+									rwzyx="已回复";
+								}
+								createrwlist(rwid,rwmc,xjrq,rwlb,rwbw,rwcjr,rwjsr,jzrq,rwfj,rwzyx);
+							}							
+							
+						} else{
+							createrwlist('','---','---','---','---','---','---','---','---','---');							
+						}
+						
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+				//创建回复列表函数
+				var createhflist=function(rwid,rwmc,hfcjrq,rwlb,rwbw,rwcjr,rwjsr,hfrq,hffj) {
+					var ziduan1=rwmc+"回复&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+hfcjrq;
+					var ziduan2="类别："+rwlb;
+					var ziduan3="部位："+rwbw;
+					var ziduan4="创建人+接收人："+rwcjr+"+"+rwjsr;
+					var ziduan5="回复日期："+hfrq;
+					var ziduan6="回复附件："+hffj;
+					var muiscroll=document.getElementsByClassName('mui-scroll');
+					var ul = document.createElement("ul");
+					ul.className = "mui-table-view mui-card my_list my_marginbottom10px";
+					ul.innerHTML = '<li class="mui-table-view-cell my_backgroundcolor_black"><a  href="team_in_hfbj.html?rwid='+rwid+'&xmid='+ProjectId+'&mobile='+mobile+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan6+'</p></li>';
+					muiscroll[1].appendChild(ul);
+				};				
+				
+				//创建回复列表
+				mui.ajax(url+'my_team/hfu_du.php',{
+					data:{
+						xmid:ProjectId
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;						
+						if (length>1) {		
+							item[1].firstChild.nodeValue="回复（"+data[length-1].count+"）";
+							for (var i=0;i<length-1;i++) {
+								var rwid=data[i].id;
+								var rwmc=data[i].任务名称;
+								var rwlb=data[i].任务类别;
+								var rwcjr=data[i].任务创建人;
+								var rwjsr=data[i].任务接收人;
+								var rwbw=data[i].部位;
+								var hfrq=data[i].回复日期;
+								var hffj=data[i].回复附件;
+								var hfcjrq=data[i].回复创建日期;
+								createhflist(rwid,rwmc,hfcjrq,rwlb,rwbw,rwcjr,rwjsr,hfrq,hffj);
+							}
+						} else{
+							createhflist('','---','---','---','---','---','---','---','---');							
+						}
+						
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+				var crezwulist=function(zwlx){					
+					var option=document.createElement('option');
+					option.value=zwlx;
+					option.text=zwlx;
+					select[0].appendChild(option);
+				};
+				//crezwulist(44);
+				mui.ajax(url+'adminphp/pc_zyzw.php',{
+					data:{
+						sqlflag:'app_select'
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							var zwlx=data[i].职务类型;
+							crezwulist(zwlx);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				////////////////////右上角操作
+				my_popover.addEventListener('tap', function() {
+					var btnArray = [
+					{title:"新建任务"},
+					{title:"任务回复"},
+					{title:"组员添加"},
+					{title:"项目组基本信息"}
+					
+					//{title:"相册"}
+					];
+					plus.nativeUI.actionSheet( {
+						title:"操作",
+						cancel:"取消",
+						buttons:btnArray
+					}, function(e){
+						var index = e.index;	
+						var nextpage='';
+						switch (index){
+							case 0:	//取消	
+								break;
+							case 1:	//任务新建								
+								nextpage='team_in_rwxj.html';								
+								break;
+							case 2:	//任务回复	
+								nextpage='team_in_rwhf.html';								
+								break;
+							case 3:	//组员添加
+								//模拟点击“组员”选项卡
+								item[0].classList.remove('mui-active');
+								content[0].classList.remove('mui-active');
+								item[1].classList.remove('mui-active');
+								content[1].classList.remove('mui-active');
+								item[2].classList.add('mui-active');
+								content[2].classList.add('mui-active');
+								
+								xming.value="";
+								zwu.value="";
+								sji.value="";
+								yxiang.value="";
+								mui("#zuyPopover").popover("toggle");
+								break;
+							case 4:	//项目组基本信息	
+								nextpage='team_in_xmzjbxx.html';
+								break;
+						}
+						mui.openWindow({
+							url: nextpage,
+							id: nextpage,
+							styles: {
+								hardwareAccelerated:false
+							},
+							extras:{
+								ProjectId:ProjectId,
+								xmmc:xmmc,
+								mobile:mobile,
+								CityName:CityName,
+								TypeName:TypeName
+								
+							},
+							show:{
+								autoShow:true,//页面loaded事件发生后自动显示
+								aniShow:'slide-in-right',//页面显示动画
+								duration:'100'//页面动画持续时间
+							},
+							waiting:{
+								autoShow:false,//自动显示等待框
+							},
+						});
+						
+					} );
+				});
+			
+				//新建任务后，刷新该页面
+				window.addEventListener('json',function(event){						
+					var wobj = plus.webview.currentWebview();					
+					wobj.reload(true);						
+				});
+				
+				//组员添加保存
+				zyqding.addEventListener('tap', function() {					
+					//当前时间戳
+					var myDate=new Date();
+					var mytime=myDate.getTime();
+					
+					var mydata = {
+							xmid:ProjectId,
+							xmmc:xmmc,
+							xming: xming.value,
+							zwu: zwu.value,
+							sji: sji.value,
+							yxiang: yxiang.value,							
+							zysjc: mytime
+						};
+					
+					zyajaxform(mydata, function(err) {
+						if (err) {
+							plus.nativeUI.toast(err);
+							return;
+						}
+						createpeoplelist(mytime,xming.value,zwu.value,sji.value,yxiang.value);
+						mui("#zuyPopover").popover("toggle");
+						plus.nativeUI.toast('保存成功');
+					});
+							
+				});
+				//组员添加框关闭
+				zygbi.addEventListener('tap', function() {
+					mui("#zuyPopover").popover("toggle");
+				});
+				
+				//利用native.js实习系统分享功能
+				var shares=null;
+				var Intent=null,File=null,Uri=null,main=null;
+				//加载android原生类，初始化
+				var android=function(){
+					main = plus.android.runtimeMainActivity();
+					Intent = plus.android.importClass("android.content.Intent");
+					File = plus.android.importClass("java.io.File");
+					Uri = plus.android.importClass("android.net.Uri");					
+				};
+				
+				//调用系统分享，打开所有手机中安装的可分享软件列表
+				var shareSystem=function (tex) {
+					if(plus.os.name!=="Android"){
+						plus.nativeUI.alert("此平台暂不支持系统分享功能!");
+						return;
+					}
+					var intent=new Intent(Intent.ACTION_SEND);
+					intent.setType("text/plain");
+					intent.putExtra(Intent.EXTRA_SUBJECT,"同欣易送检");
+					intent.putExtra(Intent.EXTRA_TEXT,tex);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					main.startActivity(Intent.createChooser(intent,"分享"));
+				};
+				
+				//任务列表长按事件监听
+				mui(".rwdiv").on('longtap', 'ul', function() {
+					var rwid=this.id;
+					var tex=this.childNodes[0].innerText;
+					tex=tex.split(/\s/g);	//分割字符串，分割空格
+					var rwmc=tex[0];
+					var sj=tex[tex.length-2];
+					var lb=this.childNodes[1].innerText.replace(/\s/g,'');	//去掉字符串里面的所有空格
+					var bw=this.childNodes[2].innerText.replace(/\s/g,'');
+					var cjjs=this.childNodes[3].innerText.replace(/\s/g,'');
+					var jzrq=this.childNodes[4].innerText.replace(/\s/g,'');
+					var fj=this.childNodes[5].innerText.replace(/\s/g,'');
+					var hfzt=this.childNodes[6].innerText.replace(/\s/g,'');
+					if (hfzt=="已回复") {						
+					} else{
+						hfzt="未回复";
+					}
+					var alltex="\n任务名称："+rwmc+"\n下发时间："+sj+"\n"+lb+"\n"+bw+"\n"+cjjs+"\n"+jzrq+"\n"+fj+"\n回复状态："+hfzt;
+					//alert(alltex);
+						var btnArray = [
+							{title:"回 复"},
+							{title:"分 享"}
+						];
+						plus.nativeUI.actionSheet( {
+							title:"操作",
+							cancel:"取消",
+							buttons:btnArray
+						}, function(e){
+							var index = e.index;							
+							switch (index){
+								case 0:	//取消
+									break;
+								case 1:	//回复
+									if (hfzt=="已回复") {
+										//已回复，回复编辑页面
+										mui.openWindow({
+											url: "team_in_hfbj.html?rwid="+rwid+"&xmid="+ProjectId+"&mobile="+mobile,
+											id: "team_in_hfbj.html",
+											extras:{												
+											},
+											show:{
+												autoShow:true,//页面loaded事件发生后自动显示
+												aniShow:'slide-in-right',//页面显示动画
+												duration:'100'//页面动画持续时间
+											},
+											waiting:{
+												autoShow:false,//自动显示等待框
+											},
+										});
+									} else{
+										//未回复，打开回复页面，自动填充数据
+										mui.openWindow({
+											url: "team_in_rwhf.html",
+											id: "team_in_rwhf.html",
+											extras:{
+												ProjectId:ProjectId,
+												xmmc:xmmc,
+												mobile:mobile,
+												rwname:rwmc
+											},
+											show:{
+												autoShow:true,//页面loaded事件发生后自动显示
+												aniShow:'slide-in-right',//页面显示动画
+												duration:'100'//页面动画持续时间
+											},
+											waiting:{
+												autoShow:false,//自动显示等待框
+											},
+										});
+									}
+									
+									break;
+								case 2:	//分享
+									android();
+									shareSystem(alltex);
+									break;
+							}
+						} );
+				
+					
+				});
+				
+				
+				
+			});
+			
+			//异步传值
+			var zyajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.xmid = mydata.xmid || '';
+				mydata.xmmc = mydata.xmmc || '';
+			
+				mydata.xming = mydata.xming || '';
+				mydata.zwu = mydata.zwu || '';
+				mydata.sji = mydata.sji || '';
+				mydata.yxiang = mydata.yxiang || '';
+				mydata.zysjc = mydata.zysjc || '';
+				
+				if (mydata.xming.length < 1) {
+					return callback('姓名不能为空！');
+				}
+				
+				mui.ajax(url+'my_team/zytj.php',{
+					data:{
+						xmid: mydata.xmid,
+						xmmc: mydata.xmmc,
+						xming: mydata.xming,
+						zwu: mydata.zwu,
+						sji: mydata.sji,
+						yxiang: mydata.yxiang,
+						zysjc: mydata.zysjc,
+					
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback('服务器返回error');	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};	
+				
+			
+		</script>			
+	</body>
+</html>

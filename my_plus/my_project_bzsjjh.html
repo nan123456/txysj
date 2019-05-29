@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style type="text/css">
+			.my_margin{
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			.mui-control-content {				
+				bottom: 0px;	
+			}
+			.mui-control-content {
+				height:420px;
+			}
+			/****表格自适应css******/
+			/****大屏幕******/
+			body {
+				font-family: arial;
+			}
+			table {
+				border: 1px solid #ccc;
+				width: 93%;
+				margin:0;
+				padding:0;
+				border-collapse: collapse;
+				border-spacing: 0;
+				margin: 0 auto;
+			}
+			table tr {
+				border: 1px solid #ddd;
+				padding: 5px;
+			}
+			table th, table td {
+				padding: 5px;
+				text-align: center;
+			}
+			table th {
+				text-transform: uppercase;
+				font-size: 14px;
+				letter-spacing: 1px;
+			}
+			/****大屏幕******/
+			/****小屏幕******/
+			@media screen and (max-width: 520px) {
+				table {
+					border: 0;
+				}
+				table thead {
+					display: none;
+				}
+				table tr {
+					margin-bottom: 0px;
+					display: block;
+					border-bottom: 2px solid #ddd;
+				}
+				table td {
+					display: block;
+					text-align: right;
+					font-size: 13px;
+					border-bottom: 1px dotted #ccc;
+				}
+				table td:last-child {
+					border-bottom: 0;
+				}
+				table td:before {
+					content: attr(data-label);
+					float: left;
+					text-transform: uppercase;
+					font-weight: bold;
+				}
+			}
+			/****小屏幕******/
+			.note{
+				max-width: 80%;
+				margin: 0 auto;
+			}
+			/****表格自适应css******/
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">本周送检计划</h1>
+		</header>
+		<div class="mui-content">			
+	        <div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a id="xmmc" class="mui-control-item mui-active" href="#item1">
+						项目名称
+					</a>					
+				</div>
+			</div>
+			
+			<div class="my_margin">
+				<form class="mui-input-group">					
+					<div class="mui-input-row">
+						<label>起始日期：</label>
+						<input id='qsrq' type="text" placeholder="起始日期" readonly="readonly">						
+					</div>	
+					<div class="mui-input-row">
+						<label>结束日期：</label>
+						<input id='jsrq' type="text" placeholder="结束日期" readonly="readonly">						
+					</div>
+				</form>				
+	        </div>
+			<div class="mui-button-row my_none">
+				<button id="qkong" type="button" class="mui-btn mui-btn-primary" disabled="disabled">清空</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button id="hzong" type="button" class="mui-btn mui-btn-primary" disabled="disabled">汇总</button>
+			</div>
+			
+			<div id="item1" class="mui-control-content mui-active my_margintop10px">
+				<div id="scroll" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<table class="mui-input-group">
+							<thead>
+								<tr>
+									<th>类型</th>
+									<th>部位</th>
+									<th>强度等级</th>
+									<th>施工日期</th>
+									<th>送检日期</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td data-label="类型">无</td>
+									<td data-label="部位">无</td>
+									<td data-label="强度等级">无</td>
+									<td data-label="施工日期">无</td>
+									<td data-label="送检日期">无</td>
+								</tr>								
+							</tbody>
+						</table>
+					</div>						
+				</div>
+			</div>
+			
+		</div>		
+		<script src="../js/mui.min.js"></script>		
+		<script src="../js/service.js" ></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+			//区域滚动,需手动初始化scroll控件
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			(function($) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});					
+			})(mui);
+			
+			mui.plusReady(function(){
+				//获取项目id、Name值
+				var self = plus.webview.currentWebview();
+				var xmid = self.xmid;
+				var xmmc = self.xmmc;				
+				var byxmmc=document.getElementById('xmmc');
+				byxmmc.innerText=xmmc;
+				
+				//today日期，如7月1日
+				var today = new Date();					
+				var year=today.getFullYear();				
+				var month=today.getMonth()+1;
+				var day=today.getDate();		
+				if (month<10) {
+					month='0'+month;
+				}
+				if (day<10) {
+					day='0'+day;
+				}
+				var todaydate2=year+'-'+month+'-'+day;	
+				//7天后日期，如7月7日
+				today.setDate(today.getDate()+6);
+				var endyear=today.getFullYear();				
+				var endmonth=today.getMonth()+1;
+				var endday=today.getDate();	
+				if (endmonth<10) {
+					endmonth='0'+endmonth;
+				}
+				if (endday<10) {
+					endday='0'+endday;
+				}
+				var endtodaydate2=endyear+'-'+endmonth+'-'+endday;		
+				
+				var qsrq=document.getElementById('qsrq');
+				var jsrq=document.getElementById('jsrq');				
+				
+				var hzong=document.getElementById('hzong');
+				var qkong=document.getElementById('qkong');	
+				
+				qsrq.value=todaydate2;
+				jsrq.value=endtodaydate2;
+				
+				/*
+				qsrq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						qsrq.value=d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+						if (qsrq.value&&jsrq.value) {
+							var gksrq=qsrq.value;
+							var gjsrq=jsrq.value;
+							var xgksrq = new Date(Date.parse(gksrq.replace(/-/g, "/")));
+							var xgksrq = xgksrq.getTime();
+							var xgjsrq = new Date(Date.parse(gjsrq.replace(/-/g, "/")));
+							var xgjsrq = xgjsrq.getTime();
+							if (xgjsrq>=xgksrq) {
+								hzong.disabled=false;
+							}
+						}
+						
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});
+				});
+				jsrq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						jsrq.value=d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+						if (qsrq.value&&jsrq.value) {
+							var gksrq=qsrq.value;
+							var gjsrq=jsrq.value;
+							var xgksrq = new Date(Date.parse(gksrq.replace(/-/g, "/")));
+							var xgksrq = xgksrq.getTime();
+							var xgjsrq = new Date(Date.parse(gjsrq.replace(/-/g, "/")));
+							var xgjsrq = xgjsrq.getTime();
+							if (xgjsrq>=xgksrq) {
+								hzong.disabled=false;
+							}
+						}
+						
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});
+				});
+				*/
+				
+				//创建送检的表格
+				var createtable=function(lxin,bwei,qddj,sgrq,sjrq) {			
+					
+					var tbody=document.getElementsByTagName('tbody');					
+					var tr = document.createElement("tr");
+					tr.innerHTML = '<td data-label="类型">'+lxin+'</td><td data-label="部位">'+bwei+'</td><td data-label="强度等级">&nbsp;'+qddj+'</td><td data-label="施工日期">'+sgrq+'</td><td data-label="送检日期">'+sjrq+'</td>';
+					tbody[0].appendChild(tr);
+				};
+				
+				//汇总事件				
+				hzong.addEventListener('tap', function() {	
+					qkong.disabled=false;
+					var qsrqvalue=qsrq.value;
+					var jsrqvalue=jsrq.value;
+					
+					mui.ajax(TxtqUrl,{
+						data:{
+							mode:'getplant',
+							begindate:qsrqvalue,
+							enddate:jsrqvalue,
+							projectid:xmid
+						},
+						dataType:'json',
+						type:'get',
+						timeout:10000,
+						success:function(data){							
+							//alert(data);		
+							//createtable('TypeName','PartName','Level','ConstructionDate','SendDate');							
+							var length=data.length;	
+							var tbody=document.getElementsByTagName('tbody');
+							if (length>0) {
+								tbody[0].innerHTML='';
+								for (var i=0;i<length;i++) {
+									var TypeName=data[i].TypeName;	//送检类型
+									var PartName=data[i].PartName;	//部位
+									var Level=data[i].Level;	//强度等级
+									var ConstructionDate=data[i].ConstructionDate;	//施工日期
+									var SendDate=data[i].SendDate;	//送检日期
+									createtable(TypeName,PartName,Level,ConstructionDate,SendDate);	
+								}
+							}else{
+								alert('该工程在本周无送检计划！');
+								tbody[0].innerHTML='';
+								var tr = document.createElement("tr");
+								tr.innerHTML = '<td data-label="类型">无</td><td data-label="部位">无</td><td data-label="强度等级">无</td><td data-label="施工日期">无</td><td data-label="送检日期">无</td>';
+								tbody[0].appendChild(tr);
+							}
+							
+						},
+						error:function(xhr,type,errorThrown){
+							//alert('ajax错误'+type);
+						}
+					});
+				});
+				
+				//清空事件
+				qkong.addEventListener('tap', function() {
+					qsrq.value='';
+					jsrq.value='';
+					var tbody=document.getElementsByTagName('tbody');
+					tbody[0].innerHTML='';
+					var tr = document.createElement("tr");
+					tr.innerHTML = '<td data-label="类型">无</td><td data-label="部位">无</td><td data-label="强度等级">无</td><td data-label="施工日期">无</td><td data-label="送检日期">无</td>';
+					tbody[0].appendChild(tr);
+				});
+				
+				mui.trigger(hzong,'tap');
+				
+			});
+		</script>
+		
+	</body>
+</html>

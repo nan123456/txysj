@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.my_color_red{
+				color: red;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">伙伴</h1>
+		</header>
+		<div class="mui-content">	
+			
+			<ul class="mui-table-view mui-grid-view mui-grid-9 my_list">
+				
+		    </ul> 
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>	
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			mobile = self.mobile;
+			
+			//创建伙伴函数
+			var CreHBList=function(hbsjc,hblx){
+				var encodehblx=encodeURI(hblx);
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3";
+				li.innerHTML='<a id="'+encodehblx+'" open-type="common" href="attention_hb_jc.html"><img class=" " src="../images/jcjg.png" height="50px"><div class="mui-media-body">'+hblx+'</div></a>';
+				ul[0].appendChild(li);
+			};	
+			
+			//加载伙伴
+			mui.ajax(url+'adminphp/pc_hblx.php',{
+					data:{
+						sqlflag:'select_all'						
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;
+						var flag=0;
+						for (var i=0;i<row;i++) {
+							var hdsjc=data[i].时间戳;
+							var hblx=data[i].伙伴类型;							
+							CreHBList(hdsjc,hblx);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+				
+				
+				//列表链接事件监听
+			var aniShow = "pop-in";
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version)<4.4){
+					aniShow = "slide-in-right";
+				}
+			}
+			mui('.my_list').on('tap', 'a', function() {
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var hdsjc = this.getAttribute("id");
+				//alert(hdsjc);
+				var webview_style = {
+					popGesture: "close",
+					hardwareAccelerated:false			
+				};
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					styles: webview_style,
+					extras:{
+						mobile:mobile,
+						hdsjc:hdsjc						
+					},
+					show: {
+						//autoShow:false,
+						aniShow: aniShow
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			});
+		
+		});
+	</script>
+	<script src="../js/setPullToRefresh.js" ></script>
+</html>

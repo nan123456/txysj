@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			p{
+				text-indent:2em;
+			}
+			.my_color_blue{
+				color:#0000FF;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">通告正文</h1>
+		</header>
+		<div class="mui-content">			
+			<div class="mui-content-padded">
+				<h4 id="zbt" style="margin-top:10px;"></h4>
+				<p id="tsdq" class="my_color_blue"></p>
+				<p id="fbt"></p>
+				<p id="tjsj"></p>				
+				<p id="tgnr"></p>					
+			</div>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			tgsjc = self.hdsjc;
+			
+			var zbt=document.getElementById("zbt");
+			var tsdq=document.getElementById("tsdq");			
+			var fbt=document.getElementById("fbt");
+			var tjsj=document.getElementById("tjsj");
+			var tgnr=document.getElementById("tgnr");		
+			
+			//获取通告内容			
+				mui.ajax(url+'adminphp/pc_tglb.php',{
+					data:{
+						sqlflag:'select',
+						sjc:tgsjc
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;						
+						for (var i=0;i<row;i++) {							
+							zbt.innerText=data[i].主标题;
+							tsdq.innerText=data[i].推送地区;
+							fbt.innerText=data[i].副标题;							
+							tjsj.innerText=data[i].添加时间;
+							tgnr.innerText=data[i].通告内容;
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});			
+			
+		});
+	</script>
+	<script src="../js/setPullToRefresh.js" ></script>
+</html>

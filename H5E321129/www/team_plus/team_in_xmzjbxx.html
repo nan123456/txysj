@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			p{
+				text-indent:2em;
+			}	
+			.mui-input-group {
+				margin-top: 10px;
+			}
+			
+			.mui-input-group:first-child {
+				margin-top: 20px;
+			}
+			
+			.mui-input-group label {
+				width: 22%;
+			}
+			
+			.mui-input-row label~input,
+			.mui-input-row label~select,
+			.mui-input-row label~textarea {
+				width: 78%;
+			}
+			
+			.mui-checkbox input[type=checkbox],
+			.mui-radio input[type=radio] {
+				top: 6px;
+			}
+			
+			.mui-content-padded {
+				margin-top: 25px;
+			}
+			
+			.mui-btn {
+				padding: 10px;
+			}
+			
+			.link-area {
+				display: block;
+				margin-top: 25px;
+				text-align: center;
+			}
+			
+			.spliter {
+				color: #bbb;
+				padding: 0px 8px;
+			}
+			
+			.oauth-area {
+				position: absolute;
+				bottom: 20px;
+				left: 0px;
+				text-align: center;
+				width: 100%;
+				padding: 0px;
+				margin: 0px;
+			}
+			
+			.oauth-area .oauth-btn {
+				display: inline-block;
+				width: 50px;
+				height: 50px;
+				background-size: 30px 30px;
+				background-position: center center;
+				background-repeat: no-repeat;
+				margin: 0px 20px;
+				/*-webkit-filter: grayscale(100%); */
+				border: solid 0px #ddd;
+				border-radius: 25px;
+			}
+			
+			.oauth-area .oauth-btn:active {
+				border: solid 0px #aaa;
+			}
+			
+			.oauth-area .oauth-btn.disabled {
+				background-color: #ddd;
+			}
+			.mui-table-view-divider {
+				background-color: #efeff4;
+				font-size: 14px;
+			}
+			.mui-table-view-divider:before,
+			.mui-table-view-divider:after {
+				height: 0;
+			}
+			img{
+			
+			
+			}
+			#mydiv{
+				width: 100%;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">项目组基本信息</h1>
+		</header>
+		<div class="mui-content">
+			<form class="mui-input-group">				
+				<ul class="mui-table-view mui-table-view-chevron">
+					<li class="mui-table-view-divider">工程名称</li>
+					<li class="mui-table-view-cell">						
+						&nbsp;<b id="gcmc"></b>
+					</li>
+					<li class="mui-table-view-divider">地区</li>
+					<li id="dq" class="mui-table-view-cell">						
+						&nbsp;
+					</li>
+					<li class="mui-table-view-divider">项目类别</li>
+					<li id="xmlb" class="mui-table-view-cell">						
+						&nbsp;
+					</li>
+					<li class="mui-table-view-divider">项目组二维码，扫描二维码添加组员</li>
+					<li class="mui-table-view-cell">
+						<div id="mydiv">
+							<img id="qrimg" width="250" height="250" src="" alt="二维码..." />
+						</div>						
+					</li>			
+				
+				</ul>
+			</form>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>
+	<script src="../js/charCode.js" type="text/javascript" charset="utf-8"></script>
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			ProjectId = self.ProjectId;
+			xmmc = self.xmmc;
+			
+			var gcmc=document.getElementById("gcmc");
+			var dq=document.getElementById("dq");
+			var xmlb=document.getElementById("xmlb");
+			gcmc.innerText=xmmc;
+			dq.innerText=dq.innerText+self.CityName;
+			xmlb.innerText=xmlb.innerText+self.TypeName;
+			
+			
+			var xmmc = kbt.encrypt(xmmc);
+			var qrimg=document.getElementById("qrimg");			
+			var alltext=serurl+"QrCode/Qrzytj.php?d="+ProjectId+"%26c="+xmmc;
+        	//var code = kbt.encrypt(alltext);	//加密 
+        	var imgsrc="http://qr.liantu.com/api.php?w=250&text="+alltext;        	
+        	qrimg.src=imgsrc;
+		});
+	</script>
+	<script src="../js/setPullToRefresh.js" ></script>
+</html>

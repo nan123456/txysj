@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+			body, .mui-content {
+				background-color: #333;
+				color: #fff;
+			}
+			header.mui-bar{
+				display: none;
+			}
+			.mui-bar-nav~.mui-content{
+				padding: 0;
+			}
+			.title{
+			  	margin: 35px 15px 10px;
+			  }
+			  .title+.content{
+			  	margin: 10px 15px 35px;
+			  	color: #bbb;
+			  	text-indent: 1em;
+			  	font-size: 14px;
+			  	line-height: 24px;
+			  }
+			  .mui-table-view{
+			  	margin-bottom: 35px;
+			  }
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">	
+			<div class="title">侧滑菜单</div>
+			<p style="margin: 10px 15px;">
+				<button id="close-btn" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="padding: 5px 20px;">关闭菜单</button>
+				<button id="FileSystem" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="padding: 5px 20px;">文件管理</button>	
+				<button id="dlsz" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="padding: 5px 20px;">登录设置</button>
+				<button id="exit" type="button" class="mui-btn mui-btn-danger mui-btn-block" style="padding: 5px 20px;">退出系统</button>
+			</p>					
+		</div>
+		<ul class="mui-table-view mui-table-view-chevron mui-table-view-inverted">
+			<li class="mui-table-view-cell" style="text-align: center;">
+				
+			</li>
+		</ul>
+		
+		</div>
+	<script src="js/mui.min.js"></script>
+	<script src="js/app.js"></script>
+	<script type="text/javascript" charset="utf-8">
+		//关闭back、menu按键监听，这样侧滑主界面会自动获得back和memu的按键事件，仅在主界面处理按键逻辑即可；
+		mui.init({
+			keyEventBind: {
+				backbutton: false,
+				menubutton: false
+			}
+		});
+		var main = null;
+		mui.plusReady(function () {
+			main = plus.webview.currentWebview().opener();
+		})
+		
+		function closeMenu () {			
+			mui.fire(main,"menu:swipeleft");
+		}
+	
+		//左滑显示出来的菜单，只需监听右滑，然后将菜单关闭即可；在该菜单上左滑，不做任何操作；
+		window.addEventListener("swipeleft",closeMenu);
+		document.getElementById("close-btn").addEventListener('tap',closeMenu);
+		
+		//退出操作******************
+		document.getElementById('exit').addEventListener('tap', function() {
+			closeMenu();			
+			var btnArray = ['是', '否'];
+			mui.confirm('确定退出系统吗？', '同欣易送检', btnArray, function(e) {
+				if (e.index == 0) {
+					plus.runtime.quit();;
+				} else {
+								
+				}
+			});		
+			/*
+			if (mui.os.ios) {
+				app.setState({});
+				mui.openWindow({
+					url: 'login.html',
+					id: 'login',
+					show: {
+						aniShow: 'pop-in'
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+				return;
+			}
+			var btnArray = [{
+				title: "注销当前账号"
+			}, {
+				title: "直接关闭应用"
+			}];
+			plus.nativeUI.actionSheet({
+				cancel: "取消",
+				buttons: btnArray
+			}, function(event) {
+				var index = event.index;
+				switch (index) {
+					case 1:
+						app.setState({});
+						mui.openWindow({
+							url: 'login.html',
+							id: 'login',
+							show: {
+								aniShow: 'pop-in'
+							},
+							waiting: {
+								autoShow: false
+							}
+						});
+						break;
+					case 2:
+						plus.runtime.quit();
+						break;
+				}
+			});
+			*/
+		}, false);
+		document.getElementById('FileSystem').addEventListener('tap', function() {
+			closeMenu();
+			mui.openWindow({
+				url: 'plus/file.html',
+				id:'plus/file.html',						
+				extras:{
+					name:'wangka'
+				},
+				show:{
+					autoShow:true,//页面loaded事件发生后自动显示
+					aniShow:'slide-in-right',//页面显示动画
+					duration:'300'//页面动画持续时间
+				},
+				waiting:{
+					autoShow:false //自动显示等待框
+				}
+			});
+			
+		});
+		document.getElementById('dlsz').addEventListener('tap', function() {
+			closeMenu();
+			mui.openWindow({
+				url: 'setting.html',
+				id:'setting.html',						
+				extras:{
+					name:'wangka'
+				},
+				show:{
+					autoShow:true,//页面loaded事件发生后自动显示
+					aniShow:'slide-in-right',//页面显示动画
+					duration:'100'//页面动画持续时间
+				},
+				waiting:{
+					autoShow:false //自动显示等待框
+				}
+			});
+			
+		});
+	</script>
+</body>
+
+</html>

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 5px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}	
+			.mui-content,input,select,textarea,option,p,label{
+				font-size: 0.9em;
+			}
+			form{
+				margin-top: 5px;
+			}
+			.my_color_blue{
+				color:#0000FF;
+			}	
+			#done.mui-disabled{
+				color: gray;
+			}
+			#hdnr{
+				padding: 10px;	
+				text-indent:2em;			
+			}				
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>		
+			<h1 class="mui-title">活动报名</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<input id="bmrs" name="bmrs" type="hidden">
+				<form class="mui-input-group">
+					<div class="mui-input-row my_none">
+						<label> 时间戳：</label>
+						<input id='sjc' type="text" placeholder="时间戳" readonly="readonly">						
+					</div>	
+					<div class="mui-input-row">
+						<label>活动名称：</label>
+						<input id="hdmc" type="text" class="mui-input-clear" placeholder="活动名称" readonly="readonly">
+					</div>
+					<div class="mui-input-row">
+						<label>活动时间：</label>
+						<input id="hdsj" type="text" class="mui-input-clear" placeholder="活动时间" readonly="readonly">
+					</div>	
+					<div class="mui-input-row">
+						<label>行车路线：</label>
+						<input id="xclx" type="text" class="mui-input-clear" placeholder="行车路线" readonly="readonly">
+					</div>	
+					<div class="mui-input-row">
+						<label>活动性质：</label>
+						<input id="hdxz" type="text" class="mui-input-clear" placeholder="活动性质" readonly="readonly">
+					</div>
+					<div class="mui-button-row">						
+						<button id="bu_hdnr" type="button" class="mui-btn mui-btn-primary">活动内容    ▼▼</button>
+					</div>
+					<p id="hdnr" class="my_none">无内容！</p>		
+				</form>	
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>姓名：</label>
+						<input id="xming" type="text" class="mui-input-clear" placeholder="姓名" required="required">
+					</div>
+					<div class="mui-input-row">
+						<label>手机：</label>
+						<input id="sji" type="number" class="mui-input-clear" placeholder="手机" value="" required="required">
+					</div>
+					<div class="mui-input-row">
+						<label>单位名称：</label>
+						<input id="dwmc" type="text" class="mui-input-clear" placeholder="单位名称" value="">
+					</div>
+					<div class="mui-button-row">						
+						<button id="baom" type="button" class="mui-btn mui-btn-primary">报名</button>
+					</div>			
+				</form>	
+				<div class="title">
+					<p class="my_color_blue">联系我们</p>
+					<p id="gsmc"></p>
+					<p id="gsdz"></p>
+					<p id="hwzx"></p>	
+					<p id="bzhu"></p>	
+				</div>			
+			</div>
+			
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			mobile = self.mobile;
+			hdsjc = self.hdsjc;
+			var sji=document.getElementById("sji");
+			var hdmc=document.getElementById("hdmc");
+			var hdsj=document.getElementById("hdsj");
+			var xclx=document.getElementById("xclx");
+			var hdxz=document.getElementById("hdxz");
+			
+			var gsmc=document.getElementById("gsmc");
+			var gsdz=document.getElementById("gsdz");
+			var hwzx=document.getElementById("hwzx");
+			var bzhu=document.getElementById("bzhu");
+			
+			var baom=document.getElementById("baom");
+			
+			var xming=document.getElementById("xming");
+			var dwmc=document.getElementById("dwmc");
+			var bmrs=document.getElementById("bmrs");
+			var sjc=document.getElementById('sjc');
+			
+			var hdnr=document.getElementById('hdnr');
+			var bu_hdnr=document.getElementById('bu_hdnr');
+			
+			sji.value=mobile;
+			//自动添加当前时间戳
+			var myDate=new Date();
+			var mytime=myDate.getTime();
+			sjc.value=mytime;
+			
+			mui.ajax(url+'adminphp/pc_hdlb.php',{
+				data:{
+					sqlflag:'select',
+					sjc:hdsjc
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+					var length=data.length;
+					for (var i=0;i<length-1;i++) {
+						hdmc.value=data[i].活动名称;
+						hdsj.value=data[i].活动时间;
+						xclx.value=data[i].行车路线;
+						hdxz.value=data[i].活动性质;
+						hdnr.innerText=data[i].活动内容;
+						bmrs.value=data[i].报名人数;
+						
+						gsmc.innerText="公司名称: "+data[i].公司名称;
+						gsdz.innerText="公司地址: "+data[i].公司地址;
+						hwzx.innerText="会务咨询: "+data[i].会务咨询;
+						bzhu.innerText="备注: "+data[i].备注;				
+						
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+					return callback('ajax错误'+type+errorThrown);
+				}
+			});			
+			
+			bu_hdnr.addEventListener('tap', function() {
+				if (hdnr.classList.contains("my_none")==true) {
+					hdnr.classList.remove("my_none");
+					bu_hdnr.innerText="活动内容    ▲▲";
+				} else{
+					hdnr.classList.add("my_none");
+					bu_hdnr.innerText="活动内容    ▼▼";
+				}				
+			});
+			
+			baom.addEventListener('tap', function() {
+				var mydata = {
+					sjc:sjc.value,					
+					xming:xming.value,
+					sji:sji.value,
+					dwmc:dwmc.value,					
+					hdsjc:hdsjc,
+					hdmc:hdmc.value,
+					sji:sji.value,					
+					bmrs:bmrs.value					
+				};
+				ajaxform(mydata, function(err) {
+					if (err) {
+						plus.nativeUI.toast(err);
+						return;
+					}
+					plus.nativeUI.toast('报名成功');
+					mui.back();
+				});
+			});
+			
+		});
+		
+		//异步传值
+			var ajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.xming = mydata.xming || '';
+				mydata.sji = mydata.sji || '';
+				mydata.dwmc = mydata.dwmc || '';
+				
+				if (mydata.xming.length < 1) {
+					return callback('姓名不能为空！');
+				}
+				if (mydata.sji.length < 1) {
+					return callback('手机不能为空！');
+				}
+			
+				mui.ajax(url+'adminphp/pc_bmqd.php',{
+					data:{
+						sqlflag:'insert',
+						sjc:mydata.sjc,
+						xming:mydata.xming,
+						sji:mydata.sji,
+						dwmc:mydata.dwmc,
+						hdsjc:mydata.hdsjc,
+						hdmc:mydata.hdmc,
+						sji:mydata.sji,
+						bmrs:mydata.bmrs
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback(data.result);	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};
+	</script>
+	<script src="../js/setPullToRefresh.js" ></script>
+</html>

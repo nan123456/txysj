@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">			
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />	
+		
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			
+			<h1 class="mui-title">任务查看</h1>
+		</header>
+		<div class="mui-content">
+			<div id="myform" class="">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>任务名称：</label>
+						<input id="rwmc" type="text" class="mui-input-clear" placeholder="任务名称" >
+					</div>
+				</form>	
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">						
+						<label>任务类别：</label>
+						<select id="rwlb">
+							<option value ="图纸会审" selected="selected">图纸会审</option>
+							<option value ="技术交底">技术交底</option>
+							<option value ="隐蔽验收">隐蔽验收</option>
+							<option value ="迎检工作">迎检工作</option>
+							<option value ="工作例会">工作例会</option>
+							<option value ="软件投诉">软件投诉</option>
+							<option value ="其他">其他</option>
+						</select>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="" style="margin: 5px;padding: 7px 10px;">
+						<label>任务描述：</label>
+						<textarea id="rwms" class="mui-input-clear" rows="1" placeholder=""></textarea>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>任务创建人：</label>						
+						<select id="rwcjr">
+							<option disabled="disabled" value ="" selected="selected"></option>
+						</select>
+					</div>
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>任务接收人：</label>						
+						<select id="zuxz" multiple="multiple">
+							<option disabled="disabled" value ="" selected="selected">点击选择项目组成员</option>							
+						</select>						
+					</div>
+					<input style="padding-left: 10%;" id='rwjsr' type="text" placeholder="无" readonly="readonly">
+					<input class="my_none" style="padding-left: 10%;" id='rwjsrhm' type="text" placeholder="无" readonly="readonly">
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>部位：</label>
+						<input id="bwei" type="text" class="mui-input-clear" placeholder="部位" >
+					</div>							
+					<div class="mui-input-row">
+						<label> 截止日期：</label>
+						<input id='jzrq' type="text" placeholder="截止日期" readonly="readonly">						
+					</div>		
+					<div class="mui-input-row my_none">
+						<label> 时间戳：</label>
+						<input id='sjc' type="text" placeholder="时间戳" readonly="readonly">						
+					</div>	
+				</form>	
+				
+	        </div>
+	        <div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-action-back">关闭</button>
+				<button id="rwfjck" type="button" class="mui-btn mui-btn-primary">附件查看</button>		
+				<button id="rwfjgx" type="button" class="mui-btn mui-btn-primary">附件更新</button>		
+				<button id="save" type="button" class="mui-btn mui-btn-primary">保存</button>
+			</div>
+			</div>
+			<div id="uploader" class="my_none">
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top:5px;">
+						<label>任务附件：</label>
+						<input id="upload_camera1" class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">						
+					</div>	
+					<div style="margin-top: -10px;padding-bottom: 1px;">
+						<ul id="history_rwfj" class="dlist" style="text-align:left;">
+							<li id="empty_rwfj" class="ditem-empty">无历史记录</li>							
+						</ul>
+						
+						<div class="mui-button-row">
+							<button id="clean_rwfj" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('rwfj');">清空记录</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button id="rwfj" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_rwfj');">上传附件</button>
+						</div>
+					</div>							
+				</form>			
+			</div>
+		</div>			
+		<div id="output">
+			<!--Camera管理摄像头设备，可用于拍摄照片、录制视频文件。      -->
+		</div>
+	
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/immersed.js" ></script>	
+		<script src="../js/service.js" ></script>
+		<script src="../js/my_js_upload.js" ></script>
+		<script>		
+			//获取url参数值
+			function geturl(name){
+				var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r!=null)return  unescape(r[2]);
+				return null;
+			}
+			rwid=geturl("rwid");
+			xmid=geturl("xmid");
+			
+			mui.plusReady(function(){				
+				//alert(xmid);		
+				
+				var save=document.getElementById('save');
+				var rwmc=document.getElementById('rwmc');
+				var rwlb=document.getElementById('rwlb');
+				var rwms=document.getElementById('rwms');
+				var rwcjr=document.getElementById('rwcjr');
+				var rwjsr=document.getElementById('rwjsr');
+				var bwei=document.getElementById('bwei');				
+				var jzrq=document.getElementById('jzrq');
+				var sjc=document.getElementById('sjc');
+				var zuxz=document.getElementById('zuxz');
+				var rwjsrhm=document.getElementById('rwjsrhm');
+				
+				var select=document.getElementsByTagName('select');		
+				var rwfjck=document.getElementById('rwfjck');
+				var rwfjgx=document.getElementById('rwfjgx');
+				
+				
+				//创建人、接收人下拉菜单函数
+				var createcjrlist=function(rwcjr,sji){
+					var option=document.createElement('option');					
+					option.value=rwcjr;
+					option.className=sji;
+					option.text=rwcjr;
+					
+					var option2=document.createElement('option');
+					option2.value=rwcjr;
+					option2.className=sji;
+					option2.text=rwcjr;
+					select[1].appendChild(option);
+					select[2].appendChild(option2);
+				};				
+			
+				//创建下拉菜单
+				mui.ajax(url+'my_team/zuyuan_du.php',{
+					data:{
+						xmid:xmid
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							var xming=data[i].姓名;
+							var sji=data[i].手机;
+							createcjrlist(xming,sji);						
+						}
+						hqu();
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+				//打开原生日期
+				jzrq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						jzrq.value=d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});	
+				});
+				
+				//附件更新监听
+				rwfjgx.addEventListener('tap', function() {
+					var btnArray = ['是', '否'];
+						mui.confirm('更新后会覆盖原有附件，确定更新吗？', '同欣易送检', btnArray, function(e) {
+							if (e.index == 0) {
+								var myform=document.getElementById('myform');
+								var uploader=document.getElementById('uploader');
+								var wchen=document.getElementById('wchen');
+								myform.classList.add('my_none');
+								uploader.classList.remove('my_none');
+								wchen.classList.remove('my_none');
+							} else {
+								
+							}
+						});
+				});
+				
+				
+				//获取该任务信息
+				fgrwfj=[];
+				var hqu=function(){
+				
+				mui.ajax(url+'my_team/rwbj_du.php',{
+					data:{
+						rwid:rwid					
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							rwmc.value=data[i].任务名称;							
+							rwlb.value=data[i].任务类别;
+							rwms.value=data[i].任务描述;
+							rwcjr.value=data[i].任务创建人;								
+							rwjsr.value=data[i].任务接收人;	
+							rwjsrhm.value=data[i].任务接收人号码;
+							jzrq.value=data[i].截止日期;
+							bwei.value=data[i].部位;
+							sjc.value=data[i].时间戳;
+							fgrwfj=data[i].任务附件.split("~*^*~");
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});	
+				};
+								
+				//附件查看
+				rwfjck.addEventListener('tap', function() {						
+					mui.openWindow({
+						url: 'team_readimage.html',
+						id:'team_readimage.html',
+						styles: {
+								hardwareAccelerated:false
+						},
+						extras:{
+							sjc:sjc.value,
+							fgrwfj:fgrwfj							
+						},
+						show:{							
+							aniShow:'slide-in-right',//页面显示动画
+							duration:'100'//页面动画持续时间
+						},
+						waiting:{
+							autoShow:false	//自动显示等待框
+						}
+					});
+				});
+				
+				save.addEventListener('tap', function() {
+					var mydata = {
+							rwid:rwid,						
+							rwmc: rwmc.value,
+							rwlb: rwlb.value,
+							rwms: rwms.value,
+							rwcjr: rwcjr.value,
+							rwjsr: rwjsr.value,
+							rwjsrhm: rwjsrhm.value,
+							bwei: bwei.value,							
+							jzrq: jzrq.value						
+					};
+					
+					var btnArray = ['是', '否'];
+					mui.confirm('确定修改数据吗？', '同欣易送检', btnArray, function(e) {
+						if (e.index == 0) {
+							ajaxform(mydata, function(err) {
+								if (err) {
+									plus.nativeUI.toast(err);
+									return;
+								}
+								plus.nativeUI.alert('保存成功');								
+								mui.back();
+								});
+						} else {
+								
+						}
+					});						
+					
+				});	
+								
+				zuxz.addEventListener('change', function() {
+					
+					var length=zuxz.length;
+					var val='';
+					var valsji='';
+					for (var i=1;i<length;i++) {
+						if (zuxz.options[i].selected) {
+							val=val+','+zuxz.options[i].value;
+							valsji=valsji+','+zuxz.options[i].className;
+						}
+					}
+					val=val.replace(/,/,'');
+					valsji=valsji.replace(/,/,'');
+					rwjsr.value=val;
+					rwjsrhm.value=valsji;
+				});
+			});		
+			
+			//异步传值
+			var ajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.rwid = mydata.rwid || '';				
+				mydata.rwmc = mydata.rwmc || '';
+				mydata.rwlb = mydata.rwlb || '';
+				mydata.rwms = mydata.rwms || '';
+				mydata.rwcjr = mydata.rwcjr || '';
+				mydata.rwjsr = mydata.rwjsr || '';
+				mydata.rwjsrhm = mydata.rwjsrhm || '';
+				mydata.bwei = mydata.bwei || '';				
+				mydata.jzrq = mydata.jzrq || '';				
+				if (mydata.rwmc.length < 1) {
+					return callback('任务名称不能为空！');
+				}
+				if (mydata.rwcjr.length < 1) {
+					return callback('任务创建人不能为空！');
+				}
+				if (mydata.rwjsr.length < 1) {
+					return callback('任务接收人不能为空！');
+				}
+				if (mydata.jzrq.length < 1) {
+					return callback('截止日期不能为空！');
+				}
+				mui.ajax(url+'my_team/rwbj_xie.php',{
+					data:{
+						rwid: mydata.rwid,						
+						rwmc: mydata.rwmc,
+						rwlb: mydata.rwlb,
+						rwms: mydata.rwms,
+						rwcjr: mydata.rwcjr,
+						rwjsr: mydata.rwjsr,
+						rwjsrhm: mydata.rwjsrhm,
+						bwei: mydata.bwei,						
+						jzrq: mydata.jzrq						
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback('服务器返回error');	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};			
+		</script>
+		<script src="../js/setPullToRefresh.js" ></script>
+	</body>
+</html>

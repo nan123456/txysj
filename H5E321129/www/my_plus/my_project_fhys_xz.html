@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">			
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />	
+		<style type="text/css">
+			#zuxz{
+				width: 100px;
+				
+			}	
+			#qtcy{
+				width: 100px;
+				font-size: 1.08em;
+				margin-top: -1px;
+			}		
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<a id='wchen' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue my_none">完成</a>
+			<h1 class="mui-title">新增任务</h1>
+		</header>
+		<div class="mui-content">
+			<div id="myform" class="">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">						
+						<label>任务类别：</label>
+						<select id="rwlb">
+							<option value ="分户验收" selected="selected">分户验收</option>						
+						</select>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="" style="margin: 5px;padding: 7px 10px;">
+						<label>任务描述：</label>
+						<textarea id="rwms" class="mui-input-clear" rows="1" placeholder=""></textarea>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="" >
+						<div class="mui-input-row">
+						<label>任务接收人：</label>	
+						<input id="qtcy" type="text" class="" value="全体成员" readonly="readonly">
+						<select id="zuxz" multiple="multiple">
+							<option disabled="disabled" value ="" selected="selected">选择组员</option>							
+						</select>
+						
+					</div>
+					<textarea id="rwjsr" class="mui-input-clear" rows="2" placeholder="" readonly="readonly" style="padding-left: 10%;"></textarea>
+					
+					<input class="my_none" style="padding-left: 10%;" id='rwjsrhm' type="text" placeholder="无" readonly="readonly">
+						
+					</div>
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>栋号：</label>
+						<input id="dhao" type="text" class="mui-input-clear" placeholder="栋号" >
+					</div>
+					<div class="mui-input-row">
+						<label>房号：</label>
+						<input id="fhao" type="text" class="mui-input-clear" placeholder="房号" >
+					</div>					
+					<div class="mui-input-row">
+						<label> 验收日期：</label>
+						<input id='pickDateBtn' type="text" placeholder="验收日期" readonly="readonly">						
+					</div>					
+				</form>	
+				
+	        </div>
+	        <div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-action-back">关闭</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button id="save" type="button" class="mui-btn mui-btn-primary">保存</button>
+			</div>
+			</div>
+			<div id="uploader" class="my_none">
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top:5px;">
+						<label>验收照片：</label>
+						<input id="upload_camera1" class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">						
+					</div>	
+					<div style="margin-top: -10px;padding-bottom: 1px;">
+						<ul id="history_yszp" class="dlist" style="text-align:left;">
+							<li id="empty_yszp" class="ditem-empty">无历史记录</li>							
+						</ul>
+						
+						<div class="mui-button-row">
+							<button id="clean_yszp" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('yszp');">清空记录</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button id="yszp" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_yszp');">上传附件</button>
+						</div>
+					</div>							
+				</form>
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top:5px;">
+						<label>户型平面图：</label>
+						<input id="upload_camera2" class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">						
+					</div>	
+					<div style="margin-top: -10px;padding-bottom: 1px;">
+						<ul id="history_hxpmt" class="dlist" style="text-align:left;">
+							<li id="empty_hxpmt" class="ditem-empty">无历史记录</li>							
+						</ul>
+						
+						<div class="mui-button-row">
+							<button id="clean_hxpmt" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('hxpmt');">清空记录</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button id="hxpmt" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_hxpmt');">上传附件</button>
+						</div>
+					</div>							
+				</form>
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top:5px;">
+						<label>验收记录：</label>
+						<input id="upload_camera3" class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">						
+					</div>	
+					<div style="margin-top: -10px;padding-bottom: 1px;">
+						<ul id="history_ysjl" class="dlist" style="text-align:left;">
+							<li id="empty_ysjl" class="ditem-empty">无历史记录</li>							
+						</ul>
+						
+						<div class="mui-button-row">
+							<button id="clean_ysjl" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('ysjl');">清空记录</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button id="ysjl" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_ysjl');">上传附件</button>
+						</div>
+					</div>							
+				</form>
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top:5px;">
+						<label>补充记录：</label>
+						<input id="upload_camera4" class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">						
+					</div>	
+					<div style="margin-top: -10px;padding-bottom: 1px;">
+						<ul id="history_bcjl" class="dlist" style="text-align:left;">
+							<li id="empty_bcjl" class="ditem-empty">无历史记录</li>							
+						</ul>
+						
+						<div class="mui-button-row">
+							<button id="clean_bcjl" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('bcjl');">清空记录</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button id="bcjl" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_bcjl');">上传附件</button>
+						</div>
+					</div>							
+				</form>
+			</div>
+		</div>			
+		<div id="output">
+			<!--Camera管理摄像头设备，可用于拍摄照片、录制视频文件。      -->
+		</div>
+	
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/immersed.js" ></script>	
+		<script src="../js/service.js" ></script>
+		<script src="../js/my_js_fhys_xz.js" ></script>		
+		<script>			
+			mui.plusReady(function(){
+				//接收上一个页面传递的值
+				var self = plus.webview.currentWebview();
+				var xmid = self.xmid;
+				//alert(xmid);	
+				
+				var save=document.getElementById('save');
+				var rwlb=document.getElementById('rwlb');
+				var rwms=document.getElementById('rwms');
+				var rwjsr=document.getElementById('rwjsr');
+				var dhao=document.getElementById('dhao');
+				var fhao=document.getElementById('fhao');
+				var ysrq=document.getElementById('pickDateBtn');
+				
+				var qtcy=document.getElementById('qtcy');
+				var zuxz=document.getElementById('zuxz');
+				var rwjsrhm=document.getElementById('rwjsrhm');			
+				var select=document.getElementsByTagName('select');
+				
+				//接收人下拉菜单函数
+				var createjsrlist=function(rwjsr,sji){
+					var option=document.createElement('option');
+					option.value=rwjsr;
+					option.className=sji;
+					option.text=rwjsr;
+					select[1].appendChild(option);
+				};
+				
+				//创建下拉菜单
+				qbname="";
+				qbshj="";
+				mui.ajax(url+'my_team/zuyuan_du.php',{
+					data:{
+						xmid:xmid
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							var xming=data[i].姓名;
+							var sji=data[i].手机;							
+							createjsrlist(xming,sji);
+							qbname=qbname+','+xming;
+							qbshj=qbshj+','+sji;							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+				qtcy.addEventListener('tap', function() {
+					var flag=qbname.substring(0,1);
+					if (flag==',') {
+						qbname=qbname.replace(/,/,'');
+						qbshj=qbshj.replace(/,/,'');
+					} 
+					rwjsr.value=qbname;
+					rwjsrhm.value=qbshj;
+				});
+				
+				save.addEventListener('tap', function() {
+					var mydata = {
+							xmid:xmid,
+							rwlb: rwlb.value,
+							rwms: rwms.value,
+							rwjsr: rwjsr.value,
+							dhao: dhao.value,
+							fhao: fhao.value,
+							ysrq: ysrq.value						
+						};
+					
+					ajaxform(mydata, function(err) {
+						if (err) {
+							plus.nativeUI.toast(err);
+							return;
+						}
+						//plus.nativeUI.toast('保存成功');
+						var btnArray = ['是', '否'];
+						mui.confirm('保存成功！是否继续上传附件？', '同欣易送检', btnArray, function(e) {
+							if (e.index == 0) {
+								var myform=document.getElementById('myform');
+								var uploader=document.getElementById('uploader');
+								var wchen=document.getElementById('wchen');
+								myform.classList.add('my_none');
+								uploader.classList.remove('my_none');
+								wchen.classList.remove('my_none');
+							} else {
+								var target=plus.webview.getWebviewById('my_project_fhys.html');
+								mui.fire(target,'json',{
+									xmid:xmid
+								});
+								mui.back();
+							}
+						});
+					});
+								
+				});
+				
+				var wchen=document.getElementById('wchen');
+				wchen.addEventListener('tap', function() {
+					var target=plus.webview.getWebviewById('my_project_fhys.html');
+					mui.fire(target,'json',{
+						xmid:xmid
+					});
+					mui.back();
+				});
+				
+				zuxz.addEventListener('change', function() {
+					
+					var length=zuxz.length;
+					var val='';
+					var valsji='';
+					for (var i=1;i<length;i++) {
+						if (zuxz.options[i].selected) {
+							val=val+','+zuxz.options[i].value;
+							valsji=valsji+','+zuxz.options[i].className;
+						}
+					}
+					val=val.replace(/,/,'');
+					valsji=valsji.replace(/,/,'');
+					rwjsr.value=val;
+					rwjsrhm.value=valsji;
+				});
+				
+			});
+				
+			
+			
+			//异步传值
+			var ajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.xmid = mydata.xmid || '';
+				mydata.rwlb = mydata.rwlb || '';
+				mydata.rwms = mydata.rwms || '';
+				mydata.rwjsr = mydata.rwjsr || '';
+				mydata.dhao = mydata.dhao || '';
+				mydata.fhao = mydata.fhao || '';
+				mydata.ysrq = mydata.ysrq || '';
+				if (mydata.dhao.length < 1) {
+					return callback('栋号不能为空！');
+				}
+				if (mydata.fhao.length < 1) {
+					return callback('房号不能为空！');
+				}
+				if (mydata.ysrq.length < 1) {
+					return callback('验收日期不能为空！');
+				}
+				mui.ajax(url+'fhys.php',{
+					data:{
+						xmid: mydata.xmid,
+						rwlb: mydata.rwlb,
+						rwms: mydata.rwms,
+						rwjsr: mydata.rwjsr,
+						dhao: mydata.dhao,
+						fhao: mydata.fhao,
+						ysrq: mydata.ysrq		
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback('服务器返回error');	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};			
+		</script>
+		
+	</body>
+</html>

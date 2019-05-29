@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link href="../css/mui.min.css" rel="stylesheet"/>    
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style>
+			
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">账户信息</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>账号：</label>
+						<input id="zhao" type="text" class="" placeholder="账号" readonly="readonly" >
+					</div>
+					<div class="mui-input-row">
+						<label>密码：</label>
+						<input id="mima" type="password" class="" placeholder="密码" readonly="readonly">
+					</div>					
+					<div class="mui-input-row">
+						<label>邮箱：</label>
+						<input id="youx" type="text" class="" placeholder="邮箱" readonly="readonly">
+					</div>
+					<div class="mui-input-row">
+						<label>手机：</label>
+						<input id="sji" type="text" class="" placeholder="手机" readonly="readonly">
+					</div>
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>积分：</label>
+						<input id="jfen" type="text" class="" placeholder="积分" readonly="readonly" value="0">
+					</div>
+					
+				</form>
+				<div class="title">					
+					<p id="jfbzsm">积分备注说明：</p>					
+				</div>			
+	        </div>
+			
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js" ></script>
+		<script>
+			mui.init();
+			mui.plusReady(function() {				
+				var self = plus.webview.currentWebview();			
+				mobile = self.mobile;
+				
+				var zhao=document.getElementById("zhao");
+				var mima=document.getElementById("mima");
+				var youx=document.getElementById("youx");
+				var sji=document.getElementById("sji");				
+				var jfen=document.getElementById("jfen");
+				var jfbzsm=document.getElementById("jfbzsm");				
+				
+				//下拉刷新成功回调函数
+				var onRefresh=function(){					
+					setTimeout(function(){						
+						self.endPullToRefresh();
+						self.reload(true);
+					},1000);
+				};
+				//下拉刷新
+				self.setPullToRefresh({
+					support:true,
+					height:"50px",
+					range:"200px",
+					contentdown:{
+						caption:"下拉可以刷新"
+					},
+					contentover:{
+						caption:"释放立即刷新"
+					},
+					contentrefresh:{
+						caption:"正在刷新..."
+					}
+				},onRefresh);
+				
+				//获取账户信息
+				mui.ajax(url+'adminphp/pc_yhxx.php',{
+					data:{
+						sqlflag:'app_select',
+						mobile:mobile
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data);
+						var length=data.length;
+						var row=length-1;
+						for (var i=0;i<row;i++) {
+							zhao.value=data[i].账号;
+							mima.value=data[i].密码;
+							youx.value=data[i].邮箱;
+							sji.value=data[i].手机;
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+				//获取用户积分
+				mui.ajax(url+'adminphp/pc_jflb.php',{
+					data:{
+						sqlflag:'app_select',
+						mobile:mobile
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;
+						for (var i=0;i<row;i++) {
+							jfen.value=data[i].积分;
+							jfbzsm.innerText="积分备注说明："+data[i].备注;
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+				
+			});
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">			
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />	
+		<style type="text/css">
+			#zuxz{
+				width: 100px;
+				
+			}	
+			#qtcy{
+				width: 100px;
+				font-size: 1.08em;
+				margin-top: -1px;
+			}		
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>				
+			<h1 class="mui-title">快速新增</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">						
+						<label>样板间：</label>						
+						<select id="ybj">
+							<option disabled="disabled" value ="" selected="selected">选择样板</option>							
+						</select>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="" style="margin: 5px;padding: 7px 10px;">
+						<label>任务描述：</label>
+						<textarea id="rwms" class="mui-input-clear" rows="1" placeholder=""></textarea>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="" >
+						<div class="mui-input-row">
+						<label>任务接收人：</label>	
+						<input id="qtcy" type="text" class="" value="全体成员" readonly="readonly">
+						<select id="zuxz" multiple="multiple">
+							<option disabled="disabled" value ="" selected="selected">选择组员</option>							
+						</select>
+						
+					</div>
+					<textarea id="rwjsr" class="mui-input-clear" rows="2" placeholder="" readonly="readonly" style="padding-left: 10%;"></textarea>
+					
+					<input class="my_none" style="padding-left: 10%;" id='rwjsrhm' type="text" placeholder="无" readonly="readonly">
+						
+					</div>
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">		
+					<div class="mui-input-row">
+						<label> 验收日期：</label>
+						<input id='pickDateBtn' type="text" placeholder="验收日期" readonly="readonly">						
+					</div>					
+				</form>
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top: 5px">
+						<label>栋号：</label>
+						<input id="dhao" type="text" class="mui-input-clear" placeholder="栋号" >
+					</div>
+					<div class="mui-input-row">
+						<label>楼层总数：</label>
+						<input id="lczs" type="number" class="mui-input-clear" placeholder="楼层总数" >
+					</div>
+					<div class="mui-input-row">
+						<label>每层户数：</label>
+						<input id="mchs" type="number" class="mui-input-clear" placeholder="每层户数" >
+					</div>
+					<div class="mui-input-row">
+						<label>起始楼层：</label>
+						<input id="qslc" type="number" class="mui-input-clear" placeholder="起始楼层" >
+					</div>
+				</form>	
+	        </div>
+	        <div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-action-back">关闭</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button id="save" type="button" class="mui-btn mui-btn-primary">保存</button>
+			</div>
+		</div>			
+	</body>
+		<script src="../js/mui.min.js"></script>	
+		<script src="../js/service.js" ></script>
+		<script>
+		mui.init({
+				swipeBack:true //启用右滑关闭功能
+		});			
+		mui.plusReady(function(){
+			//接收上一个页面传递的xmid
+			var self = plus.webview.currentWebview();
+			var xmid = self.xmid;
+			
+			var ybj=document.getElementById('ybj');
+			var rwms=document.getElementById('rwms');
+			var rwjsr=document.getElementById('rwjsr');
+			var pickDateBtn=document.getElementById('pickDateBtn');
+			var dhao=document.getElementById('dhao');
+			var lczs=document.getElementById('lczs');
+			var mchs=document.getElementById('mchs');
+			var qslc=document.getElementById('qslc');
+			
+			var save=document.getElementById('save');
+			
+			var qtcy=document.getElementById('qtcy');
+			var zuxz=document.getElementById('zuxz');
+			var rwjsrhm=document.getElementById('rwjsrhm');
+			var select=document.getElementsByTagName('select');
+			
+			//样板间下拉菜单函数
+			var createybjlist=function(sjc,ybj){
+				var option=document.createElement('option');
+				option.value=ybj;
+				option.className=sjc;
+				option.text=ybj;
+				select[0].appendChild(option);
+			};
+			
+			mui.ajax(url+'my_ybj.php',{
+				data:{
+					xmid:xmid
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+					var length=data.length;
+					for (var i=0;i<length-1;i++) {
+						var sjc=data[i].时间戳;
+						var ybj=data[i].名称;
+						createybjlist(sjc,ybj);						
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+					return callback('ajax错误'+type+errorThrown);
+				}
+			});
+			
+			//接收人下拉菜单函数
+			var createjsrlist=function(rwjsr,sji){
+				var option=document.createElement('option');
+				option.value=rwjsr;
+				option.className=sji;
+				option.text=rwjsr;
+				select[1].appendChild(option);
+			};
+			
+			//创建下拉菜单
+				qbname="";
+				qbshj="";
+				mui.ajax(url+'my_team/zuyuan_du.php',{
+					data:{
+						xmid:xmid
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							var xming=data[i].姓名;
+							var sji=data[i].手机;							
+							createjsrlist(xming,sji);
+							qbname=qbname+','+xming;
+							qbshj=qbshj+','+sji;							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+								
+			qtcy.addEventListener('tap', function() {
+					var flag=qbname.substring(0,1);
+					if (flag==',') {
+						qbname=qbname.replace(/,/,'');
+						qbshj=qbshj.replace(/,/,'');
+					} 
+					rwjsr.value=qbname;
+					rwjsrhm.value=qbshj;
+			});
+			
+			ybj.addEventListener('change', function() {
+				var length=ybj.length;
+				var sjc='';
+				for (var i=1;i<length;i++) {
+					if (ybj.options[i].selected) {						
+						sjc=ybj.options[i].className;
+					}
+				}				
+				//alert(sjc); 				
+				mui.ajax(url+'my_project_ksxz_du.php',{
+					data:{
+						sjc:sjc,
+						mchen:this.value
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							rwms.value=data[i].任务描述;
+							rwjsr.value=data[i].任务接收人;
+							dhao.value=data[i].栋号;
+							pickDateBtn.value=data[i].验收日期;
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+			});		
+			
+			//监听pickDateBtn，打开原生日期选择
+			pickDateBtn.addEventListener('tap', function() {
+				var dDate = new Date();
+				plus.nativeUI.pickDate(function(e) {
+					var d = e.date;
+					pickDateBtn.value=d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+				}, function(e) {
+					//alert(e);
+				}, {
+					title: "请选择日期",
+				});
+			});
+			
+			//保存事件
+			save.addEventListener('tap', function() {
+				var mydata = {
+					xmid:xmid,
+					rwlb: '分户验收',
+					rwms: rwms.value,
+					rwjsr: rwjsr.value,
+					ysrq: pickDateBtn.value,
+					dhao: dhao.value,
+					lczs: lczs.value,
+					mchs: mchs.value,
+					qslc: qslc.value					
+				};
+				//验证数据，存到数据库
+				ajaxform(mydata, function(err) {
+					if (err) {
+						plus.nativeUI.toast(err);
+						return;
+					}
+					plus.nativeUI.alert('保存成功');
+					var target=plus.webview.getWebviewById('my_project_fhys.html');
+					mui.fire(target,'json',{
+						xmid:xmid
+					});
+					mui.back();
+				});								
+			});
+			
+			//验证数据，存到数据库
+			var ajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.xmid = mydata.xmid || '';
+				mydata.rwlb = mydata.rwlb || '';
+				mydata.rwms = mydata.rwms || '';
+				mydata.rwjsr = mydata.rwjsr || '';
+				mydata.ysrq = mydata.ysrq || '';
+				mydata.dhao = mydata.dhao || '';
+				mydata.lczs = mydata.lczs || '';	
+				mydata.mchs = mydata.mchs || '';	
+				mydata.qslc = mydata.qslc || '';	
+				
+				if (mydata.dhao.length < 1) {
+					return callback('栋号不能为空！');
+				}				
+				if (mydata.ysrq.length < 1) {
+					return callback('验收日期不能为空！');
+				}
+				if (mydata.lczs.length < 1) {
+					return callback('楼层总数不能为空！');
+				}
+				if (mydata.mchs.length < 1) {
+					return callback('每层户数不能为空！');
+				}
+				if (mydata.qslc.length < 1) {
+					return callback('起始楼层不能为空！');
+				}
+				mui.ajax(url+'ksxz.php',{
+					data:{
+						xmid: mydata.xmid,
+						rwlb: mydata.rwlb,
+						rwms: mydata.rwms,
+						rwjsr: mydata.rwjsr,
+						ysrq: mydata.ysrq,
+						dhao: mydata.dhao,
+						lczs: mydata.lczs,
+						mchs: mydata.mchs,
+						qslc: mydata.qslc						
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback('服务器返回error');	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};	
+			
+			
+			zuxz.addEventListener('change', function() {
+				var length=zuxz.length;
+				var val='';
+				var valsji='';
+				for (var i=1;i<length;i++) {
+					if (zuxz.options[i].selected) {
+						val=val+','+zuxz.options[i].value;
+						valsji=valsji+','+zuxz.options[i].className;
+					}
+				}
+				val=val.replace(/,/,'');
+				valsji=valsji.replace(/,/,'');
+				rwjsr.value=val;
+				rwjsrhm.value=valsji;
+			});
+		
+		});
+		
+		
+		</script>	
+		
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link href="css/mui.min.css" rel="stylesheet"/>    
+		
+		<style>
+			p {
+				text-indent: 22px;
+				padding: 5px 8px;
+			}
+			
+			html,
+			body,
+			.mui-content {
+				
+			}			
+			h4 {
+				margin-left: 5px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">关于</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded">
+				<h4 style="margin-top:10px;" >系统简介</h4>
+				<p id="xtjj"></p>
+				
+				<h4 style="margin-top:10px;" >主要功能</h4>
+				<p id="zygn"></p>				
+				<h4>版本编号</h4>
+				<p>当前版本为<b id="bbh"></b>，可到"我的"的"更多设置"中，检查最新版本进行下载。</p>
+				
+			</div>			
+		</div>
+		<script src="js/mui.min.js"></script>
+		<script src="js/service.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			//处理点击事件，需要打开原生浏览器
+			mui('body').on('tap', 'a', function(e) {
+				var href = this.getAttribute('href');
+				if (href) {
+					if (window.plus) {
+						plus.runtime.openURL(href);
+					} else {
+						location.href = href;
+					}
+				}
+			});	
+			
+			
+			mui.plusReady(function() {		
+				var bbh =document.getElementById('bbh');
+				var thisversion=plus.runtime.version;
+				bbh.innerText=thisversion;
+				var xtjj =document.getElementById("xtjj");
+				
+				var zygn =document.getElementById("zygn");
+				
+				mui.ajax(url+'adminphp/pc_gyxx.php',{
+					data:{
+						
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						xtjj.value=data[0].系统简介;
+						zygn.value=data[0].主要功能;
+						xtjj.innerText=xtjj.value;
+						zygn.innerText =zygn.value;
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+				
+			});
+		</script>
+		<script src="js/setPullToRefresh.js" ></script>
+	</body>
+
+</html>

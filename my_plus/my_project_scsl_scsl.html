@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />
+		<style type="text/css">
+			.mui-control-content {
+				bottom: 0px;
+			}
+			
+			.my_table {
+				float: left;
+				text-align: center;
+			}
+			
+			.my_th_weight {
+				font-weight: bold;
+			}
+			
+			.my_td_width30 {
+				width: 30%;
+			}
+			
+			.my_td_width40 {
+				width: 40%;
+			}
+			/*媒体查询，横屏效果*/
+			
+			@media only screen and (orientation:landscape) {
+				.mui-control-content {
+					bottom: 0px;
+				}
+			}
+			
+			.mui-popover {
+				height: 260px;
+			}
+			
+			#middlePopover {
+				min-width: 282px;
+				top: 15% !important;
+				margin-top: -150px;
+				left: 50% !important;
+				margin-left: -141px;
+			}
+			
+			#cdbzPopover {
+				min-width: 282px;
+				top: 15% !important;
+				margin-top: -150px;
+				left: 50% !important;
+				margin-left: -141px;
+			}
+			
+			.mui-popover .mui-popover-arrow {
+				display: none !important;
+			}
+			
+			#mydiv {
+				width: 315px;
+				height: 420px;
+				margin: auto;
+				border: 1px #C6C6C6 solid;
+				background-size: 100% 100%;
+				/*背景图片充满div*/
+			}
+			
+			.bzcd {
+				margin: 10px;
+				padding-bottom: 10px;
+				height: auto;
+				min-height: 80px;
+				border: 1px #C6C6C6 solid;
+			}
+			
+			.jobDescription {
+				margin: 10px;
+				padding-bottom: 10px;
+				height: auto;
+				min-height: 100px;
+				border: 1px #C6C6C6 solid;
+			}
+			
+			p {
+				font-size: 1em;
+				color: #000000;
+			}
+			
+			span {
+				margin-left: 15px;
+			}
+			
+			.myposition {
+				position: absolute;
+			}
+			
+			.out {
+				margin: 10px;
+				padding-bottom: 10px;
+				height: auto;
+				min-height: 60px;
+				border: 1px #C6C6C6 solid;
+			}
+		</style>
+
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id="my_popover" class="mui-icon mui-icon-bars mui-pull-right"></a>
+			<h1 class="mui-title">实测实量</h1>
+		</header>
+		<div class="mui-content">
+
+			<head class="mui-bar mui-bar-tab">
+				<div style="padding: 10px 10px;">
+					<div id="segmentedControl" class="mui-segmented-control">
+						<a id="a1" class="mui-control-item  mui-active" href="#item1">
+							基本信息
+						</a>
+						<a id="a2" class="mui-control-item" href="#item2">
+							测点布置
+						</a>
+						<a id="a3" class="mui-control-item" href="#item3">
+							实测实量
+						</a>
+						<a id="a" class="mui-control-item" href="#item4">
+							统计分析
+						</a>
+					</div>
+				</div>
+			</head>
+			<div class="mui-content" id="refreshContainer">
+				<!--基本信息  -->
+				<div id="item1" class="mui-control-content  mui-active">
+					<div id="myform" class="mui-content">
+						<form class=" mui-input-group">
+							<div class="mui-input-row">
+								<label>名称：</label>
+								<input type="text" id="mc" placeholder="名称">
+							</div>
+							<div class="mui-input-row">
+								<label>检查部位：</label>
+								<input type="text" id="jcbw" placeholder="检查部位">
+							</div>
+							<div class="mui-input-row">
+								<label>检查日期：</label>
+								<input type="date" id="jcrq" placeholder="检查日期">
+							</div>
+							<div class="mui-input-row">
+								<label>检查人员：</label>
+								<input type="text" id="jcry" placeholder="检查人员">
+							</div>
+						</form>
+						<form class=" mui-input-group" style="margin-top: 10px;">
+							<div class="mui-input-row">
+								<label>施工班组：</label>
+								<input type="text" id="sgbz" placeholder="施工班组">
+							</div>
+							<div class="mui-input-row">
+								<label>组长姓名：</label>
+								<input type="text" id="zzxm" placeholder="组长姓名">
+							</div>
+							<div class="mui-input-row">
+								<label>联系电话：</label>
+								<input type="text" id="lxdh" placeholder="联系电话">
+							</div>
+							<div class="mui-input-row">
+								<label>施工日期：</label>
+								<input type="date" id="sgrq" placeholder="施工日期">
+							</div>
+						</form>
+						<form class="mui-input-group">
+							<div class="jobDescription">
+								<p>工作描述：</p>
+								<input type="text" id="gzms" value="" placeholder="工作描述">
+							</div>
+							<div class="mui-button-row my_margintop10px">
+								<!--<button id="fjck" type="button" class="mui-btn mui-btn-primary">附件查看</button>-->
+								<button id="fjscxg" type="button" class="mui-btn mui-btn-primary">附件上传/修改</button>
+								<button id="save" type="button" class="mui-btn mui-btn-primary">保存</button>
+							</div>
+						</form>
+					</div>
+					<div id="uploader" class="my_none">
+						<div id="upload_camera">
+							<form class="mui-input-group">
+								<div class="mui-input-row">
+									<label>附件上传：</label>
+									<input class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">
+								</div>
+								<div style="margin-top: -10px;padding-bottom: 1px;">
+									<ul id="history_yszp" class="dlist" style="text-align:left;">
+										<li id="empty_yszp" class="ditem-empty">无历史记录</li>
+									</ul>
+									<div class="mui-button-row">
+										<button id="clean_yszp" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('yszp');">清空记录</button>&nbsp;&nbsp;&nbsp;&nbsp;
+										<button id="yszp" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_yszp');">上传附件</button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+				<!--基本信息  -->
+
+				<!--测点布置  -->
+				<div id="item2" class="mui-control-content">
+					<div class="mui-content">
+						<div id="scroll" class="mui-scroll-wrapper">
+							<div class="mui-scroll">
+								<div id="mydiv"></div>
+								<div class="bzcd">
+									<p>可供布置的测点：</p>
+								</div>
+								<div class="mui-button-row">
+									<button id="xztp" type="button" class="mui-btn mui-btn-primary">选择测点分层</button>
+									<button id="qkbz" type="button" class="mui-btn mui-btn-primary">清空布置</button>
+									<button id="bcbz" type="button" class="mui-btn mui-btn-primary">保存布置</button>
+								</div>
+								<div class="out">
+									操作：
+									<p id="out"></p>
+								</div>
+							</div>
+						</div>
+
+						<div id="cdbzPopover" class="mui-popover">
+							<div class="mui-popover-arrow"></div>
+							<h4 id="title" style="text-align: center;margin-top: 20px;">测点基本信息</h4>
+							<form class="mui-input-group" style="margin-top: 30px;">
+								<div class="mui-input-row">
+									<label> 编号：</label>
+									<input id="kbbhao" type="text" class="" placeholder="" readonly="readonly">
+								</div>
+								<div class="mui-input-row">
+									<label>类型：</label>
+									<input id="kbcdlx" type="text" class="" placeholder="" readonly="readonly">
+								</div>
+								<div class="mui-input-row">
+									<label>实测值：</label>
+									<input id="kbscz" type="text" class="mui-input-clear" placeholder="请输入">
+								</div>
+							</form>
+							<div class="mui-button-row my_margintop10px">
+								<button id="kbgbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+								<button id="kbqding" type="button" class="mui-btn mui-btn-primary">确定</button>
+							</div>
+						</div>
+						<!--区域滚动  -->
+					</div>
+					<!--区域滚动  -->
+
+				</div>
+				<!--测点布置  -->
+
+				<!--实量实测  -->
+				<div id="item3" class="mui-control-content">
+					<!--区域滚动  -->
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul class="mui-table-view">
+								<li class="mui-table-view-cell my_th_weight mui-disabled">
+									<div class="my_table my_td_width30">编号</div>
+									<div class="my_table my_td_width40">测点类型</div>
+									<div class="my_table my_td_width30">实测值</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<!--区域滚动  -->
+					<div id="middlePopover" class="mui-popover">
+						<div class="mui-popover-arrow"></div>
+						<h4 id="title" style="text-align: center;margin-top: 20px;">实测值输入</h4>
+						<form class="mui-input-group" style="margin-top: 30px;">
+							<div class="mui-input-row">
+								<label> 编号：</label>
+								<input id="bhao" type="text" class="" placeholder="" readonly="readonly">
+							</div>
+							<div class="mui-input-row">
+								<label>类型：</label>
+								<input id="cdlx" type="text" class="" placeholder="" readonly="readonly">
+							</div>
+							<div class="mui-input-row">
+								<label>实测值：</label>
+								<input id="scz" type="text" class="mui-input-clear" placeholder="请输入">
+							</div>
+						</form>
+						<div class="mui-button-row my_margintop10px">
+							<button id="scgbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+							<button id="scqding" type="button" class="mui-btn mui-btn-primary">确定</button>
+						</div>
+
+					</div>
+				</div>
+				<div id="item4" class="mui-control-content">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<ul id="tjfx" class="mui-table-view">
+								<li class="mui-table-view-cell my_th_weight mui-disabled">
+									<div class="my_table my_td_width30">编号</div>
+									<div class="my_table my_td_width40">测点类型</div>
+									<div class="my_table my_td_width30">合格率</div>
+								</li>
+								<li class="mui-table-view-cell my_th_weight mui-disabled">
+									<div class="my_table my_td_width30">综合统计</div>
+									<div class="my_table my_td_width40">----</div>
+									<div id="zhtj" class="my_table my_td_width30"></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--实量实测  -->
+		</div>
+		<div id="output">
+			<!--Camera管理摄像头设备，可用于拍摄照片、录制视频文件。      -->
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/common.js"></script>
+	<script src="../js/immersed.js"></script>
+	<script src="../js/service.js"></script>
+	<script src="../js/my_scsl.js"></script>
+	<!--<script src="../js/setPullToRefresh.js"></script>-->
+
+</html>

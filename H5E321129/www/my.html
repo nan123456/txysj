@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>		
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<link rel="stylesheet" href="css/my_css.css">
+		
+	</head>
+	<body>
+		<div class="mui-content">
+			
+			<ul class="mui-table-view mui-table-view-chevron my_list">
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right" open-type="common" href="my_plus/my_project_list.html">
+						<img class="mui-media-object mui-pull-left" src="images/wdgc.png">
+						<div class="mui-media-body">
+							我的工程
+							<p id='www' class='mui-ellipsis'>0个项目</p>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a class='mui-navigate-right' open-type="common" href="my_plus/my_zjsj.html">
+						<img class="mui-media-object mui-pull-left" src="images/zjsj.png">
+						<div class="mui-media-body">
+							最近送检
+							<p class='mui-ellipsis'>最近一周我有0个送检计划</p>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right" open-type="common" href="my_plus/my_wdrw.html">
+						<img class="mui-media-object mui-pull-left" src="images/wdrw.png">
+						<div class="mui-media-body">
+							我的任务
+							<p class='mui-ellipsis'>我有0个任务</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<div class="title"> 
+						
+			</div>
+			<ul class="mui-table-view mui-table-view-chevron my_list">
+				<!--
+                	
+               
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right">
+						<img class="mui-media-object mui-pull-left" src="images/txsc.png">
+						<div class="mui-media-body">
+							同欣商城 
+							<p class='mui-ellipsis'>天天有惊喜，人人都开心</p>
+						</div>
+					</a>
+				</li>
+				 -->
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right" open-type="common" href="my_plus/my_xxlb_list.html">
+						<img class="mui-media-object mui-pull-left" src="images/xx.png">
+						<div class="mui-media-body">
+							消息							
+							<p class='mui-ellipsis'>您有0条消息未读<span class="mui-badge mui-badge-primary mui-pull-right">0</span></p>
+						</div>
+					</a>
+				</li>
+				<li class="mui-table-view-cell mui-media">
+					<a class="mui-navigate-right" open-type="common" href="my_plus/my_setting.html">
+						<img class="mui-media-object mui-pull-left" src="images/gdsz.png">
+						<div class="mui-media-body">
+							更多设置
+							<p class='mui-ellipsis'>二维码扫描、通用设置等</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/my_js_nextpage.js"></script>
+	<script src="js/service.js" ></script>	
+	<script>
+		//获取传值
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();
+			
+			//全局变量mobile
+			mobile = self.mobile;
+			uid = self.uid;
+//			alert(uid);
+			var p=document.getElementsByTagName('p');
+			var span=document.getElementsByTagName('span');
+//			my_pj.href = "my_plus/my_project_list.html?uid="+uid+" ";
+			
+			var today = new Date();
+			//today.setDate(today.getDate()-1);
+			var year=today.getFullYear();
+			var month=today.getMonth()+1;
+			var day=today.getDate();
+			if (month<10) {
+				month='0'+month;
+			}
+			if (day<10) {
+				day='0'+day;
+			}
+			var todaydate=year+'-'+month+'-'+day;
+			
+			mui.ajax(TxtqUrl,{
+				data:{
+					mode:'myproject',
+					mobile:mobile,
+					uid:uid
+				},
+				dataType:'json',
+				type:'get',
+				timeout:10000,
+				success:function(data){
+					if (data) {
+						//alert(data.rowcount);
+						var count=data.length;	//本号码的项目个数						
+						p[0].firstChild.nodeValue=count+"个项目";
+					} else{
+						//alert('');
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+				}
+			});
+			
+			mui.ajax(TxtqUrl,{
+				data:{
+					mode:'oneweeknote',
+					mobile:mobile,
+					begindate:todaydate
+				},
+				dataType:'json',
+				type:'get',
+				timeout:10000,
+				success:function(data){
+					if (data) {
+						//alert(data.rowcount);
+						var count=data.length;	
+						p[1].firstChild.nodeValue="最近一周我有"+count+"个送检计划";
+					} else{
+						//alert('');
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+				}
+			});
+			
+			mui.ajax(url+'my_plus/wdrw_du.php',{
+				data:{
+					mobile:mobile
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){					
+					var length=data.length;
+					if (length>1) {
+						//alert(data.rowcount);
+						var count=data[length-1].count;	
+						p[2].firstChild.nodeValue="我有"+count+"个任务";
+					} else{
+						//alert('');
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理； 
+					//alert('ajax错误'+type);
+				}
+			});
+			mui.ajax(url+'adminphp/pc_xxlb.php',{
+				data:{
+					sqlflag:'app_selectcount',
+					mobile:mobile
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){	
+					var count=data.result;					
+					if (count>0) {
+						p[3].firstChild.nodeValue="您有"+count+"条消息未读";
+						span[0].innerText=count;
+					} else{
+						//alert('');
+					}
+				
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+				}
+			});
+		});
+	</script>
+	<script src="js/setPullToRefresh.js" ></script>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style type="text/css">
+			.mui-control-content {				
+				bottom: 0px;	
+			}
+			/*媒体查询，横屏效果*/
+			@media only screen and (orientation:landscape ) {
+				.mui-control-content {
+					bottom: 0px;
+					}			
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<a id="my_popover" class="mui-icon mui-icon-bars mui-pull-right" ></a>			
+			<h1 class="mui-title">分户验收</h1>
+		</header>
+		<div class="mui-content">
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						全部（2）
+					</a>
+					<a class="mui-control-item" href="#item2">
+						运行中（1）
+					</a>
+					<a class="mui-control-item" href="#item3">
+						延期（1）
+					</a>
+				</div>
+			</div>
+			<div>
+				<!--全部 -->
+				<div id="item1" class="mui-control-content mui-active">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+									
+						</div>						
+					</div>
+				</div>
+				<!--全部 -->
+				<!--运行中 -->
+				<div id="item2" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							
+						</div>
+					</div>				
+				</div>
+				<!--运行中 -->
+				<!--延期-->
+				<div id="item3" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							
+						</div>
+					</div>
+				</div>
+				<!--延期-->
+			</div>		
+		</div>		
+		<script src="../js/mui.min.js"></script>		
+		<script src="../js/service.js"></script>		
+		<script>
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});			
+			//区域滚动,需手动初始化scroll控件
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			(function($) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});					
+			})(mui);
+			
+			mui.plusReady(function(){
+				//获取项目id值
+				var self = plus.webview.currentWebview();
+				var xmid = self.xmid;
+				//alert(xmid);
+				mui.ajax(url+'my_project_fhys.php',{
+					data:{						
+						xmid:xmid
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var item=document.getElementsByClassName('mui-control-item');
+						var length=data.length;
+						var yx=0;
+						var yq=0;
+						item[0].firstChild.nodeValue="全部（"+data[length-1].qbu+"）";
+						for (var i=0;i<length-1;i++) {
+							var fhid=data[i].id;
+							var xmid=data[i].xmid;
+							var mchen=data[i].名称;
+							var rwjsr=data[i].任务接收人;
+							var dhao=data[i].栋号;
+							var fhao=data[i].房号;
+							var ysrq=data[i].验收日期;
+							var fujian=data[i].验收照片+"-"+data[i].户型平面图+"-"+data[i].验收记录+"-"+data[i].补充记录;
+							var tjrq=data[i].添加日期;
+							createlist(fhid,xmid,mchen,rwjsr,dhao,fhao,ysrq,fujian,tjrq);
+						}
+						for (var i=0;i<length-1;i++) {
+							var fhid=data[i].id;
+							var xmid=data[i].xmid;
+							var mchen=data[i].名称;
+							var rwjsr=data[i].任务接收人;
+							var dhao=data[i].栋号;
+							var fhao=data[i].房号;
+							var ysrq=data[i].验收日期;
+							var fujian=data[i].验收照片+"-"+data[i].户型平面图+"-"+data[i].验收记录+"-"+data[i].补充记录;
+							var tjrq=data[i].添加日期;
+							//获取当天日期，与验收日期比较，划分运行中和延期
+							var xysrq = new Date(Date.parse(ysrq.replace(/-/g, "/")));
+							var xysrq = xysrq.getTime();
+							var today = new Date();
+							if (xysrq>today) {
+								createlistyx(fhid,xmid,mchen,rwjsr,dhao,fhao,ysrq,fujian,tjrq);
+								yx++;
+							} else{
+								createlistyq(fhid,xmid,mchen,rwjsr,dhao,fhao,ysrq,fujian,tjrq);
+								yq++;
+							}
+						}
+						item[1].firstChild.nodeValue="运行中（"+yx+"）";
+						item[2].firstChild.nodeValue="延期（"+yq+"）";
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+					}
+				});
+				
+				//右上角按钮监听
+				var my_popover=document.getElementById('my_popover');
+				my_popover.addEventListener('tap', function() {
+					var btnArray = [
+					{title:"新建"},
+					{title:"快速新增"}
+					
+					];
+					plus.nativeUI.actionSheet( {
+						title:"操作",
+						cancel:"取消",
+						buttons:btnArray
+					}, function(e){
+						var index = e.index;						
+						switch (index){
+							case 0:	//取消								
+								break;
+							case 1:	//新建
+								mui.openWindow({
+									url: "my_project_fhys_xz.html",
+									id: "my_project_fhys_xz.html",
+									styles: {
+										hardwareAccelerated:false
+									},
+									waiting:{
+										autoShow:false
+									},
+									extras:{
+										//传值
+										name:'mui',
+										xmid:xmid
+									},
+									show:{
+									 	autoShow:true,//页面loaded事件发生后自动显示
+									 	aniShow:'slide-in-right',//页面显示动画
+									 	duration:'100'//页面动画持续时间
+									 },
+									 waiting:{
+									 	autoShow:false,//自动显示等待框						 	
+									 }
+								});								
+								break;
+							case 2:	//快速新增							
+								mui.openWindow({
+									url: 'my_project_fhys_ksxz.html',
+									id:'my_project_fhys_ksxz.html',	
+									styles: {
+										hardwareAccelerated:false
+									},
+									extras:{
+										name:'wangka',
+										xmid:xmid
+									},
+									show:{
+									 	autoShow:true,//页面loaded事件发生后自动显示
+									 	aniShow:'slide-in-right',//页面显示动画
+									 	duration:'100'//页面动画持续时间
+									 },
+									 waiting:{
+									 	autoShow:false,//自动显示等待框						 	
+									 }
+								});
+								break;
+						}
+					} );
+				});
+				
+				
+				
+			});	
+			window.addEventListener('json',function(event){	
+				var wobj = plus.webview.getWebviewById("my_project_fhys.html");
+				wobj.reload(true);
+				var xmid=event.detail.xmid;
+			});
+			
+			
+			//创建分户验收列表，全部
+			var createlist=function(fhid,xmid,mchen,rwjsr,dhao,fhao,ysrq,fujian,tjrq) {
+			var ziduan1=mchen+"分户验收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+tjrq;
+			var ziduan2="栋号/ 房号："+dhao+"/"+fhao;
+			var ziduan3="任务指定人+任务接收人："+rwjsr;
+			var ziduan4="验收日期："+ysrq;
+			var ziduan5="附件："+fujian;
+			var muiscroll=document.getElementsByClassName('mui-scroll');
+			var ul = document.createElement("ul");			
+			ul.className = "mui-table-view mui-card my_list my_marginbottom10px";			
+			ul.innerHTML = '<li class="mui-table-view-cell my_backgroundcolor_blue2"><a  href="my_project_fhys_bj.html?fhid='+fhid+'&xmid='+xmid+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li>';		
+			muiscroll[0].appendChild(ul);		
+			};			
+			//创建分户验收列表，运行中
+			var createlistyx=function(fhid,xmid,mchen,rwjsr,dhao,fhao,ysrq,fujian,tjrq) {
+			var ziduan1=mchen+"分户验收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+tjrq;
+			var ziduan2="栋号/ 房号："+dhao+"/"+fhao;
+			var ziduan3="任务指定人+任务接收人："+rwjsr;
+			var ziduan4="验收日期："+ysrq;
+			var ziduan5="附件："+fujian;
+			var muiscroll=document.getElementsByClassName('mui-scroll');
+			var ul = document.createElement("ul");			
+			ul.className = "mui-table-view mui-card my_list my_marginbottom10px";			
+			ul.innerHTML = '<li class="mui-table-view-cell my_backgroundcolor_blue2"><a href="my_project_fhys_bj.html?fhid='+fhid+'&xmid='+xmid+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li>';		
+			muiscroll[1].appendChild(ul);		
+			};
+			//创建分户验收列表，延期
+			var createlistyq=function(fhid,xmid,mchen,rwjsr,dhao,fhao,ysrq,fujian,tjrq) {
+			var ziduan1=mchen+"分户验收&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+tjrq;
+			var ziduan2="栋号/ 房号："+dhao+"/"+fhao;
+			var ziduan3="任务指定人+任务接收人："+rwjsr;
+			var ziduan4="验收日期："+ysrq;
+			var ziduan5="附件："+fujian;
+			var muiscroll=document.getElementsByClassName('mui-scroll');
+			var ul = document.createElement("ul");			
+			ul.className = "mui-table-view mui-card my_list my_marginbottom10px";			
+			ul.innerHTML = '<li class="mui-table-view-cell my_backgroundcolor_blue2"><a href="my_project_fhys_bj.html?fhid='+fhid+'&xmid='+xmid+'"><span class="mui-icon mui-icon-info mui-pull-left my_fontweight my_color_white"></span><p class="mui-ellipsis my_style2">'+ziduan1+'</p></a></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan2+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan3+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan4+'</p></li><li class="mui-table-view-cell"><p class="mui-ellipsis my_style1">'+ziduan5+'</p></li>';		
+			muiscroll[2].appendChild(ul);		
+			};			
+		</script>		
+		
+	</body>
+</html>

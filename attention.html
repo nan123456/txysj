@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="css/mui.min.css">
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title {
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.my_color_red{
+				color: red;
+			}
+			.my_backgroundcolor_white{
+				background-color: #FFFFFF;
+			}
+			.mui-grid-view.mui-grid-9{
+				    background-color: #FFFFFF;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="mui-content">			
+			<ul class="mui-table-view my_hdlist">
+				<li class="mui-table-view-cell mui-media">
+					<a open-type="common" href="attention_plus/attention_hdbm_list.html">						
+						<div class="mui-media-body">
+							<p class="mui-pull-left my_color_red">活动</p>
+							<p class="mui-pull-right my_color_red">更多＞＞</p>
+						</div>
+					</a>
+				</li>
+			</ul>
+			<div class="title"> 
+			</div>
+			
+			<ul class="mui-table-view my_hdlist">
+				<li class="mui-table-view-cell mui-media">
+					<a open-type="common" href="attention_plus/attention_tg_list.html">						
+						<div class="mui-media-body">
+							<p class="mui-pull-left my_color_red">通告</p>
+							<p class="mui-pull-right my_color_red">更多＞＞</p>
+						</div>
+					</a>
+				</li>				
+			</ul>
+			<div class="title"> 
+				
+			</div>
+			<ul class="mui-table-view my_hdlist">
+				<li class="mui-table-view-cell mui-media">
+					<a open-type="common" href="attention_plus/attention_hb_list.html">						
+						<div class="mui-media-body">
+							<p class="mui-pull-left my_color_red">伙伴</p>
+							<p class="mui-pull-right my_color_red">更多＞＞</p>
+						</div>
+					</a>
+				</li>				
+			</ul>
+			<ul class="mui-table-view mui-grid-view mui-grid-9 my_hdlist">	        
+				
+		   </ul> 		    
+		</div>
+	</body>
+	<script src="js/mui.min.js"></script>
+	<script src="js/service.js" ></script>	
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();
+			mobile = self.mobile;
+			//创建两个活动列表
+			var CreHdList=function(hdsjc,hdmc,hdsj,hddd){
+				
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell mui-media";
+				li.innerHTML='<a id="'+hdsjc+'" open-type="common" href="attention_plus/attention_hdbm_bm.html"><img class="mui-media-object mui-pull-left" src="images/hd.png"><div class="mui-media-body">活动名称：'+hdmc+'<p class="mui-ellipsis">时间:'+hdsj+'</p><p class="mui-ellipsis">地点:'+hddd+'</p></div></a>';
+				ul[0].appendChild(li);
+			};
+			
+			//创建两个通告列表
+			var CreTGList=function(tgsjc,zbt,fbt,tjsj){				
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell mui-media";
+				li.innerHTML='<a id="'+tgsjc+'" open-type="common" href="attention_plus/attention_tg_nr.html"><img class="mui-media-object mui-pull-left" src="images/tg.png"><div class="mui-media-body">'+zbt+'<p class="mui-ellipsis">'+fbt+'</p><p class="mui-ellipsis mui-pull-right">'+tjsj+'</p></div></a>';
+				ul[1].appendChild(li);
+			};	
+			
+			//创建伙伴函数
+			var CreHBList=function(hbsjc,hblx){
+				var encodehblx=encodeURI(hblx);
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.className="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3";
+				li.innerHTML='<a id="'+encodehblx+'" open-type="common" href="attention_plus/attention_hb_jc.html"><img class=" " src="images/jcjg.png" height="50px"><div class="mui-media-body">'+hblx+'</div></a>';
+				ul[3].appendChild(li);
+			};	
+			
+			//定位手机所在城市
+			plus.geolocation.getCurrentPosition( function ( p ) {
+				//alert(p.address.city);
+				Cre(p.address.city);
+				CreTG(p.address.city);
+			}, function ( e ) {
+				alert( "Geolocation error: " + e.message );
+			});
+			
+			//获取活动列表
+			var Cre=function(m){
+				var today = new Date();
+				mui.ajax(url+'adminphp/pc_hdlb.php',{
+					data:{
+						sqlflag:'app_select_two',
+						qd:m
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;
+						var flag=0;
+						for (var i=0;i<row;i++) {
+							var hdsjc=data[i].时间戳;
+							var hdmc=data[i].活动名称;
+							var hdsj=data[i].活动时间;
+							var hddd=data[i].活动地点;
+							
+							var xhdsj = new Date(Date.parse(hdsj.replace(/-/g, "/")));
+							var xhdsj = xhdsj.getTime();							
+							if (xhdsj>today) {
+								flag++;
+								CreHdList(hdsjc,hdmc,hdsj,hddd);
+							}
+							if (flag==2) {
+								break;
+							}
+							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});				
+			};
+			
+			//获取通告列表
+			var CreTG=function(m){				
+				mui.ajax(url+'adminphp/pc_tglb.php',{
+					data:{
+						sqlflag:'app_select_two',
+						qd:m
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;
+						var flag=0;
+						for (var i=0;i<row;i++) {
+							var tgsjc=data[i].时间戳;
+							var zbt=data[i].主标题;
+							var fbt=data[i].副标题;
+							var tjsj=data[i].添加时间;
+							flag++;
+							CreTGList(tgsjc,zbt,fbt,tjsj);							
+							if (flag==2) {
+								break;
+							}							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});				
+			};
+			
+			//加载伙伴
+			mui.ajax(url+'adminphp/pc_hblx.php',{
+					data:{
+						sqlflag:'select_all'						
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						var row=length-1;
+						var flag=0;
+						for (var i=0;i<row;i++) {
+							var hdsjc=data[i].时间戳;
+							var hblx=data[i].伙伴类型;
+							flag++;
+							CreHBList(hdsjc,hblx);							
+							if (flag==3) {
+								break;
+							}
+							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						alert('ajax错误'+type+'---'+errorThrown);
+					}
+				});
+			
+			//列表链接事件监听
+			var aniShow = "pop-in";
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version)<4.4){
+					aniShow = "slide-in-right";
+				}
+			}
+			mui('.my_hdlist').on('tap', 'a', function() {
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var hdsjc = this.getAttribute("id");
+				//alert(hdsjc);
+				var webview_style = {
+					popGesture: "close"
+					//hardwareAccelerated:false
+				};
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					styles: webview_style,
+					extras:{
+						mobile:mobile,
+						hdsjc:hdsjc						
+					},
+					show: {
+						//autoShow:false,
+						aniShow: aniShow
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+			});
+			
+		});
+	</script>
+	
+</html>

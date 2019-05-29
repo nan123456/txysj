@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">		
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.my_color_red{
+				color: red;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">消息列表</h1>
+		</header>
+		<div class="mui-content">			
+			<ul class="mui-table-view my_list">
+				
+			</ul>
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/service.js" ></script>
+	<script>
+		mui.init({
+			gestureConfig:{
+				doubletap: true, //默认为false
+				longtap: true, //默认为false
+			}
+		});
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			mobile = self.mobile;
+			//alert(mobile);
+			
+			//创建消息列表函数
+			var CreXxList=function(sjc,xxmc,xxnr,tjsj,xxzt){				
+				var ul=document.getElementsByTagName("ul");
+				var li=document.createElement("li");
+				li.id=sjc;
+				li.className="mui-table-view-cell mui-media";				
+				if (xxzt=="未读") {
+					li.innerHTML='<a sjc="'+sjc+'" open-type="common" href="my_xx_nr.html"><div class="mui-media-body">'+xxmc+'<span id="span'+sjc+'"  class="mui-badge mui-badge-primary mui-pull-right">未读</span><p class="mui-ellipsis">'+xxnr+'</p><p class="mui-ellipsis mui-pull-right">'+tjsj+'</p></div></a>';
+				} else{
+					li.innerHTML='<a sjc="'+sjc+'" open-type="common" href="my_xx_nr.html"><div class="mui-media-body">'+xxmc+'<p class="mui-ellipsis">'+xxnr+'</p><p class="mui-ellipsis mui-pull-right">'+tjsj+'</p></div></a>';
+				}				
+				ul[0].appendChild(li);
+			};	
+			
+			mui.ajax(url+'adminphp/pc_xxlb.php',{
+				data:{
+					sqlflag:'app_selectall',
+					mobile:mobile
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){						
+					var length=data.length;
+					var row=length-1;
+					for (var i=0;i<row;i++) {
+						var sjc=data[i].时间戳;
+						var xxmc=data[i].消息名称;
+						var xxnr=data[i].消息内容;
+						var tjsj=data[i].添加时间;
+						var xxzt=data[i].消息状态;
+						CreXxList(sjc,xxmc,xxnr,tjsj,xxzt);
+					}
+				
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					alert('ajax错误'+type);
+				}
+			});
+			
+			//消息列表长按删除事件
+			mui('.my_list').on('longtap', 'li', function() {
+				var thisid=this.id;
+				dcthisid=document.getElementById(thisid);
+				var btnArray = ['是', '否'];
+				mui.confirm('确定删除该条消息吗？', '同欣易送检', btnArray, function(e) {
+					if (e.index == 0) {
+						
+						mui.ajax(url+'adminphp/pc_xxlb.php',{
+							data:{
+								sqlflag:'app_delete',
+								sjc:thisid
+							},
+							dataType:'json',
+							type:'post',
+							timeout:10000,
+							success:function(data){
+								if (data.result=="success") {
+									dcthisid.remove();
+									plus.nativeUI.toast('删除成功！');
+								}else{
+									plus.nativeUI.toast('删除失败！');
+								}
+							},
+							error:function(xhr,type,errorThrown){
+								//异常处理；
+								alert('ajax错误'+type);
+							}
+						});
+					} else {
+						
+					}
+				});
+			});
+			
+			//列表链接事件监听
+			var aniShow = "pop-in";
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+				//Android平台暂时使用slide-in-right动画
+				if(parseFloat(mui.os.version)<4.4){
+					aniShow = "slide-in-right";
+				}
+			}
+			mui('.my_list').on('tap', 'a', function() {				
+				var id = this.getAttribute('href');
+				var href = this.href;
+				var sjc = this.getAttribute("sjc");
+				var spanid="span"+sjc;
+				var dcspanid=document.getElementById(spanid);
+				if (dcspanid) {
+					dcspanid.remove();
+				}
+				
+				//alert(hdsjc);
+				var webview_style = {
+					popGesture: "close",
+					hardwareAccelerated:false
+				};
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					styles: webview_style,
+					extras:{						
+						sjc:sjc						
+					},
+					show: {
+						//autoShow:false,
+						aniShow: aniShow
+						
+					},
+					waiting: {
+						autoShow: false,
+						title:'请稍等，数据加载中...'
+					}
+				});
+				
+			});
+		});
+	</script>
+	
+</html>

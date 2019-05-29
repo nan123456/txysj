@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">			
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">
+	        <ul class="mui-table-view mui-grid-view mui-grid-9 my_list">
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_sjjh.html">
+	                    <span class="mui-icon mui-icon-compose"></span>
+	                    <div class="mui-media-body">送检计划</div>
+	            	</a>
+	            </li>
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_wdcx.html">
+	                    <span class="mui-icon mui-icon-search"></span>
+	                    <div class="mui-media-body">温度查询</div>
+	            	</a>
+	            </li>
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_sjcx.html">
+	                    <span class="mui-icon mui-icon-spinner-cycle "></span>
+	                    <div class="mui-media-body">时间查询</div>
+	            	</a>
+	            </li>
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_bwjd.html">
+	                    <span class="mui-icon mui-icon-location"></span>
+	                    <div class="mui-media-body">部位进度</div>
+	         	   </a>
+	            </li>
+	            
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_sjjg.html">
+	                    <span class="mui-icon mui-icon-download"></span>
+	                    <div class="mui-media-body">送检结果</div>
+	            	</a>
+	            </li>	           
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_fhys.html">
+	                    <span class="mui-icon mui-icon-phone"></span>
+	                    <div class="mui-media-body">分户验收</div>
+	            	</a>
+	            </li>
+	            <li class="mui-table-view-cell mui-media mui-col-xs-4 mui-col-sm-3">
+	            	<a href="my_project_ysjl.html">
+	                    <span class="mui-icon mui-icon-bars"></span>
+	                    <div class="mui-media-body">原始记录</div>
+	            	</a>
+	            </li>
+	        </ul> 
+		</div>		
+		<script src="../js/mui.min.js"></script>		
+		<script src="../js/service.js" ></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true //启用右滑关闭功能
+			});
+			
+			mui.plusReady(function(){
+				var self = plus.webview.currentWebview();
+			    var mobile = self.mobile;
+			    var uid = self.uid;
+//			    alert(uid);
+			
+			//获取url参数值
+			function geturl(name){
+				var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+				var r = window.location.search.substr(1).match(reg);
+				if(r!=null)return  unescape(r[2]);
+				return null;
+			}
+			var xmid=geturl("xmid");
+			//项目名称和地区是汉字，进行解码
+			var CityName=geturl("CityName");
+			var Name=geturl("Name");
+			CityName=decodeURI(CityName);
+			Name=decodeURI(Name);
+			//alert(Name);
+			
+			var h1=document.getElementsByTagName('h1');
+			h1[0].firstChild.nodeValue=Name;
+			
+			var aniShow = "pop-in";
+			//主列表点击事件 ,把项目id传到所有子页面中
+			mui('.my_list').on('tap', 'a', function() {
+				var id = this.getAttribute('href');
+				var href = this.href;
+				//var type = this.getAttribute("open-type");
+				//alert(type);
+				var webview_style = {
+					popGesture: "close",					
+					hardwareAccelerated:false
+				
+				};
+				mui.openWindow({
+					id: id,
+					url: this.href,
+					styles: webview_style,
+					extras:{
+						xmid:xmid,
+						Name:Name,
+						CityName:CityName,
+						mobile:mobile,
+						uid:uid
+					},
+					show: {
+						aniShow: aniShow
+					},
+					waiting: {
+						autoShow: false
+					}
+				});
+			});
+		});
+		</script>
+	</body>
+</html>

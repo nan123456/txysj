@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">			
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />	
+		<style type="text/css">		
+			#rwzyx{				
+				background-color: #00BFFF;
+			}
+			#zuxz{
+				width: 100px;
+				
+			}	
+			#qtcy{
+				width: 100px;
+				font-size: 1.08em;
+				margin-top: -1px;
+			}		
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<a id='wchen' class="mui-btn mui-btn-link mui-pull-right mui-btn-blue my_none">完成</a>
+			<h1 class="mui-title">任务新建</h1>
+		</header>
+		<div class="mui-content">
+			<div id="myform" class="">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>任务名称：</label>
+						<input id="rwmc" type="text" class="mui-input-clear" placeholder="任务名称" >
+					</div>
+				</form>	
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>任务重要性：</label>
+						<select id="rwzyx">
+							<option value ="重要">重要</option>
+							<option value ="次重要">次重要</option>
+							<option value ="一般" selected="selected">一般</option>
+							<option value ="无时限">无时限</option>							
+						</select>
+					</div>
+				</form>	
+				
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">						
+						<label>任务类别：</label>
+						<select id="rwlb">
+							<option value ="图纸会审" selected="selected">图纸会审</option>
+							<option value ="技术交底">技术交底</option>
+							<option value ="隐蔽验收">隐蔽验收</option>
+							<option value ="迎检工作">迎检工作</option>
+							<option value ="工作例会">工作例会</option>
+							<option value ="软件投诉">软件投诉</option>
+							<option value ="其他">其他</option>
+						</select>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="" style="margin: 5px;padding: 7px 10px;">
+						<label>任务描述：</label>
+						<textarea id="rwms" class="mui-input-clear" rows="1" placeholder=""></textarea>
+					</div>
+				</form>
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>任务创建人：</label>						
+						<select id="rwcjr">
+							<option disabled="disabled" value ="" selected="selected"></option>
+						</select>
+					</div>
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>任务接收人：</label>	
+						<input id="qtcy" type="text" class="" value="全体成员" readonly="readonly">
+						<select id="zuxz" multiple="multiple">
+							<option disabled="disabled" value ="" selected="selected">选择组员</option>							
+						</select>
+						
+					</div>
+					<textarea id="rwjsr" class="mui-input-clear" rows="2" placeholder="" readonly="readonly" style="padding-left: 10%;"></textarea>
+					
+					<input class="my_none" style="padding-left: 10%;" id='rwjsrhm' type="text" placeholder="无" readonly="readonly">
+					
+				</form>
+				<form class="mui-input-group" style="margin-top: 5px;">
+					<div class="mui-input-row">
+						<label>部位：</label>
+						<input id="bwei" type="text" class="mui-input-clear" placeholder="部位" >
+					</div>							
+					<div class="mui-input-row">
+						<label> 截止日期：</label>
+						<input id='jzrq' type="text" placeholder="截止日期" readonly="readonly">						
+					</div>		
+					<div class="mui-input-row my_none">
+						<label> 时间戳：</label>
+						<input id='sjc' type="text" placeholder="时间戳" readonly="readonly">						
+					</div>	
+				</form>	
+				
+	        </div>
+	        <div class="mui-button-row">
+				<button type="button" class="mui-btn mui-btn-primary mui-action-back">关闭</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<button id="save" type="button" class="mui-btn mui-btn-primary">保存</button>
+			</div>
+			</div>
+			<div id="uploader" class="my_none">
+				<form class="mui-input-group">
+					<div class="mui-input-row" style="margin-top:5px;">
+						<label>任务附件：</label>
+						<input id="upload_camera1" class="upload_camera" type="text" placeholder="点击添加" readonly="readonly">						
+					</div>	
+					<div style="margin-top: -10px;padding-bottom: 1px;">
+						<ul id="history_rwfj" class="dlist" style="text-align:left;">
+							<li id="empty_rwfj" class="ditem-empty">无历史记录</li>							
+						</ul>
+						
+						<div class="mui-button-row">
+							<button id="clean_rwfj" type="button" class="mui-btn mui-btn-primary" onclick="cleanHistory('rwfj');">清空记录</button>
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<button id="rwfj" type="button" class="mui-btn mui-btn-primary" onclick="upload(this.id,'clean_rwfj');">上传附件</button>
+						</div>
+					</div>							
+				</form>			
+			</div>
+		</div>			
+		<div id="output">
+			<!--Camera管理摄像头设备，可用于拍摄照片、录制视频文件。      -->
+		</div>
+	
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/common.js"></script>
+		<script src="../js/immersed.js" ></script>	
+		<script src="../js/service.js" ></script>
+		<script src="../js/my_js_upload.js" ></script>
+		<script>			
+			mui.plusReady(function(){
+				//接收上一个页面传递的值
+				var self = plus.webview.currentWebview();
+				var xmid = self.ProjectId;
+				var xmmc = self.xmmc;
+				//alert(xmid);
+				
+				var save=document.getElementById('save');
+				var rwmc=document.getElementById('rwmc');
+				var rwlb=document.getElementById('rwlb');
+				var rwms=document.getElementById('rwms');
+				var rwcjr=document.getElementById('rwcjr');
+				var rwjsr=document.getElementById('rwjsr');
+				var bwei=document.getElementById('bwei');				
+				var jzrq=document.getElementById('jzrq');
+				var sjc=document.getElementById('sjc');
+				var zuxz=document.getElementById('zuxz');
+				var rwjsrhm=document.getElementById('rwjsrhm');
+				
+				var select=document.getElementsByTagName('select');
+				var wchen=document.getElementById('wchen');
+				var rwzyx=document.getElementById('rwzyx');
+				var qtcy=document.getElementById('qtcy');
+				
+				//自动添加当前时间戳,作为这个新建任务的唯一标识存到数据库，附件上传时会用到
+				var myDate=new Date();
+				var mytime=myDate.getTime();
+				sjc.value=mytime;
+				
+				//创建人下拉菜单函数
+				var createcjrlist=function(rwcjr,sji){
+					var option=document.createElement('option');
+					option.value=rwcjr;
+					option.className=sji;
+					option.text=rwcjr;
+					select[2].appendChild(option);
+				};
+				
+				//接收人下拉菜单函数
+				var createjsrlist=function(rwjsr,sji){
+					var option=document.createElement('option');
+					option.value=rwjsr;
+					option.className=sji;
+					option.text=rwjsr;
+					select[3].appendChild(option);
+				};
+				
+				//创建下拉菜单
+				qbname="";
+				qbshj="";
+				mui.ajax(url+'my_team/zuyuan_du.php',{
+					data:{
+						xmid:xmid
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						var length=data.length;
+						for (var i=0;i<length-1;i++) {
+							var xming=data[i].姓名;
+							var sji=data[i].手机;
+							createcjrlist(xming,sji);
+							createjsrlist(xming,sji);
+							qbname=qbname+','+xming;
+							qbshj=qbshj+','+sji;							
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+				//任务重要性改变背景颜色
+				rwzyx.addEventListener('change', function() {
+					var dj=rwzyx.value;
+					if (dj=='重要') {
+						rwzyx.style.backgroundColor="red";
+					}else if (dj=='次重要') {
+						rwzyx.style.backgroundColor="orange";					
+					}else if (dj=='一般') {
+						rwzyx.style.backgroundColor="#00BFFF";
+					}else if (dj=='无时限') {
+						rwzyx.style.backgroundColor="green";
+					}else{
+						rwzyx.style.backgroundColor="white";
+					}
+				});				
+				
+				rwlb.addEventListener('change', function() {
+					if (rwlb.value=='软件投诉') {
+						zuxz.classList.add("my_none");
+						qtcy.classList.add("my_none");
+						rwjsr.value='同欣客服1,同欣客服2,同欣客服3';
+						rwjsrhm.value='18988583168,18988583166,18988583163';
+					}else{
+						zuxz.classList.remove("my_none");
+						qtcy.classList.remove("my_none");
+						rwjsr.value='';
+						rwjsrhm.value='';
+					}
+				});
+				
+				qtcy.addEventListener('tap', function() {
+					var flag=qbname.substring(0,1);
+					if (flag==',') {
+						qbname=qbname.replace(/,/,'');
+						qbshj=qbshj.replace(/,/,'');
+					} 
+					rwjsr.value=qbname;
+					rwjsrhm.value=qbshj;
+				});
+				
+				//打开原生日期
+				jzrq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						jzrq.value=d.getFullYear() + "-" + (d.getMonth() + 1) + "-" + d.getDate();
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});	
+				});
+				
+				save.addEventListener('tap', function() {
+					var mydata = {
+							xmid:xmid,
+							xmmc:xmmc,
+							rwmc: rwmc.value,
+							rwzyx: rwzyx.value,
+							rwlb: rwlb.value,
+							rwms: rwms.value,
+							rwcjr: rwcjr.value,
+							rwjsr: rwjsr.value,
+							rwjsrhm: rwjsrhm.value,
+							bwei: bwei.value,							
+							jzrq: jzrq.value,
+							sjc: sjc.value
+						};
+					
+					ajaxform(mydata, function(err) {
+						if (err) {
+							plus.nativeUI.toast(err);
+							return;
+						}
+						//plus.nativeUI.toast('保存成功');
+						var btnArray = ['是', '否'];
+						mui.confirm('保存成功！是否继续上传附件？', '同欣易送检', btnArray, function(e) {
+							if (e.index == 0) {
+								var myform=document.getElementById('myform');
+								var uploader=document.getElementById('uploader');								
+								myform.classList.add('my_none');
+								uploader.classList.remove('my_none');
+								wchen.classList.remove('my_none');
+							} else {
+								var target=plus.webview.getWebviewById('team_in.html');
+								mui.fire(target,'json',{
+									flag:'rwxj'
+								});
+								mui.back();
+							}
+						});
+					});
+							
+				});	
+				
+				wchen.addEventListener('tap', function() {
+					var target=plus.webview.getWebviewById('team_in.html');
+					mui.fire(target,'json',{
+						flag:'rwxj'
+					});
+					mui.back();
+				});
+				
+								
+				zuxz.addEventListener('change', function() {
+					
+					var length=zuxz.length;
+					var val='';
+					var valsji='';
+					for (var i=1;i<length;i++) {
+						if (zuxz.options[i].selected) {
+							val=val+','+zuxz.options[i].value;
+							valsji=valsji+','+zuxz.options[i].className;
+						}
+					}
+					val=val.replace(/,/,'');
+					valsji=valsji.replace(/,/,'');
+					rwjsr.value=val;
+					rwjsrhm.value=valsji;
+				});
+			});		
+			
+			//异步传值
+			var ajaxform = function(mydata, callback) {
+				callback = callback || $.noop;
+				mydata = mydata || {};
+				mydata.xmid = mydata.xmid || '';
+				mydata.xmmc = mydata.xmmc || '';
+				mydata.rwmc = mydata.rwmc || '';
+				mydata.rwzyx = mydata.rwzyx || '';
+				mydata.rwlb = mydata.rwlb || '';
+				mydata.rwms = mydata.rwms || '';
+				mydata.rwcjr = mydata.rwcjr || '';
+				mydata.rwjsr = mydata.rwjsr || '';
+				mydata.rwjsrhm = mydata.rwjsrhm || '';
+				mydata.bwei = mydata.bwei || '';				
+				mydata.jzrq = mydata.jzrq || '';
+				mydata.sjc = mydata.sjc || '';
+				if (mydata.rwmc.length < 1) {
+					return callback('任务名称不能为空！');
+				}
+				if (mydata.rwcjr.length < 1) {
+					return callback('任务创建人不能为空！');
+				}
+				if (mydata.rwjsr.length < 1) {
+					return callback('任务接收人不能为空！');
+				}
+				if (mydata.jzrq.length < 1) {
+					return callback('截止日期不能为空！');
+				}
+				mui.ajax(url+'my_team/rwxj.php',{
+					data:{
+						xmid: mydata.xmid,
+						xmmc: mydata.xmmc,
+						rwmc: mydata.rwmc,
+						rwzyx: mydata.rwzyx,
+						rwlb: mydata.rwlb,
+						rwms: mydata.rwms,
+						rwcjr: mydata.rwcjr,
+						rwjsr: mydata.rwjsr,
+						rwjsrhm: mydata.rwjsrhm,
+						bwei: mydata.bwei,						
+						jzrq: mydata.jzrq,
+						sjc: mydata.sjc
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						//alert(data.result);
+						if (data.result=='success') {
+							return callback();
+						} else{
+							return callback('服务器返回error');	
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+			};			
+		</script>
+		<script src="../js/setPullToRefresh.js" ></script>
+	</body>
+</html>

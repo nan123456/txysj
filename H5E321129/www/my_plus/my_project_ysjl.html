@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">
+		<style type="text/css">
+			#addNew{
+				position:fixed;
+				right:10px;
+				bottom:50px;
+				/*background-color:transparent;*/
+		        z-index: 998 ;
+		    }
+		    #zuyPopover{
+				min-width: 300px;
+				height:150px;				
+				top:35%;
+				/*position:relative;*/
+				left:9%;
+
+			}
+			.reorganizeBtn{
+				width: 100px;
+			}
+			.margintop10px{
+				margin-top: 10px;
+			}
+			.paddingleft34px{
+				padding-left: 34px;
+			}
+			.mui-popover {
+				height: 260px;
+			}
+			
+			#cdbzPopover{
+				min-width: 282px;				
+				top:15% !important;
+				margin-top: 0px;
+				left: 50% !important;
+				margin-left: -141px;
+				position: fixed;
+			}
+			.mui-popover .mui-popover-arrow{
+				display: none !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<!--
+            
+			<a id="info" class="mui-icon mui-icon-plus mui-pull-right" style="color: #999;"></a>
+			-->
+			<h1 id="refresh" class="mui-title">我的工程</h1>
+		</header>
+		<div>
+			<button id="addNew" class="mui-btn mui-fab mui-btn-mini mui-btn-danger">
+            	<span class="mui-icon mui-icon-plusempty"></span>
+       		</button>
+		</div>
+		<div  id='card' class="mui-content">
+			<!-- 累计温度  -->
+			<div id="cdbzPopover" class="mui-popover">
+	        	<div class="mui-popover-arrow"></div>	        		
+	        	<h4 id="title" style="text-align: center;margin-top: 20px;">累计温度</h4>
+	        	<form class="mui-input-group" style="margin-top: 30px;">
+	        		<div class="mui-input-row">
+	        			<label>开始：</label>
+	        			<input id='ksrq' type="text" placeholder="开始日期" readonly="readonly">	
+	        		</div>
+	        		<div class="mui-input-row">
+	        			<label>结束：</label>
+	        			<input id='jsrq' type="text" placeholder="结束日期" readonly="readonly">	
+	        		</div>
+	        		<div class="mui-input-row">
+	        			<label>温度和：</label>
+	        			<input id="wdh" type="text" class="mui-input-clear" placeholder="" readonly="readonly">
+	        		</div>
+	        		<div class="mui-input-row my_none">
+	        			<label>地区：</label>
+	        			<input id="diqu" type="text" class="mui-input-clear" placeholder="" readonly="readonly">
+	        		</div>
+	        	</form>
+				<div class="mui-button-row my_margintop10px">
+					<button id="kbgbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<button id="jisuan" type="button" class="mui-btn mui-btn-primary" disabled="disabled">计算</button>
+				</div>
+			</div>
+			<!-- 累计温度  -->
+		</div>
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js" ></script>
+		<script type="text/javascript">	
+		
+		mui.init({
+//				preloadPages:[
+//				    {
+//				      url:'division_details.html',
+//				      id:'list'
+//				    } 
+//				],
+				gestureConfig:{					
+					longtap: true, //长按默认为false
+					doubletap: true
+				}
+			});
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		    });
+		    
+		mui.plusReady(function(){
+			//获取项目mobile值
+			var self = plus.webview.currentWebview();
+			var mobile = self.mobile;
+			var uid = self.uid;
+//			alert(uid);		
+			
+			var today = new Date();
+			var year=today.getFullYear();
+			var month=today.getMonth()+1;
+			var day=today.getDate();
+			var hours=today.getHours();
+			var minutes=today.getMinutes();
+			var seconds=today.getSeconds();
+			var todaydate=month+'月'+day+'日';
+			var todaydate2=year+'-'+month+'-'+day;
+			var todaydate3=year+'-'+month+'-'+day+' '+hours+':'+minutes+':'+seconds;
+			var diqu=document.getElementById('diqu');
+			var	addNew = document.getElementById("addNew");
+			var	refresh = document.getElementById("refresh");
+			//监听标题栏的双击事件(刷新页面)
+			refresh.addEventListener('doubletap',function () {
+				window.location.reload();
+			});
+			
+			//新增按钮
+			addNew.addEventListener('tap',function(){
+					mui.ajax(TxtqUrl,{
+						data:{
+//							ulId:"",
+							mobile:mobile,
+//							flag:"division"
+						},
+						dataType:'json',
+						type:'post',
+						timeout:10000,
+						success:function(data){
+//							alert(data);
+
+								mui.openWindow({
+									url:"my_project_ysjl_add.html",
+									extras:{
+										    mobile:mobile,
+                                            uid:uid
+									},
+									show: {
+										aniShow:"pop-in"
+									},
+									waiting: {
+										autoShow: false
+									}
+								});
+//							}
+
+						},
+						error:function(xhr,type,errorThrown){
+//							alert('ajax错误'+type+'---'+errorThrown+"失败！");
+						}
+					});	
+				});	
+			
+
+                
+				
+		
+		var myproject = function(id, timestamp , bgbh , bgbgmc, ysbw , ysrq) {
+//			alert(ysbw);
+			var bgmc=bgbh+" "+bgbgmc;
+			//汉字编码，为了get传值
+			var Name=encodeURI(encodeURI(bgmc));
+			var CityName=encodeURI(encodeURI(bgmc));
+//			alert(CityName);
+			var ysbwa='验收部位：';
+			var ysrqa='验收日期：';
+			var muicontent=document.getElementsByClassName('mui-content');
+			var div=document.createElement('div');
+			div.className='mui-card margintop10px';			
+			muicontent[0].appendChild(div);
+			var ul=document.createElement('ul');
+			ul.id=id;
+			ul.timestamp=timestamp;
+			ul.className='mui-table-view ';
+			div.appendChild(ul);
+			var li=document.createElement('li');
+			li.className='mui-table-view-cell mui-media my_backgroundcolor_blue my_color_white';
+			ul.appendChild(li);
+			var a=document.createElement('a');			
+			a.href="my_project_ysjl_ysjl.html?id="+id+"&CityName="+CityName+"&Name="+Name+"&timestamp="+timestamp;			
+			li.appendChild(a);
+			var div2=document.createElement('div');
+			div2.className='mui-media-body';			
+			a.appendChild(div2);
+			var txt=document.createTextNode(bgmc);
+			div2.appendChild(txt);
+			var p=document.createElement('p');
+			p.className='mui-ellipsis my_color_white';
+			div2.appendChild(p);
+			var p2=document.createElement('p');
+			p2.className='mui-ellipsis my_underline my_color_white';
+			div2.appendChild(p2);
+			var li2=document.createElement('li');
+			li2.className='mui-table-view-cell mui-media';
+			ul.appendChild(li2);
+			var a2=document.createElement('a');
+			li2.appendChild(a2);
+			var div3=document.createElement('div');
+			div3.className='mui-media-body';
+			a2.appendChild(div3);
+			var span=document.createElement('span');
+			span.className='mui-icon mui-icon-spinner-cycle mui-pull-left';
+			var p3=document.createElement('p');
+			p3.className='mui-ellipsis my_fontsize my_paddingleft';
+			div3.appendChild(p3);
+			var p4=document.createElement('p');
+			p4.className='mui-ellipsis my_fontsize my_color_blue my_paddingleft';
+			div3.appendChild(p4);
+			var txt6=document.createTextNode(ysbwa+ysbw);
+			p4.appendChild(txt6);
+			var p5=document.createElement('p');
+			p5.className='mui-ellipsis my_fontsize my_color_blue paddingleft34px';
+			div3.appendChild(p5);
+			var li3=document.createElement('li');
+			li3.className='mui-table-view-cell mui-media';
+			ul.appendChild(li3);
+			var a3=document.createElement('a');
+			li3.appendChild(a3);
+			var div4=document.createElement('div');
+			div4.className='mui-media-body';
+			a3.appendChild(div4);
+			var span2=document.createElement('span');
+			span2.className='mui-icon mui-icon-info mui-pull-left';
+			var button2=document.createElement('button');
+			button2.className='mui-btn mui-btn-warning mui-pull-right';
+			button2.type='button';
+			var p6=document.createElement('p');
+			p6.className='mui-ellipsis my_fontsize my_paddingleft';
+			div4.appendChild(p6);
+			var p7=document.createElement('p');
+			p7.className='mui-ellipsis my_fontsize my_color_blue my_paddingleft';
+			div4.appendChild(p7);
+			var txt9=document.createTextNode(ysrqa+ysrq);
+			p7.appendChild(txt9);
+			
+	
+		};		
+		
+		//长按卡项进行删除操作
+	mui('#card').on('longtap', 'ul', function() {
+		var ulId=this.id;
+		var timestamp = this.timestamp;
+
+		var btnArray = [
+
+			{title:"删除"}
+		];
+		plus.nativeUI.actionSheet( {
+			title:"操作",
+			cancel:"取消",
+			buttons:btnArray
+		}, function(e){
+			var index = e.index;
+			var nextpage='';
+			switch (index){
+				case 0:	//取消	
+					break;
+//				
+				case 1:	//删除
+					nextpage='';
+					var bts=["是","否"];
+					plus.nativeUI.confirm("您确认删除此卡项吗？",function(e){
+						var i=e.index;
+						if(i==0){
+							//是
+						sccg(ulId,timestamp);
+                            
+						}else{
+							//否
+									
+						}
+					},"同欣二期",bts);
+					break;
+			}
+			mui.openWindow({
+				url: nextpage,
+				id: nextpage,
+				styles: {
+					hardwareAccelerated:false
+				},
+				extras:{
+					name:'wushaohang_lidegejing'
+				},
+				show:{
+					autoShow:true,//页面loaded事件发生后自动显示
+					aniShow:'slide-in-right',//页面显示动画
+					duration:'100'//页面动画持续时间
+				},
+				waiting:{
+					autoShow:false,//自动显示等待框
+				},
+			});
+		});
+	});
+	
+//	删除草稿
+	var sccg=function xfzg(ulId,timestamp){
+		var caid = ulId;
+		var timestamp =timestamp;
+		mui.ajax(url+'adminphp/pc_ysjl_delete.php',{
+			data:{ 
+				ulId:caid,
+			    timestamp:timestamp
+
+			},
+//			dataType:'json',
+			type:'POST', 
+			timeout:10000,
+			
+			success:function(data){
+
+					alert("卡项删除成功！");
+					var wobj = plus.webview.currentWebview();					
+					wobj.reload(true);
+
+			}, 
+			error:function(xhr,type,errorThrown){
+				alert('ajax错误'+type+'---'+errorThrown);
+			}
+		});
+	};
+	
+	
+		var ksrq=document.getElementById('ksrq');
+		var jsrq=document.getElementById('jsrq');
+		var wdh=document.getElementById('wdh');
+		var jisuan=document.getElementById('jisuan');
+		var kbgbi=document.getElementById('kbgbi');
+		
+		//异步传值,获取卡项的数据
+		mui.ajax(url + 'my_plus/my_project_list.php', {
+			data: {
+				mobile: mobile,
+
+			},
+			dataType: 'json',
+			type: 'POST',
+			timeout: 10000,
+			success: function(data) {
+//				alert(data[0].id+"ppppp");
+//              alert(data[0].时间戳)
+				var length = data.length;
+				if(length > 1) {
+					for(var i = 0; i < length - 1; i++) {
+						var id = data[i].id;
+						var timestamp = data[i].时间戳;
+						var bgbh = data[i].表格编号;
+						var bgmc = data[i].表格名称;
+						var ysbw = data[i].验收部位;
+						var ysrq = data[i].验收日期;
+						var kpzt = "已保存";
+						myproject(id, timestamp , bgbh , bgmc , ysbw , ysrq , kpzt);
+					}
+				} else {
+					alert("暂无数据");
+				}
+			},
+			error: function(xhr, type, errorThrown) {
+				//alert('ajax错误'+type+'---'+errorThrown);
+			}
+		});
+		
+		
+		ksrq.addEventListener('tap', function() {});
+		jsrq.addEventListener('tap', function() {});
+		//计算温度和事件
+		jisuan.addEventListener('tap', function() {});
+		kbgbi.addEventListener('tap', function() {
+			mui("#cdbzPopover").popover("toggle");
+		});
+		
+		});		
+	</script>
+	
+	</body>
+
+</html>

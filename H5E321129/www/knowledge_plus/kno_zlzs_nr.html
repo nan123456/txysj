@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 15px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}
+			.mui-control-content {				
+				bottom: 0px;	
+			}
+			.mui-preview-image.mui-fullscreen {
+				position: fixed;
+				z-index: 20;
+				background-color: #FFFFFF;
+			}
+			.mui-preview-header,
+			.mui-preview-footer {
+				position: absolute;
+				width: 100%;
+				left: 0;
+				z-index: 10;
+			}
+			.mui-preview-header {
+				height: 44px;
+				top: 0;
+			}
+			.mui-preview-footer {
+				height: 50px;
+				bottom: 0px;
+			}
+			.mui-preview-header .mui-preview-indicator {
+				display: block;
+				line-height: 25px;
+				color: #fff;
+				text-align: center;
+				margin: 15px auto 4;
+				width: 70px;
+				background-color: rgba(0, 0, 0, 0.4);
+				border-radius: 12px;
+				font-size: 16px;
+			}
+			.mui-preview-image {
+				display: none;
+				-webkit-animation-duration: 0.5s;
+				animation-duration: 0.5s;
+				-webkit-animation-fill-mode: both;
+				animation-fill-mode: both;
+			}
+			.mui-preview-image.mui-preview-in {
+				-webkit-animation-name: fadeIn;
+				animation-name: fadeIn;
+			}
+			.mui-preview-image.mui-preview-out {
+				background: none;
+				-webkit-animation-name: fadeOut;
+				animation-name: fadeOut;
+			}
+			.mui-preview-image.mui-preview-out .mui-preview-header,
+			.mui-preview-image.mui-preview-out .mui-preview-footer {
+				display: none;
+			}
+			.mui-zoom-scroller {
+				position: absolute;
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				top: 0;
+				width: 100%;
+				height: 100%;
+				margin: 0;
+				-webkit-backface-visibility: hidden;
+			}
+			.mui-zoom {
+				-webkit-transform-style: preserve-3d;
+				transform-style: preserve-3d;
+			}
+			.mui-slider .mui-slider-group .mui-slider-item img {
+				width: auto;
+				height: auto;
+				max-width: 100%;
+				max-height: 100%;
+			}
+			.mui-android-4-1 .mui-slider .mui-slider-group .mui-slider-item img {
+				width: 100%;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-slider-group .mui-slider-item {
+				display: inline-table;
+			}
+			.mui-android-4-1 .mui-slider.mui-preview-image .mui-zoom-scroller img {
+				display: table-cell;
+				vertical-align: middle;
+			}
+			.mui-preview-loading {
+				position: absolute;
+				width: 100%;
+				height: 100%;
+				top: 0;
+				left: 0;
+				display: none;
+			}
+			.mui-preview-loading.mui-active {
+				display: block;
+			}
+			.mui-preview-loading .mui-spinner-white {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				margin-left: -25px;
+				margin-top: -25px;
+				height: 50px;
+				width: 50px;
+			}
+			.mui-preview-image img.mui-transitioning {
+				-webkit-transition: -webkit-transform 0.5s ease, opacity 0.5s ease;
+				transition: transform 0.5s ease, opacity 0.5s ease;
+			}
+			@-webkit-keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@keyframes fadeIn {
+				0% {
+					opacity: 0;
+				}
+				100% {
+					opacity: 1;
+				}
+			}
+			@-webkit-keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			@keyframes fadeOut {
+				0% {
+					opacity: 1;
+				}
+				100% {
+					opacity: 0;
+				}
+			}
+			p img {
+				max-width: 100%;
+				height: auto;
+				margin-bottom: 30px;
+				border:1px solid #007AFF;
+			}
+			p{
+				font-size: 1em;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">加载中...</h1>
+		</header>
+		<div class="mui-content">			
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						范例样式
+					</a>
+					<a class="mui-control-item" href="#item2">
+						填表说明
+					</a>
+					<a class="mui-control-item" href="#item3">
+						注意要点
+					</a>
+				</div>
+			</div>
+			<div style="padding-left: 10px;padding-right: 10px;">
+				<!--范例样式 -->
+				<div id="item1" class="mui-control-content mui-active">
+					<div id="scroll" class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<p id="addImg">
+								加载中...
+							</p>
+						</div>						
+					</div>
+				</div>
+				<!--范例样式 -->
+				<!--填表说明 -->
+				<div id="item2" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<p class="myp">
+								加载中...
+							</p>
+						</div>
+					</div>				
+				</div>
+				<!--填表说明 -->
+				<!--注意要点-->
+				<div id="item3" class="mui-control-content">					
+					<div class="mui-scroll-wrapper">
+						<div class="mui-scroll">
+							<p class="myp">
+								加载中...
+							</p>
+						</div>
+					</div>
+				</div>
+				<!--注意要点-->
+			</div>
+			
+			
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/mui.zoom.js"></script>
+	<script src="../js/mui.previewimage.js"></script>
+	<script src="../js/service.js" ></script>
+	<script>
+		mui.init();
+		//区域滚动,需手动初始化scroll控件
+		mui('.mui-scroll-wrapper').scroll({
+			deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+		});
+		(function($) {
+			$('#scroll').scroll({
+				indicators: true //是否显示滚动条
+			});
+		})(mui);
+		
+		mui.plusReady(function() {
+			mui.previewImage();
+			var self = plus.webview.currentWebview();			
+			var id= self.id,
+				bh=self.Bh,
+				doc=document,
+				h3=doc.getElementsByTagName("h1"),
+				myp=doc.getElementsByClassName("myp");
+			
+			h3[0].innerText=bh;
+			
+			//创建图片函数
+			var creImg=function(str){
+				var len=str.indexOf(","),
+					addPhoHtml="",
+					addImg=document.getElementById("addImg");					
+				if (len>0) {
+					var spl=str.split(",");
+					var	cout=spl.length;
+						
+					for (var i=0;i<cout;i++) {
+						addPhoHtml=addPhoHtml+'<img src="'+imgurl+spl[i]+'" data-preview-src="" data-preview-group="1" />';
+					}					
+				}else{
+					addPhoHtml='<img src="'+imgurl+str+'" data-preview-src="" data-preview-group="1" />';
+				}
+				addImg.innerHTML=addPhoHtml;
+			};
+			
+			//加载数据
+			mui.ajax(url+'adminphp/pc_zlzslb.php',{
+				data:{
+					sqlflag:'appselect',
+					bh:bh
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+					var cout=data.length-1;
+					if (cout>0) {
+						var	$sctp="",
+							$tbsm="",
+							$zyyd="";							
+						$sctp=data[0].上传图片;
+						$tbsm=data[0].填表说明;
+						$zyyd=data[0].注意要点;
+						creImg($sctp);
+						if ($tbsm) {
+							myp[0].innerHTML=$tbsm;
+						}else{
+							myp[0].innerHTML="无数据";
+						}
+						if ($zyyd) {
+							myp[1].innerHTML=$zyyd;
+						}else{
+							myp[1].innerHTML="无数据";
+						}
+					} else{
+						alert("数据库无该编号的表格！");
+						mui.back();
+					}
+					
+				},
+				error:function(xhr,type,errorThrown){
+					alert('ajax错误'+type+'---'+errorThrown);
+				}
+			});
+		
+		});
+	</script>
+	
+</html>

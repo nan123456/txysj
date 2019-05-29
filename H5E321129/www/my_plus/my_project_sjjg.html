@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">		
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style type="text/css">
+			.my_margin{
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+			.mui-control-content {
+				bottom: 0px;	
+			}
+			.mui-control-content {
+				height:330px;
+			}
+			/****表格自适应css******/
+			/****大屏幕******/
+			body {
+				font-family: arial;
+			}
+			table {
+				border: 1px solid #ccc;
+				width: 93%;
+				margin:0;
+				padding:0;
+				border-collapse: collapse;
+				border-spacing: 0;
+				margin: 0 auto;
+			}
+			table tr {
+				border: 1px solid #ddd;
+				padding: 5px;
+			}
+			table th, table td {
+				padding: 5px;
+				text-align: center;
+			}
+			table th {
+				text-transform: uppercase;
+				font-size: 14px;
+				letter-spacing: 1px;
+			}
+			/****大屏幕******/
+			/****小屏幕******/
+			@media screen and (max-width: 520px) {
+				table {
+					border: 0;
+				}
+				table thead {
+					display: none;
+				}
+				table tr {
+					margin-bottom: 0px;
+					display: block;
+					border-bottom: 2px solid #ddd;
+				}
+				table td {
+					display: block;
+					text-align: right;
+					font-size: 13px;
+					border-bottom: 1px dotted #ccc;
+				}
+				table td:last-child {
+					border-bottom: 0;
+				}
+				table td:before {
+					content: attr(data-label);
+					float: left;
+					text-transform: uppercase;
+					font-weight: bold;
+				}
+			}
+			/****小屏幕******/
+			.note{
+				max-width: 80%;
+				margin: 0 auto;
+			}
+			/****表格自适应css******/
+			.sjjg{
+				color: #4CD964;
+			}
+			
+			.mui-popover {
+				height: 260px;
+			}
+			#middlePopover{
+				position: fixed;
+				min-width: 292px;
+				top:15% !important;
+				margin-top: -30px;
+				left: 50% !important;
+				margin-left: -141px;
+			}
+			
+			.mui-popover .mui-popover-arrow{
+				display: none !important;
+			}
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>			
+			<h1 class="mui-title">送检结果</h1>
+		</header>
+		<div class="mui-content">		
+	        <div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a id="xmmc" class="mui-control-item mui-active" href="">
+						项目名称
+					</a>					
+				</div>
+			</div>
+			
+			<div class="my_margin">
+				<form class="mui-input-group">					
+					<div class="mui-input-row">
+						<label>起始日期：</label>
+						<input id='qsrq' type="text" placeholder="起始日期" readonly="readonly">						
+					</div>	
+					<div class="mui-input-row">
+						<label>结束日期：</label>
+						<input id='jsrq' type="text" placeholder="结束日期" readonly="readonly">						
+					</div>
+				</form>				
+	        </div>
+			<div class="mui-button-row">
+				<button id="qkong" type="button" class="mui-btn mui-btn-primary" disabled="disabled">清空</button>
+				<button id="hzong" type="button" class="mui-btn mui-btn-primary" disabled="disabled">汇总</button>	
+				<button id="update" type="button" class="mui-btn mui-btn-primary" disabled="disabled">刷新</button>	
+			</div>
+			
+			<div style="padding: 10px 10px;">
+				<div id="segmentedControl" class="mui-segmented-control">
+					<a class="mui-control-item mui-active" href="#item1">
+						有结果
+					</a>
+					<a class="mui-control-item" href="#item2">
+						无结果
+					</a>					
+				</div>
+			</div>
+			
+			<div id="item1" class="mui-control-content mui-active">
+				<div id="scroll" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<table class="mui-input-group">
+							<thead>
+								<tr>
+									<th>类型</th>
+									<th>部位</th>
+									<th>强度等级</th>
+									<th>送检日期</th>
+									<th>试验结果</th>
+									<th>检验结果单位</th>
+									<th>试验结果报告单编号</th>
+									<th>是否合格</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td id="lxin" data-label="类型">无</td>
+									<td data-label="部位">无</td>
+									<td data-label="强度等级">无</td>
+									<td data-label="送检日期">无</td>
+									<td data-label="试验结果">无</td>
+									<td data-label="检验结果单位">无</td>
+									<td data-label="试验结果报告单编号">无</td>
+									<td data-label="是否合格">无</td>
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>						
+				</div>
+			</div>
+			
+			<div id="item2" class="mui-control-content">
+				<div id="scroll" class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<table class="mui-input-group">
+							<thead>
+								<tr>
+									<th>类型</th>
+									<th>部位</th>
+									<th>强度等级</th>
+									<th>送检日期</th>
+									<th>试验结果</th>
+									<th>检验结果单位</th>
+									<th>试验结果报告单编号</th>
+								</tr>
+							</thead>
+							<tbody>								
+								<tr>
+									<td id="lxin" data-label="类型">无</td>
+									<td data-label="部位">无</td>
+									<td data-label="强度等级">无</td>
+									<td data-label="送检日期">无</td>
+									<td class="sjjg" data-label="试验结果" data-keyid="123456">请输入(必填)</td>
+									<td class="" data-label="检验结果单位">请输入</td>
+									<td class="" data-label="试验结果报告单编号">请输入</td>
+									
+								</tr>
+								
+							</tbody>
+						</table>
+					</div>						
+				</div>
+				<!--弹窗   -->
+				<div id="middlePopover" class="mui-popover">
+	        		<div class="mui-popover-arrow"></div>	        		
+	        		<h4 id="title" style="text-align: center;margin-top: 20px;">输入数据</h4>
+	        		<form class="mui-input-group" style="margin-top: 30px;">	        			
+	        			<div class="mui-input-row">
+	        				<label>试验结果</label>
+	        				<input id="syjg" type="text" class="mui-input-clear" placeholder="请输入" >
+	        			</div>
+	        			<div class="mui-input-row">
+	        				<label>单位</label>
+	        				<input id="dw" type="text" class="mui-input-clear" placeholder="请输入" >
+	        			</div>	        			
+	        			<div class="mui-input-row">
+	        				<label>编号</label>
+	        				<input id="bhao" type="text" class="mui-input-clear" placeholder="请输入" >
+	        			</div>
+	        		</form>
+					<div id="tcbutton" class="mui-button-row my_margintop10px">
+						<button id="tcgbi" type="button" class="mui-btn mui-btn-primary">关闭</button>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<button id="tcqding" type="button" class="mui-btn mui-btn-primary">确定</button>
+					</div>						
+					
+	        	</div>
+	        	<!--弹窗   -->
+				
+			</div>
+			
+		</div>		
+		<script src="../js/mui.min.js"></script>		
+		<script src="../js/service.js" ></script>
+		<script type="text/javascript">
+			mui.init({
+				swipeBack:true, //启用右滑关闭功能
+				gestureConfig:{
+					longtap: true, //默认为false					
+				}
+			});
+			
+			//区域滚动,需手动初始化scroll控件
+			mui('.mui-scroll-wrapper').scroll({
+				deceleration: 0.0005 //flick 减速系数，系数越大，滚动速度越慢，滚动距离越小，默认值0.0006
+			});
+			(function($) {
+				$('#scroll').scroll({
+					indicators: true //是否显示滚动条
+				});					
+			})(mui);
+			
+			mui.plusReady(function(){	
+				
+				//获取项目id、Name值
+				var self = plus.webview.currentWebview();
+				var xmid = self.xmid,
+					Name = self.Name;
+				var doc=document;
+				var xmmc=doc.getElementById('xmmc');
+				xmmc.innerText=Name;
+				
+				var qsrq=doc.getElementById('qsrq'),
+					jsrq=doc.getElementById('jsrq'),					
+					hzong=doc.getElementById('hzong'),
+					qkong=doc.getElementById('qkong'),
+					tcbutton=doc.getElementById('tcbutton'),
+					syjg=doc.getElementById('syjg'),
+					dw=doc.getElementById('dw'),
+					bhao=doc.getElementById('bhao'),
+					update=doc.getElementById('update');
+				
+				var lxin=doc.getElementById('lxin').innerText;					
+				
+				qsrq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						var month=d.getMonth()+1;
+						var day=d.getDate();
+						if (month<10) {
+							month='0'+month;
+						}
+						if (day<10) {
+							day='0'+day;
+						}
+						qsrq.value=d.getFullYear() + "-" + month + "-" + day;
+						if (qsrq.value&&jsrq.value) {
+							var gksrq=qsrq.value;
+							var gjsrq=jsrq.value;
+							var xgksrq = new Date(Date.parse(gksrq.replace(/-/g, "/")));
+							var xgksrq = xgksrq.getTime();
+							var xgjsrq = new Date(Date.parse(gjsrq.replace(/-/g, "/")));
+							var xgjsrq = xgjsrq.getTime();
+							if (xgjsrq>=xgksrq) {
+								hzong.disabled=false;
+								update.disabled=false;
+							}else{
+								alert('起始日期不能大于结束日期！');
+								hzong.disabled=true;
+								update.disabled=true;
+							}
+						}
+						
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});
+				});
+				jsrq.addEventListener('tap', function() {
+					var dDate = new Date();
+					plus.nativeUI.pickDate(function(e) {
+						var d = e.date;
+						var month=d.getMonth()+1;
+						var day=d.getDate();
+						if (month<10) {
+							month='0'+month;
+						}
+						if (day<10) {
+							day='0'+day;
+						}
+						jsrq.value=d.getFullYear() + "-" + month + "-" + day;						
+						if (qsrq.value&&jsrq.value) {
+							var gksrq=qsrq.value;
+							var gjsrq=jsrq.value;
+							var xgksrq = new Date(Date.parse(gksrq.replace(/-/g, "/")));
+							var xgksrq = xgksrq.getTime();
+							var xgjsrq = new Date(Date.parse(gjsrq.replace(/-/g, "/")));
+							var xgjsrq = xgjsrq.getTime();
+							if (xgjsrq>=xgksrq) {
+								hzong.disabled=false;
+								update.disabled=false;
+							}else{
+								alert('起始日期不能大于结束日期！');
+								hzong.disabled=true;
+								update.disabled=true;
+							}
+						}
+						
+					}, function(e) {
+						//alert(e);
+					}, {
+						title: "请选择日期",
+					});
+				});
+				
+				//有结果、无结果数据请求，成功回调函数
+				var getplantSuccess=function(data) {
+					//alert(data);
+					var doc=document,
+						tbody=doc.getElementsByTagName('tbody'),
+						length=data.length;						
+					if (length>0) {
+						var resultHtml="",
+							notResultHtml="";						
+						for (var i=0;i<length;i++) {
+							var KeyId=data[i].KeyId,
+								TypeName=data[i].TypeName,	//送检类型
+								PartName=data[i].PartName,	//部位
+								Level=data[i].Level,	//强度等级							
+								SendDate=data[i].SendDate,	//送检日期							
+								IsPass=data[i].IsPass,	//(1:结果合格 0:结果不合格)
+								ResultValue=data[i].ResultValue,	//检验结果值
+								ResultUnit=data[i].ResultUnit,	//检验结果单位
+								ItemNo=data[i].ItemNo;
+							//判断是否合格
+							if (IsPass=="1") {
+								IsPass="合格";
+							} else{
+								IsPass="不合格";
+							}
+							//数据分类，有结果/无结果
+							if (ResultValue!="") {
+								resultHtml=resultHtml+'<tr><td id="lxin" data-label="类型">&nbsp;'+TypeName+'</td><td data-label="部位">&nbsp;'+PartName+'</td><td data-label="强度等级">&nbsp;'+Level+'</td><td data-label="送检日期">&nbsp;'+SendDate+'</td><td data-label="试验结果">&nbsp;'+ResultValue+'</td><td data-label="检验结果单位">&nbsp;'+ResultUnit+'</td><td data-label="试验结果报告单编号">&nbsp;'+ItemNo+'</td><td data-label="是否合格">&nbsp;'+IsPass+'</td></tr>';
+							} else{
+								notResultHtml=notResultHtml+'<tr><td id="lxin" data-label="类型">&nbsp;'+TypeName+'</td><td data-label="部位">&nbsp;'+PartName+'</td><td data-label="强度等级">&nbsp;'+Level+'</td><td data-label="送检日期">&nbsp;'+SendDate+'</td><td class="sjjg" data-label="试验结果" data-keyid="'+KeyId+'">请输入(必填)</td><td class="" data-label="检验结果单位">请输入</td><td class="" data-label="试验结果报告单编号">请输入</td>';
+							}							
+						}						
+						if (resultHtml!="") {
+							tbody[0].innerHTML=resultHtml;
+						} 
+						if (notResultHtml!="") {
+							tbody[1].innerHTML=notResultHtml;
+						} 
+					}else{
+						alert('该工程在所选日期区间无送检计划！');
+					}
+					
+				};
+				
+				//汇总事件				
+				hzong.addEventListener('tap', function() {
+					qkong.disabled=false;
+					var qsrqvalue=qsrq.value;
+					var jsrqvalue=jsrq.value;
+					
+					mui.ajax(TxtqUrl,{
+						data:{
+							mode:'getplant',
+							begindate:qsrqvalue,
+							enddate:jsrqvalue,
+							projectid:xmid
+						},
+						dataType:'json',
+						type:'get',
+						timeout:10000,
+						success:function(data){
+							getplantSuccess(data);
+						},
+						error:function(xhr,type,errorThrown){
+							alert('ajax错误'+type);
+						}
+					});
+				});
+				
+				//清空事件
+				qkong.addEventListener('tap', function() {
+					qsrq.value='';
+					jsrq.value='';
+					var doc=document,
+						tbody=document.getElementsByTagName('tbody');
+					tbody[0].innerHTML='<tr><td id="lxin" data-label="类型">无</td><td data-label="部位">无</td><td data-label="强度等级">无</td><td data-label="送检日期">无</td><td data-label="试验结果">无</td><td data-label="检验结果单位">无</td><td data-label="试验结果报告单编号">无</td><td data-label="是否合格">无</td></tr>';
+					tbody[1].innerHTML='<tr><td id="lxin" data-label="类型">无</td><td data-label="部位">无</td><td data-label="强度等级">无</td><td data-label="送检日期">无</td><td class="" data-label="试验结果">请输入(必填)</td><td class="" data-label="检验结果单位">请输入</td><td class="" data-label="试验结果报告单编号">请输入</td></tr>';	
+					hzong.disabled=true;
+					qkong.disabled=true;
+					update.disabled=true;
+				});
+				
+				//刷新数据
+				update.addEventListener('tap', function() {
+					//location.reload();
+					mui.trigger(hzong,'tap');
+				});
+					
+					
+				var tempkeyid="",	//临时存放送检keyid
+					tempElement={};	//临时存放被点击的元素
+				mui("#item2").on('tap', '.sjjg', function() {
+					//获取被点击的元素，以及下面两个同辈元素
+					tempElement=this;	
+					var nexEle=tempElement.nextElementSibling,
+						nexNexEle=nexEle.nextElementSibling;
+					tempkeyid=this.dataset.keyid;
+					//判断被点击的元素是否有输入过数据，有数据就显示，没有数据就为空
+					if (tempElement.innerText!="请输入(必填)") {
+						syjg.value=tempElement.innerText;
+						dw.value=nexEle.innerText;
+						bhao.value=nexNexEle.innerText;
+					}else{
+						syjg.value="";
+						dw.value="";
+						bhao.value="";
+					}					
+					mui("#middlePopover").popover("toggle");
+				});
+				//弹窗按钮事件
+				tcbutton.addEventListener('tap', function(event) {
+					var targetId=event.target.id;
+					//alert(targetId);
+					switch(targetId){
+						case "tcgbi":
+							mui("#middlePopover").popover("toggle");
+							break;
+						case "tcqding":
+							var swsyjg=syjg.value,
+								swdw=dw.value,
+								swbhao=bhao.value;
+							if (swdw=="") {
+								swdw="未填";
+							}
+							if (swbhao=="") {
+								swbhao="未填";
+							}
+							if (swsyjg!="") {								
+								var nexEle=tempElement.nextElementSibling,
+									nexNexEle=nexEle.nextElementSibling;
+								tempElement.innerText=swsyjg;
+								nexEle.innerText=swdw;	
+								nexNexEle.innerText=swbhao;
+								mui("#middlePopover").popover("toggle");
+							} else{
+								syjg.focus();
+								alert("试验结果不能为空！");								
+							}							
+							break;
+					}
+					
+				});	
+				//长按，上传试验数据
+				mui("#item2").on('longtap', 'tr', function() {
+					var tempEle=this;
+					var bgsbh=tempEle.lastElementChild,	//试验结果报告单编号td
+						jyjgdw=bgsbh.previousElementSibling,	//结果单位td
+						syjg=jyjgdw.previousElementSibling;	//试验结果td
+					var texsyjg=syjg.innerText;
+					//验证是否有填写值，为空则不能提交，终止执行
+					if (texsyjg=="请输入(必填)" || texsyjg=="") {
+						alert("请填写试验结果，否则不能提交。");
+						return false;
+					}					
+					var btnArray = ['上传', '取消'];
+					mui.confirm("确定上传数据吗？上传后，本app端不可修改。", '同欣易送检', btnArray, function(e) {
+					if (e.index == 0) {						
+						var texbgsbh=bgsbh.innerText,
+							texjyjgdw=jyjgdw.innerText,							
+							texkeyid=syjg.dataset.keyid;						
+						mui.ajax(TxtqUrl,{
+							data:{
+								mode:'saveplace',
+								KeyId:texkeyid,
+								HasSend:"1",
+								IsPass:"1",
+								ResultValue:texsyjg, 
+								ResultUnit:texjyjgdw,
+								ItemNo:texbgsbh
+							},
+							dataType:'json',
+							type:'get',
+							timeout:10000,
+							success:function(data){
+								//alert(data);
+								var dat=data.success;
+								if (dat.toString()=="true") {
+									tempEle.innerHTML="";
+									plus.nativeUI.toast('上传成功！');
+									
+								} else{
+									alert(data.msg);
+								}
+							},
+							error:function(xhr,type,errorThrown){
+								alert('ajax错误:'+xhr+"--"+type+"--"+errorThrown);
+							}
+						});								
+					} else {						
+					}
+				});
+				});
+				
+				/****************************分享功能**************/
+				//利用native.js实现系统分享功能
+				var shares=null;
+				var Intent=null,File=null,Uri=null,main=null;
+				//加载android原生类，初始化
+				var android=function(){
+					main = plus.android.runtimeMainActivity();
+					Intent = plus.android.importClass("android.content.Intent");
+					File = plus.android.importClass("java.io.File");
+					Uri = plus.android.importClass("android.net.Uri");					
+				};
+				//调用系统分享，打开所有手机中安装的可分享软件列表
+				var shareSystem=function (tex) {
+					if(plus.os.name!=="Android"){
+						plus.nativeUI.alert("此平台暂不支持系统分享功能!");
+						return;
+					}
+					var intent=new Intent(Intent.ACTION_SEND);
+					intent.setType("text/plain");
+					intent.putExtra(Intent.EXTRA_SUBJECT,"同欣易送检");
+					intent.putExtra(Intent.EXTRA_TEXT,tex);
+					intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					main.startActivity(Intent.createChooser(intent,"分享"));
+				};
+				
+				/****************************分享功能**************/				
+				
+				//长按，分享
+				mui("#item1").on('longtap', 'tr', function() {
+					var tex=this.childNodes,
+						len=tex.length,
+						tempEle={},
+						temtype="",
+						temlabel="",
+						temtex="",
+						alltex="";
+					//获取这个tr里面内容
+					for (var i=0;i<len;i++) {
+						tempEle=tex[i];
+						temtype=tempEle.nodeType;
+						if (temtype=="1") {
+							temlabel=tempEle.dataset.label;
+							temtex=tempEle.innerText;
+							alltex=alltex+temlabel+"："+temtex+"\n";
+						}
+					}
+					//alltex=alltex+"详细信息：http://www.baidu.com/"+"\n";					
+					var btnArray = ['分享', '取消'];
+					mui.confirm(alltex, '分享内容', btnArray, function(e) {
+						if (e.index == 0) {
+							//分享到其他平台
+							android();
+							shareSystem(alltex);
+						} else {
+							
+						}
+					});		
+				
+				});
+			});
+		</script>		
+	</body>
+</html>

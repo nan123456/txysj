@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">
+		<link rel="stylesheet" href="../css/my_css.css">
+		<link rel="stylesheet" href="../css/my_project_fhys_xz.css" />
+		<style type="text/css">
+			.my_disabled {
+				color: #BBBBBB;
+			}
+		</style>
+	</head>
+
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">批量输入</h1>
+		</header>
+		<p></p>
+		<div class="mui-content">
+			<!--<form id="fsxz" class="mui-input-group">
+				<div class="mui-input-row">
+					<label style="font-size: 0.85em;">新增方式：</label>
+					<select id="xzfs">
+						<option value="单个增加">单个增加</option>
+						<option value="批量增加" selected="selected">批量增加</option>
+					</select>
+				</div> 
+			</form>-->
+			<form class="mui-input-group">
+
+				<div class="mui-input-row">
+					<label style="font-size: 0.85em;">测点类型：</label>
+					<select id="cdlxbh">
+						<option selected>
+							</optin>
+							<option value="A">A</option>
+							<option value="B">B</option>
+							<option value="C">C</option>
+							<option value="D">D</option>
+							<option value="E">E</option>
+							<option value="F">F</option>
+							<option value="G">G</option>
+							<option value="H">H</option>
+							<option value="I">I</option>
+							<option value="J">J</option>
+							<option value="K">K</option>
+							<option value="L">L</option>
+							<option value="M">M</option>
+							<option value="N">N</option>
+							<option value="O">O</option>
+							<option value="P">P</option>
+							<option value="Q">Q</option>
+							<option value="R">R</option>
+							<option value="S">S</option>
+							<option value="T">T</option>
+							<option value="U">U</option>
+							<option value="V">V</option>
+							<option value="W">W</option>
+							<option value="X">X</option>
+							<option value="Y">Y</option>
+							<option value="Z">Z</option>
+					</select>
+				</div>
+				<div class="mui-input-row">
+					<label style="font-size: 0.85em;">测点个数：</label>
+					<input id="cdgs" type="number" placeholder="后台自动生成" readonly="readonly">
+				</div>
+				<!--<div class="mui-input-row">
+					<label style="font-size: 0.85em;">测点类型：</label>
+					<input id="cdlx" type="text" class="" value="" placeholder="请输入类型名称">
+					
+					</input>
+				</div>-->
+
+				<div class="mui-input-row">
+					<label style="font-size: 0.85em;">实测值(min)：</label>
+					<input id="sczmin" type="number" class="" value="">
+				</div>
+				<div class="mui-input-row">
+					<label style="font-size: 0.85em;">实测值(max)：</label>
+					<input id="sczmax" type="number" class="" value="">
+				</div>
+			</form>
+			<!--<form class="mui-input-group">
+				<div class="my_style3">
+					<label style="font-size: 0.85em;">说明：</label>
+					<textarea id="sm" class="mui-input-clear" rows="2" placeholder="" readonly="readonly"></textarea>
+				</div>
+			</form>-->
+			<div class="mui-button-row">
+				<button id="no" type="button" class="mui-btn mui-btn-primary">关闭</button>
+				<button id="ok" type="button" class="mui-btn mui-btn-primary">确定</button>
+
+			</div>
+		</div>
+
+		<script src="../js/mui.min.js"></script>
+		<script src="../js/service.js"></script>
+		<script>
+			mui.init({
+				swipeBack: true //启用右滑关闭功能
+			});
+			mui.plusReady(function() {
+				//接收上一个页面传递的值
+				var self = plus.webview.currentWebview();
+				var sjc = self.sjc;
+				var xmid = self.xmid;
+				var checkId = self.checkId;
+
+				var no = document.getElementById('no');
+				var ok = document.getElementById('ok');
+				var cdgs = document.getElementById('cdgs');
+				var sczmin = document.getElementById('sczmin');
+				var sczmax = document.getElementById('sczmax');
+				var cdlxbh = document.getElementById('cdlxbh');
+
+				//								alert(sczmin);
+				//初始生成个数
+				cdlxbh.addEventListener('change', function() {
+					mui.ajax(url + 'my_nums.php', {
+						data: {
+							cdlxbh: cdlxbh.value,
+							sjc: sjc
+						},
+						dataType: 'json',
+						type: 'post',
+						timeout: 10000,
+						success: function(data) {
+							if(data['result'] == 'success') {
+								cdgss = data['rowcount']
+								cdgs.value = cdgss;
+							}
+							//              		alert(data); 
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							alert('ajax错误' + type + errorThrown);
+							//							return callback('ajax错误' + type + errorThrown);
+						}
+					});
+				})
+
+				ok.addEventListener('tap', function() {
+					document.getElementById("ok").disabled=true;
+					function GetRandomNum(Min, Max) {
+						var Range = Max - Min;
+						var Rand = Math.random();
+						var ret = parseInt(Min) + parseInt(Math.round(Rand * Range));
+						return ret;
+					}
+					var nums = "";
+					for(var i = 0; i < cdgs.value; i++) {
+						//alert(sczmin.value+"---"+sczmax.value);
+						var num = GetRandomNum(sczmin.value, sczmax.value);
+						nums += "," + num;
+						//						alert(num);
+					}
+					nums = nums.substr(1);
+					//					alert(nums);
+					mui.ajax(url + 'my_project_yjsr.php', {
+						data: {
+							sjc: sjc,
+							cdgs: cdgs.value,
+							cdlxbh: cdlxbh.value,
+							nums: nums,
+						},
+						dataType: 'json',
+						type: 'post',
+						timeout: 10000,
+						success: function(data) {
+							//							alert(data)
+							//alert(data['sqldata']);//数据库里最大的编号 +1后 作为本次创建的起始编号
+							if(data.result == 'success') {
+								plus.nativeUI.toast('保存成功！');
+								mui.back();
+								return callback('');
+							} else {
+								return callback('服务器返回error');
+							}
+						},
+						error: function(xhr, type, errorThrown) {
+							//异常处理；
+							//							alert('ajax错误'+type);
+							return callback('ajax错误' + type + errorThrown);
+						}
+					});
+					var target = plus.webview.currentWebview().opener();
+						mui.fire(target, 'json_bj', {
+							flag: 'ok'
+							
+						});
+						mui.back();
+				});
+
+				//关闭按钮
+				no.addEventListener('tap', function() {
+					var target = plus.webview.currentWebview().opener();
+					mui.fire(target, 'json_bj', {
+						flag: 'no'
+					});
+					mui.back();
+				});
+
+				//处理手机自身返回键或者home键
+				plus.key.addEventListener("backbutton", function() {
+					var target = plus.webview.currentWebview().opener();
+					mui.fire(target, 'json_bj', {
+						flag: 'backbutton'
+					});
+					mui.back();
+				});
+
+			});
+		</script>
+
+	</body>
+
+</html>

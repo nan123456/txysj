@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>同欣易送检</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<link rel="stylesheet" href="../css/mui.min.css">	
+		<link rel="stylesheet" href="../css/my_css.css">	
+		<style>
+			html,body {
+				background-color: #efeff4;
+			}
+			.title{
+				margin: 20px 5px 10px;
+				color: #6d6d72;
+				font-size: 15px;
+			}	
+			.mui-content,input,select,textarea,option,p,label{
+				font-size: 0.9em;
+			}
+			form{
+				margin-top: 5px;
+			}
+			.my_color_blue{
+				color:#0000FF;
+			}	
+			#done.mui-disabled{
+				color: gray;
+			}	
+			#hdnr{
+				padding: 10px;	
+				text-indent:2em;			
+			}		
+		</style>
+	</head>
+	<body>
+		<header class="mui-bar mui-bar-nav">
+			<a class="mui-action-back mui-icon mui-icon-left-nav mui-pull-left"></a>
+			<h1 class="mui-title">活动签到</h1>
+		</header>
+		<div class="mui-content">
+			<div class="mui-content-padded" style="margin: 5px;">
+				<form class="mui-input-group">
+					<div class="mui-input-row">
+						<label>活动名称：</label>
+						<input id="hdmc" type="text" class="mui-input-clear" placeholder="活动名称" readonly="readonly">
+					</div>
+					<div class="mui-input-row">
+						<label>活动时间：</label>
+						<input id="hdsj" type="text" class="mui-input-clear" placeholder="活动时间" readonly="readonly" >
+					</div>	
+					<div class="mui-input-row">
+						<label>行车路线：</label>
+						<input id="xclx" type="text" class="mui-input-clear" placeholder="行车路线" readonly="readonly">
+					</div>	
+					<div class="mui-input-row">
+						<label>活动性质：</label>
+						<input id="hdxz" type="text" class="mui-input-clear" placeholder="活动性质" readonly="readonly">
+					</div>	
+					<div class="mui-input-row">
+						<label>活动积分：</label>
+						<input id="hdjf" type="text" class="mui-input-clear" placeholder="活动积分" readonly="readonly">
+					</div>	
+					<div class="mui-button-row">						
+						<button id="bu_hdnr" type="button" class="mui-btn mui-btn-primary">活动内容    ▼▼</button>
+					</div>
+					<p id="hdnr" class="my_none">无内容！</p>		
+				</form>	
+				<form id="selectform" class="mui-input-group">
+					<div class="mui-input-row">
+						<label>手机：</label>
+						<input id="shj" type="text" class="mui-input-clear" placeholder="手机" required="required" value="">
+					</div>
+						<div class="mui-button-row">						
+						<button id="yanz" type="button" class="mui-btn mui-btn-primary">验证</button>
+					</div>					
+				</form>				
+				<form id="updateform" class="mui-input-group my_none">	
+					<input id="bmqdsjc" name="bmqdsjc" type="hidden">
+					<div class="mui-input-row">
+						<label for="xming">姓名：</label>
+						<input id="xming" name="xming" type="text" class="mui-input-clear" placeholder="姓名" readonly="readonly">
+					</div>
+					<div class="mui-input-row">
+						<label for="sji">手机：</label>
+						<input id="sji" name="sji" type="number" class="mui-input-clear" placeholder="手机" value="" readonly="readonly">
+					</div>	
+					<div class="mui-input-row">
+						<label for="dwmc">单位名称：</label>
+						<input id="dwmc" name="dwmc" type="text" class="mui-input-clear" placeholder="单位名称" value="" readonly="readonly">
+					</div>
+					<div class="mui-input-row">
+						<label for="qdzt">签到状态：</label>
+						<input id="qdzt" name="qdzt" type="text" class="mui-input-clear" placeholder="签到状态" value="" readonly="readonly">
+					</div>
+					<div class="mui-button-row">						
+						<button id="qiand" type="button" class="mui-btn mui-btn-primary">签到</button>
+					</div>					
+				</form>
+				<div class="title">
+					<p class="my_color_blue">联系我们</p>
+					<p id="gsmc"></p>
+					<p id="gsdz"></p>
+					<p id="hwzx"></p>	
+					<p id="bzhu"></p>	
+				</div>			
+			</div>
+			
+		</div>
+	</body>
+	<script src="../js/mui.min.js"></script>
+	<script src="../js/charCode.js"></script>
+	<script src="../js/service.js" ></script>
+	<script>
+		mui.init();
+		mui.plusReady(function() {
+			//获取传值
+			var self = plus.webview.currentWebview();			
+			var str = self.str;
+			mobile = self.mobile;
+			str=str.toString().split("=");
+			var hdsjc=str[1].split("&")[0];
+			var sjs=str[2].split("&")[0];
+			var sjm=str[3].split("&")[0];
+			//var encode = kbt.decrypt(sjs);	//解密
+			sjs=kbt.decrypt(sjs);
+			sjm=kbt.decrypt(sjm);
+			var times=Date.parse($sjs);
+        	var timem=Date.parse($sjm);
+        	var nowtime=new Date();
+        	if (nowtime<times || nowtime>timem) {
+        		alert("对不起，现在不在规定签到时间内！");
+        		document.getElementById("yanz").disabled=true;
+        	} 
+			
+			var yanz=document.getElementById("yanz");
+			
+			var sji=document.getElementById("sji");
+			var hdmc=document.getElementById("hdmc");
+			var hdsj=document.getElementById("hdsj");
+			var xclx=document.getElementById("xclx");
+			var hdxz=document.getElementById("hdxz");
+			var hdjf=document.getElementById("hdjf");
+			
+			var gsmc=document.getElementById("gsmc");
+			var gsdz=document.getElementById("gsdz");
+			var hwzx=document.getElementById("hwzx");
+			var bzhu=document.getElementById("bzhu");			
+			
+			var xming=document.getElementById("xming");
+			var dwmc=document.getElementById("dwmc");			
+			var sji=document.getElementById('sji');
+			
+			var bmqdsjc=document.getElementById('bmqdsjc');
+			var shj=document.getElementById('shj');
+			var qiand=document.getElementById('qiand');
+			var selectform=document.getElementById('selectform');
+			var updateform=document.getElementById('updateform');
+			var hdnr=document.getElementById('hdnr');
+			var bu_hdnr=document.getElementById('bu_hdnr');
+			shj.value=mobile;
+			
+			mui.ajax(url+'adminphp/pc_hdlb.php',{
+				data:{
+					sqlflag:'select',
+					sjc:hdsjc
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+					var length=data.length;
+					for (var i=0;i<length-1;i++) {
+						hdmc.value=data[i].活动名称;
+						hdsj.value=data[i].活动时间;
+						xclx.value=data[i].行车路线;
+						hdxz.value=data[i].活动性质;						
+						hdjf.value=data[i].活动积分;	
+						hdnr.innerText=data[i].活动内容;
+						gsmc.innerText="公司名称: "+data[i].公司名称;
+						gsdz.innerText="公司地址: "+data[i].公司地址;
+						hwzx.innerText="会务咨询: "+data[i].会务咨询;
+						bzhu.innerText="备注: "+data[i].备注;
+					}
+				},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+					return callback('ajax错误'+type+errorThrown);
+				}
+			});
+			
+			bu_hdnr.addEventListener('tap', function() {
+				if (hdnr.classList.contains("my_none")==true) {
+					hdnr.classList.remove("my_none");
+					bu_hdnr.innerText="活动内容    ▲▲";
+				} else{
+					hdnr.classList.add("my_none");
+					bu_hdnr.innerText="活动内容    ▼▼";
+				}				
+			});
+			
+			yanz.addEventListener('tap', function() {
+				mui.ajax(url+'adminphp/pc_bmqd.php',{
+				data:{
+					sqlflag:'select',
+					hdsjc:hdsjc,
+					sji:shj.value
+				},
+				dataType:'json',
+				type:'post',
+				timeout:10000,
+				success:function(data){
+					var length=data.length;
+					if (length>1) {
+						for (var i=0;i<length-1;i++) {
+							bmqdsjc.value=data[i].时间戳;
+							xming.value=data[i].姓名;
+							sji.value=data[i].手机;
+							dwmc.value=data[i].单位名称;
+							qdzt.value=data[i].签到状态;
+						}
+						if (qdzt.value=="已签到") {
+							qiand.disabled=true;
+							alert("您已签到！");
+						}
+						selectform.classList.add("my_none");
+						updateform.classList.remove("my_none");
+					} else{
+						alert("对不起，您未报名！");
+					}
+            	},
+				error:function(xhr,type,errorThrown){
+					//异常处理；
+					//alert('ajax错误'+type);
+					return callback('ajax错误'+type+errorThrown);
+				}
+			});
+				
+			});
+			
+			qiand.addEventListener('tap', function() {
+				mui.ajax(url+'adminphp/pc_bmqd.php',{
+					data:{
+						sqlflag:'update',
+						sjc:bmqdsjc.value,
+						xming:xming.value,
+						hdjf:hdjf.value,
+						sji:sji.value
+					},
+					dataType:'json',
+					type:'post',
+					timeout:10000,
+					success:function(data){
+						if (data.result=='success') {
+							alert("签到成功，欢迎您的参与！");
+							mui.back();
+						} else{
+							var severresult=data.result;
+							alert(severresult);
+						}
+					},
+					error:function(xhr,type,errorThrown){
+						//异常处理；
+						//alert('ajax错误'+type);
+						return callback('ajax错误'+type+errorThrown);
+					}
+				});
+				
+			});
+				
+			
+		});
+	</script>
+</html>
